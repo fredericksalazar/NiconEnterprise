@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ImpActividad" language="groovy" pageWidth="612" pageHeight="400" whenNoDataType="AllSectionsNoDetail" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="40"/>
+	<parameter name="idActividad" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+     Empresa.`Nit` AS Empresa_Nit,
+     Empresa.`Razon_social` AS Empresa_Razon_social,
+     Empresa.`Slogan` AS Empresa_Slogan,
+     Empresa.`Direccion` AS Empresa_Direccion,
+     Empresa.`Ciudad` AS Empresa_Ciudad,
+     Empresa.`Departamento` AS Empresa_Departamento,
+     Empresa.`Telefono_fijo` AS Empresa_Telefono_fijo,
+     Empresa.`Telefono_movil` AS Empresa_Telefono_movil,
+     Actividades.`TituloActividad` AS Actividades_TituloActividad,
+     Actividades.`DescripcionActividad` AS Actividades_DescripcionActividad,
+     Actividades.`TipoActividad_codigo` AS Actividades_TipoActividad_codigo,
+     Actividades.`FechaAsignacion` AS Actividades_FechaAsignacion,
+     Actividades.`EstadoActividad` AS Actividades_EstadoActividad,
+     Actividades.`FechaRegistro` AS Actividades_FechaRegistro,
+     Actividades.`Clientes_identificacion` AS Actividades_Clientes_identificacion,
+     Clientes.`nombres` AS Clientes_nombres,
+     Clientes.`apellidos` AS Clientes_apellidos,
+     Clientes.`ciudad` AS Clientes_ciudad,
+     Clientes.`direccion` AS Clientes_direccion,
+     Clientes.`Departamento` AS Clientes_Departamento,
+     Clientes.`telefono_fijo` AS Clientes_telefono_fijo,
+     Clientes.`telefono_movil` AS Clientes_telefono_movil,
+     Clientes.`Telefono_alternativo` AS Clientes_Telefono_alternativo,
+     TipoActividad.`Titulo` AS TipoActividad_Titulo,
+     TipoActividad.`codigo` AS TipoActividad_codigo,
+     Clientes.`identificacion` AS Clientes_identificacion,
+     Empresa.`email` AS Empresa_email
+FROM
+     `Clientes` Clientes INNER JOIN `Actividades` Actividades ON Clientes.`identificacion` = Actividades.`Clientes_identificacion`
+     INNER JOIN `TipoActividad` TipoActividad ON Actividades.`TipoActividad_codigo` = TipoActividad.`codigo`,
+     `Empresa` Empresa
+WHERE
+     Actividades.idActividad = $P{idActividad}]]>
+	</queryString>
+	<field name="Empresa_Nit" class="java.lang.String"/>
+	<field name="Empresa_Razon_social" class="java.lang.String"/>
+	<field name="Empresa_Slogan" class="java.lang.String"/>
+	<field name="Empresa_Direccion" class="java.lang.String"/>
+	<field name="Empresa_Ciudad" class="java.lang.String"/>
+	<field name="Empresa_Departamento" class="java.lang.String"/>
+	<field name="Empresa_Telefono_fijo" class="java.lang.String"/>
+	<field name="Empresa_Telefono_movil" class="java.lang.String"/>
+	<field name="Actividades_TituloActividad" class="java.lang.String"/>
+	<field name="Actividades_DescripcionActividad" class="java.lang.String"/>
+	<field name="Actividades_TipoActividad_codigo" class="java.lang.Integer"/>
+	<field name="Actividades_FechaAsignacion" class="java.sql.Date"/>
+	<field name="Actividades_EstadoActividad" class="java.lang.Boolean"/>
+	<field name="Actividades_FechaRegistro" class="java.sql.Date"/>
+	<field name="Actividades_Clientes_identificacion" class="java.lang.Integer"/>
+	<field name="Clientes_nombres" class="java.lang.String"/>
+	<field name="Clientes_apellidos" class="java.lang.String"/>
+	<field name="Clientes_ciudad" class="java.lang.String"/>
+	<field name="Clientes_direccion" class="java.lang.String"/>
+	<field name="Clientes_Departamento" class="java.lang.String"/>
+	<field name="Clientes_telefono_fijo" class="java.lang.String"/>
+	<field name="Clientes_telefono_movil" class="java.lang.String"/>
+	<field name="Clientes_Telefono_alternativo" class="java.lang.String"/>
+	<field name="TipoActividad_Titulo" class="java.lang.String"/>
+	<field name="TipoActividad_codigo" class="java.lang.Integer"/>
+	<field name="Clientes_identificacion" class="java.lang.Integer"/>
+	<field name="Empresa_email" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="97" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="1" width="570" height="93"/>
+			</rectangle>
+			<textField>
+				<reportElement x="428" y="32" width="109" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Ciudad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="5" y="29" width="278" height="23" forecolor="#282828"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Slogan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="52" width="71" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Telefono_fijo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="418" y="32" width="10" height="20" forecolor="#010101"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="428" y="52" width="109" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Telefono_movil}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="283" y="32" width="64" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="5" y="1" width="423" height="28" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="20"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Razon_social}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="8" y="50" width="23" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Nit:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="418" y="52" width="10" height="20" forecolor="#010101"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="52" width="64" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Telefonos:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="347" y="32" width="71" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="50" width="100" height="20" forecolor="#010101"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_Nit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="283" y="72" width="64" height="20" forecolor="#010101"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Email:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="347" y="72" width="190" height="20" forecolor="#010101"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Empresa_email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="534" y="1" width="38" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{idActividad}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="512" y="1" width="20" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CA:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="93" splitType="Stretch">
+			<rectangle>
+				<reportElement x="1" y="0" width="572" height="87"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="388" y="44" width="75" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Telefono Fijo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="24" width="83" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nombres:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="24" width="75" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Telefono Movil]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="463" y="44" width="95" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_telefono_fijo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="24" width="100" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="64" width="83" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Identificación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="64" width="77" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Departamento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="463" y="24" width="95" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_telefono_movil}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="44" width="100" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_ciudad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="275" y="64" width="100" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_Departamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="93" y="24" width="100" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="93" y="64" width="100" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_identificacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="44" width="83" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Apellidos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="24" width="77" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="44" width="77" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ciudad:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="93" y="44" width="100" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Clientes_apellidos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="4" width="152" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Información del Cliente:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="83">
+			<textField>
+				<reportElement x="113" y="20" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TipoActividad_Titulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="20" width="88" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Actividades_FechaAsignacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="40" width="262" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Actividades_TituloActividad}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="60" width="131" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripcion Actividad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="40" width="101" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Objeto Actividad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="20" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Asignación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="0" width="183" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Detalles de Actividad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="20" width="91" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Actividad:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="82" splitType="Prevent">
+			<textField>
+				<reportElement x="10" y="2" width="557" height="80"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Actividades_DescripcionActividad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
