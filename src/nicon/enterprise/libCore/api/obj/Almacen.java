@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.obj;
+package nicon.enterprise.libCore.api.obj;
 
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import nicon.enterprise.libCore.Conection;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.EmpresaDAO;
+import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 
 public class Almacen {
 

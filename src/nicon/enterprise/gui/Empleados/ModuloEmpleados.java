@@ -27,10 +27,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ContratoEmpleadoDAO;
-import nicon.enterprise.libCore.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
+import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.obj.Empleado;
 import nicon.enterprise.libCore.obj.ContratoEmpleado;
-import nicon.enterprise.libCore.obj.Empleado;
+
 
 public class ModuloEmpleados  implements ActionListener, MouseListener{
     
@@ -340,6 +341,7 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     return this.panelAdmin;
   }
 
+  @Override
   public void actionPerformed(ActionEvent e)
   {
     if (e.getSource() == this.crearEmpleado) {

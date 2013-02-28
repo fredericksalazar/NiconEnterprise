@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.obj.Almacen;
+import nicon.enterprise.libCore.api.obj.Almacen;
 import nicon.enterprise.memData.StoreData;
 
 public class GuiAlmacen extends JDialog implements ActionListener, MouseListener {
@@ -226,7 +226,7 @@ public class GuiAlmacen extends JDialog implements ActionListener, MouseListener
                 JOptionPane.showMessageDialog(this.rootPane, "Hay datos que aún no ha ingresado, por favor verifique e intente de nuevo", "NiconEnterprise", 0);
             } else {
                 this.Store = new Almacen(Nombre, Direccion, Barrio, Ciudad, Departamento, Tel_fijo, Email);
-                StoreData.addStore(this.Store);
+//                StoreData.addStore(this.Store);
                 this.ModelList.addElement(this.Store.getNombre());
                 setToReadDataPanel();
             }

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.obj;
+package nicon.enterprise.libCore.api.obj;
 
 import java.util.Date;
 
@@ -179,6 +179,7 @@ public class Empleado
     this.codigo = codigo;
   }
 
+  @Override
   public String toString()
   {
     return "Empleado{Identificacion=" + this.Identificacion + ", Nombres=" + this.Nombres + ", Apellidos=" + this.Apellidos + ", FechaNacimiento=" + this.FechaNacimiento + ", LugarNacimiento=" + this.LugarNacimiento + ", EstadoCivil=" + this.EstadoCivil + ", Direccion=" + this.Direccion + ", Barrio=" + this.Barrio + ", Ciudad=" + this.Ciudad + ", TelefonoFijo=" + this.TelefonoFijo + ", TelefonoMovil=" + this.TelefonoMovil + ", Email=" + this.Email + ", Estado=" + this.Estado + ", FechaRegistro=" + this.FechaRegistro + ", codigo=" + this.codigo + '}';

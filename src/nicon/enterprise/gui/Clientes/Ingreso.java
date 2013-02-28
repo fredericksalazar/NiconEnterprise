@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.obj.Almacen;
 import nicon.enterprise.libCore.dao.ClienteDAO;
 import nicon.enterprise.libCore.obj.*;
 import nicon.enterprise.memData.BasicDataAplication;

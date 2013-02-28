@@ -18,8 +18,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconLibTools;
-import nicon.enterprise.libCore.dao.ContratoEmpleadoDAO;
-import nicon.enterprise.libCore.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
+import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
 import nicon.enterprise.libCore.obj.ContratoEmpleado;
 
 public class CrearContrato {

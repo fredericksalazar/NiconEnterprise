@@ -22,10 +22,12 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconLibTools;
-import nicon.enterprise.libCore.dao.ContratoEmpleadoDAO;
-import nicon.enterprise.libCore.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
+import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.obj.Empleado;
 import nicon.enterprise.libCore.obj.ContratoEmpleado;
-import nicon.enterprise.libCore.obj.Empleado;
+
+
 
 public class GuiIngreso extends JDialog  implements ActionListener{
     

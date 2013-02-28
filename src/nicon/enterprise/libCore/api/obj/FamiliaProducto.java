@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.obj;
+package nicon.enterprise.libCore.api.obj;
 
 public class FamiliaProducto
 {

@@ -16,8 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.EmpleadoDAO;
-import nicon.enterprise.libCore.obj.Empleado;
+import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.obj.Empleado;
 
 public class EditorEmpleado extends JDialog
 {

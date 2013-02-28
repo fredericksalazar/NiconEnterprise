@@ -8,6 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,7 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.EmpresaDAO;
+import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 import nicon.enterprise.libCore.obj.Empresa;
 
 public class RegistroEmpresa extends JDialog
@@ -279,12 +282,16 @@ public class RegistroEmpresa extends JDialog
     if ((Nit.equals("")) || (razon_social.equals("")) || (representante.equals("")) || (Direccion.equals("")) || (Ciudad.equals("")) || (Dpto.equals("")) || (tel_fijo.equals(""))) {
       JOptionPane.showMessageDialog(null, "Hay campos que no han sido ingresado, por favor verifique e intente de nuevo", "NiconEnnterprise v 0.1", 0);
     } else {
-      Empresa empresa = new Empresa(Nit, razon_social, Slogan, representante, Direccion, Ciudad, Dpto, tel_fijo, Tel_movil, pbx, email, Web_page, face_page);
-      EmpresaDAO empresaDAO = new EmpresaDAO(empresa);
-      empresaDAO.registrarEmpresa();
-      dispose();
-      ModuloPrincipal Gui = new ModuloPrincipal(empresa);
-      Gui.setVisible(true);
+        try {
+            Empresa empresa = new Empresa(Nit, razon_social, Slogan, representante, Direccion, Ciudad, Dpto, tel_fijo, Tel_movil, pbx, email, Web_page, face_page);
+            EmpresaDAO empresaDAO = new EmpresaDAO(empresa);
+            empresaDAO.registrarEmpresa();
+            dispose();
+            ModuloPrincipal Gui = new ModuloPrincipal(empresa);
+            Gui.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(RegistroEmpresa.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
   }
 

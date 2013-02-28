@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.dao;
+package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import nicon.enterprise.libCore.Conection;
-import nicon.enterprise.libCore.obj.FamiliaProducto;
+import nicon.enterprise.libCore.api.obj.FamiliaProducto;
 
 
 public class FamiliaProductoDAO

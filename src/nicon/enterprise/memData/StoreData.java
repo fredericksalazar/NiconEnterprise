@@ -7,7 +7,7 @@ package nicon.enterprise.memData;
 import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
 import nicon.enterprise.libCore.Conection;
-import nicon.enterprise.libCore.obj.Almacen;
+import nicon.enterprise.libCore.api.obj.Almacen;
 
 public class StoreData {
 
