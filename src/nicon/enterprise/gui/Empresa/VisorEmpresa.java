@@ -19,8 +19,8 @@ import javax.swing.JPanel;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 import nicon.enterprise.libCore.api.obj.Almacen;
+import nicon.enterprise.libCore.api.obj.Empresa;
 import nicon.enterprise.libCore.dao.ClienteDAO;
-import nicon.enterprise.libCore.obj.Empresa;
 
 public class VisorEmpresa
 {

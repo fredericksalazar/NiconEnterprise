@@ -11,7 +11,7 @@ import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 
 import nicon.enterprise.libCore.Conection;
-import nicon.enterprise.libCore.obj.Empresa;
+import nicon.enterprise.libCore.api.obj.Empresa;
 
 /**
  * Un creado a partir de la clase EmpresaDAO define un api de metodos que serán

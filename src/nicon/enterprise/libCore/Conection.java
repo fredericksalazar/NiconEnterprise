@@ -46,7 +46,7 @@ public class Conection {
                 this.estadoConeccion = true;
                 this.coneccion += 1;
             } else {
-                JOptionPane.showMessageDialog(null, "Ya existe una conección activa con el sistema. no se puede conectar", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPossitive.png")));
+                JOptionPane.showMessageDialog(null, "Ya existe una conección activa con el sistema. no se puede conectar", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
             }
         } catch (ClassNotFoundException ce) {
             JOptionPane.showMessageDialog(null, "El controlador JDBC no ha sido encontrado, por favor verique que todas las librerias estan completas.", GlobalConfigSystem.getAplicationTitle(), 0);

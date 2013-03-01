@@ -22,7 +22,7 @@ import javax.swing.border.TitledBorder;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
-import nicon.enterprise.libCore.obj.Empresa;
+import nicon.enterprise.libCore.api.obj.Empresa;
 
 public class RegistroEmpresa extends JDialog
   implements WindowListener

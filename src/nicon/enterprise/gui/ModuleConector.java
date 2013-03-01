@@ -1,7 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.gui;
 
 import java.awt.event.ActionEvent;
@@ -11,6 +17,13 @@ import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
+/**
+ * Module Conector es la interfaz mediante la cual se puede ver la información de configuracion de la coneccion 
+ * con la fuente de datos y permite de igual forma ingresar los datos para configurar una nueva configuracion 
+ * define dos metodos constructores que ajustan la interfaz para el caso en el que se necesite.
+ * 
+ * @author frederick
+ */
 public class ModuleConector extends JDialog {
 
     private JPanel panelConfig;
@@ -32,154 +45,173 @@ public class ModuleConector extends JDialog {
     private ConfigConectorDAO configDAO;
     private boolean state;
 
+    /**
+     * Este constructor permite activar la vista del modulo de coneccion para recibir nuevos datos de configuracion
+     * y configurar el nuevo archivo, no recibe parametros.
+     */
     public ModuleConector() {
         crearPanel();
     }
-
+ 
+    /**
+     * Este metodo permite ajustar la vista en modo de visualizacion de datos, recibe el ConfigConector a visualizar
+     * 
+     * @param configConector 
+     */
     public ModuleConector(ConfigConector configConector) {
         this.config = configConector;
         crearPanel();
-        ajustarInterfaz();
+        modoLectura();
     }
-
+    
+    /**
+     * Crear u ajusta el panel principal de la vista
+     */
     private void crearPanel() {
         setTitle(GlobalConfigSystem.getAplicationTitle());
-        setSize(600, 390);
+        setSize(600,400);
         setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
 
-        this.panelConfig = new JPanel();
-        this.panelConfig.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.panelConfig.setLayout(null);
+        panelConfig = new JPanel();
+        panelConfig.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        panelConfig.setLayout(null);
 
-        this.jlTitulo = new JLabel("Nueva Conección");
-        this.jlTitulo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlTitulo.setFont(GlobalConfigSystem.getFontAplicationTitle());
-        this.jlTitulo.setBounds(20, 20, 500, 30);
+        jlTitulo = new JLabel("Nueva Conección");
+        jlTitulo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlTitulo.setFont(GlobalConfigSystem.getFontAplicationTitle());
+        jlTitulo.setBounds(20, 20, 500, 30);
 
-        this.jlNombre = new JLabel("- Nombre de la conección:");
-        this.jlNombre.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlNombre.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlNombre.setBounds(50, 90, 250, 20);
+        jlNombre = new JLabel("- Nombre de la conección:");
+        jlNombre.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlNombre.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlNombre.setBounds(50, 90, 250, 20);
 
-        this.jtNombre = new JTextField();
-        this.jtNombre.setFont(GlobalConfigSystem.getFontAplicationTextBold());
-        this.jtNombre.setBounds(260, 85, 300, 30);
+        jtNombre = new JTextField();
+        jtNombre.setFont(GlobalConfigSystem.getFontAplicationTextBold());
+        jtNombre.setBounds(260, 85, 300, 30);
 
-        this.jlIPServer = new JLabel("- Dirección IP a conectar:");
-        this.jlIPServer.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlIPServer.setFont(GlobalConfigSystem.getFontAplicationTextBold());
-        this.jlIPServer.setBounds(50, 140, 220, 20);
+        jlIPServer = new JLabel("- Dirección IP a conectar:");
+        jlIPServer.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlIPServer.setFont(GlobalConfigSystem.getFontAplicationTextBold());
+        jlIPServer.setBounds(50, 140, 220, 20);
 
-        this.jtIPServer = new JTextField();
-        this.jtIPServer.setFont(GlobalConfigSystem.getFontAplicationTextBold());
-        this.jtIPServer.setBounds(260, 135, 300, 30);
+        jtIPServer = new JTextField();
+        jtIPServer.setFont(GlobalConfigSystem.getFontAplicationTextBold());
+        jtIPServer.setBounds(260, 135, 300, 30);
 
-        this.jlPort = new JLabel("- Puerto de conección:");
-        this.jlPort.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlPort.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlPort.setBounds(50, 190, 220, 20);
+        jlPort = new JLabel("- Puerto de conección:");
+        jlPort.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlPort.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlPort.setBounds(50, 190, 220, 20);
 
-        this.jtPort = new JTextField();
-        this.jtPort.setFont(GlobalConfigSystem.getFontAplicationTextBold());
-        this.jtPort.setBounds(260, 185, 300, 30);
+        jtPort = new JTextField();
+        jtPort.setFont(GlobalConfigSystem.getFontAplicationTextBold());
+        jtPort.setBounds(260, 185, 300, 30);
 
-        this.jlUsuario = new JLabel("- Ingrese el Usuario:");
-        this.jlUsuario.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlUsuario.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlUsuario.setBounds(50, 240, 220, 20);
+        jlUsuario = new JLabel("- Ingrese el Usuario:");
+        jlUsuario.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlUsuario.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlUsuario.setBounds(50, 240, 220, 20);
 
-        this.jtUsuario = new JTextField();
-        this.jtUsuario.setFont(GlobalConfigSystem.getFontAplicationTextBold());
-        this.jtUsuario.setBounds(260, 235, 300, 30);
+        jtUsuario = new JTextField();
+        jtUsuario.setFont(GlobalConfigSystem.getFontAplicationTextBold());
+        jtUsuario.setBounds(260, 235, 300, 30);
 
-        this.jlPassword = new JLabel("- Password para el usuario");
-        this.jlPassword.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlPassword.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlPassword.setBounds(50, 290, 220, 20);
+        jlPassword = new JLabel("- Password para el usuario");
+        jlPassword.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlPassword.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlPassword.setBounds(50, 290, 220, 20);
 
-        this.jtPassword = new JPasswordField();
-        this.jtPassword.setFont(GlobalConfigSystem.getFontAplicationTextBold());
-        this.jtPassword.setBounds(260, 285, 300, 30);
+        jtPassword = new JPasswordField();
+        jtPassword.setFont(GlobalConfigSystem.getFontAplicationTextBold());
+        jtPassword.setBounds(260, 285, 300, 30);
 
-        this.jbCancelar = new JButton("Cancelar");
-        this.jbCancelar.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jbCancelar.setBounds(330, 340, 120, 30);
-        this.jbCancelar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconCancelButton.png")));
-        this.jbCancelar.addActionListener(new ActionListener() {
+        jbCancelar = new JButton("Cancelar");
+        jbCancelar.setFont(GlobalConfigSystem.getFontAplicationText());
+        jbCancelar.setBounds(330, 340, 120, 30);
+        jbCancelar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconCancelButton.png")));
+        jbCancelar.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
-                ModuleConector.this.dispose();
+                dispose();
             }
         });
-        this.jbAceptar = new JButton("Aceptar");
-        this.jbAceptar.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jbAceptar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconOK.png")));
-        this.jbAceptar.setToolTipText("Crear un nuevo archivo de coneccion a la fuente de datos con los parametros ingresados");
-        this.jbAceptar.setBounds(460, 340, 120, 30);
-        this.jbAceptar.addActionListener(new ActionListener() {
+        
+        jbAceptar = new JButton("Aceptar");
+        jbAceptar.setFont(GlobalConfigSystem.getFontAplicationText());
+        jbAceptar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconOK.png")));
+        jbAceptar.setToolTipText("Crear un nuevo archivo de coneccion a la fuente de datos con los parametros ingresados");
+        jbAceptar.setBounds(460, 340, 120, 30);
+        jbAceptar.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
-                ModuleConector.this.guardarConfiguracion();
+                guardarConfiguracion();
             }
         });
-        this.jlInformacion = new JLabel();
-        this.jlInformacion.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlInformacion.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlInformacion.setBounds(10, 340, 400, 20);
+        
+        jlInformacion = new JLabel();
+        jlInformacion.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlInformacion.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlInformacion.setBounds(10, 340, 400, 20);
 
-        this.panelConfig.add(this.jlTitulo);
-        this.panelConfig.add(this.jlNombre);
-        this.panelConfig.add(this.jtNombre);
-        this.panelConfig.add(this.jlIPServer);
-        this.panelConfig.add(this.jtIPServer);
-        this.panelConfig.add(this.jlPort);
-        this.panelConfig.add(this.jtPort);
-        this.panelConfig.add(this.jlUsuario);
-        this.panelConfig.add(this.jtUsuario);
-        this.panelConfig.add(this.jlPassword);
-        this.panelConfig.add(this.jtPassword);
-        this.panelConfig.add(this.jbCancelar);
-        this.panelConfig.add(this.jbAceptar);
-        this.panelConfig.add(this.jlInformacion);
+        panelConfig.add(this.jlTitulo);
+        panelConfig.add(this.jlNombre);
+        panelConfig.add(this.jtNombre);
+        panelConfig.add(this.jlIPServer);
+        panelConfig.add(this.jtIPServer);
+        panelConfig.add(this.jlPort);
+        panelConfig.add(this.jtPort);
+        panelConfig.add(this.jlUsuario);
+        panelConfig.add(this.jtUsuario);
+        panelConfig.add(this.jlPassword);
+        panelConfig.add(this.jtPassword);
+        panelConfig.add(this.jbCancelar);
+        panelConfig.add(this.jbAceptar);
+        panelConfig.add(this.jlInformacion);
         getContentPane().add(this.panelConfig);
     }
 
-    private void ajustarInterfaz() {
-        this.jlTitulo.setText("Detalles de Conección:");
-        this.jtNombre.setEditable(false);
-        this.jtIPServer.setEditable(false);
-        this.jtPort.setEditable(false);
-        this.jtUsuario.setEditable(false);
-        this.jtPassword.setEditable(false);
-        this.jtNombre.setText(this.config.getNAMECONECTION());
-        this.jtIPServer.setText(this.config.getIPSERVER());
-        this.jtPort.setText(this.config.getPORT());
-        this.jtUsuario.setText(this.config.getUSUARIO());
-        this.panelConfig.remove(this.jbAceptar);
-        this.jbCancelar.setText("Salir");
-        this.jbCancelar.setBounds(460, 340, 120, 30);
+    private void modoLectura() {
+        jlTitulo.setText("Detalles de Conección:");
+        jtNombre.setEditable(false);
+        jtIPServer.setEditable(false);
+        jtPort.setEditable(false);
+        jtUsuario.setEditable(false);
+        jtPassword.setEditable(false);
+        jtNombre.setText(config.getNAMECONECTION());
+        jtIPServer.setText(config.getIPSERVER());
+        jtPort.setText(config.getPORT());
+        jtUsuario.setText(config.getUSUARIO());
+        panelConfig.remove(jbAceptar);
+        jbCancelar.setText("Salir");
+        jbCancelar.setBounds(460, 340, 120, 30);
         repaint();
     }
 
     private void guardarConfiguracion() {
-        String nombre = this.jtNombre.getText();
-        String ip = this.jtIPServer.getText();
-        String Port = this.jtPort.getText();
-        String user = this.jtUsuario.getText();
-        String pass = String.valueOf(this.jtPassword.getPassword());
+        String nombre = jtNombre.getText();
+        String ip = jtIPServer.getText();
+        String Port = jtPort.getText();
+        String user = jtUsuario.getText();
+        String pass = String.valueOf(jtPassword.getPassword());
 
         if ((nombre.equals("")) || (ip.equals("")) || (Port.equals("")) || (user.equals("")) || (pass.equals(""))) {
-            JOptionPane.showMessageDialog(null, "Hay campos in ingresar", GlobalConfigSystem.getAplicationTitle(), 0);
+            JOptionPane.showMessageDialog(null, "Hay campos sin ingresar por favor verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
         } else {
-            this.jlInformacion.setText("Obteniendo nuevos parametros ...");
-            this.config = new ConfigConector(nombre, ip, Port, "NiconEnterprise", user, pass);
-            this.configDAO = new ConfigConectorDAO(this.config);
-            this.jlInformacion.setText("Eliminando configuración actual ...");
-            this.configDAO.deleteConfigFile();
-            this.state = this.configDAO.createConfigFile();
-            if (this.state) {
-                this.jlInformacion.setText("Nueva configuracion terminada ...");
-                JOptionPane.showMessageDialog(this.panelConfig, "La nueva configuración ha sido establecida en Conector.conf exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+            jlInformacion.setText("Obteniendo nuevos parametros ...");
+            panelConfig.repaint();
+            config = new ConfigConector(nombre, ip, Port, "NiconEnterprise", user, pass);
+            configDAO = new ConfigConectorDAO(config);
+            jlInformacion.setText("Eliminando configuración actual ...");
+            panelConfig.repaint();
+            configDAO.deleteConfigFile();
+            state = configDAO.createConfigFile();
+            if (state) {
+                jlInformacion.setText("Nueva configuracion terminada ...");
+                panelConfig.repaint();
+                JOptionPane.showMessageDialog(panelConfig, "La nueva configuración ha sido establecida en Conector.conf exitosamente", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconPositive.png")));
                 dispose();
             }
         }

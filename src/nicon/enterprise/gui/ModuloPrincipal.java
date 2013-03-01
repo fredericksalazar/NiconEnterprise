@@ -5,6 +5,7 @@
  * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
  * Sanchez.
  */
+
 package nicon.enterprise.gui;
 
 import java.awt.Dimension;
@@ -58,7 +59,6 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private JPanel panelDash;
     private JPanel mainPanel;
     private JPanel panelAcciones;
-    private JPanel JPTemp;
     private JLabel jlRazonSocial;
     private JLabel jlSlogan;
     private JLabel jlNit;
@@ -240,7 +240,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
         JTabsNiconEnterprise = new JTabbedPane();
         JTabsNiconEnterprise.setFont(GlobalConfigSystem.getFontAplicationText());
         JTabsNiconEnterprise.setBounds(10, 20, 1280, 650);
-        JTabsNiconEnterprise.addTab(GlobalConfigSystem.getAplicationTitle(), panelDash);
+        JTabsNiconEnterprise.addTab("Home", panelDash);
 
         mainPanel.add(JTabsNiconEnterprise);
 
