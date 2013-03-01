@@ -1,17 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated.
+ *
+ * NiconSystem Inc. Cll 9a#6a-09 Florida Valle del cauca Colombia 318 437 4382
+ * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
+ * Sanchez.
  */
 package nicon.enterprise.gui;
 
+import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+
 import nicon.enterprise.gui.Clientes.ModuloClientes;
 import nicon.enterprise.gui.Clientes.activities.ActividadesPendientes;
 import nicon.enterprise.gui.Empleados.ModuloEmpleados;
@@ -19,10 +23,17 @@ import nicon.enterprise.gui.Empresa.VisorEmpresa;
 import nicon.enterprise.gui.Proveedores.ModuloProveedores;
 import nicon.enterprise.libCore.Conection;
 import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.obj.Empresa;
 import nicon.enterprise.libCore.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.obj.ConfigConector;
-import nicon.enterprise.libCore.obj.Empresa;
 
+/**
+ * Moudlo Principal es JFrame que perite la administracion de todos los modulos
+ * del sistema, se encarga de posisionar accesos a los diferentes modulos del
+ * sistema Hereda de <b> JFrame </b>
+ *
+ * @author frederick
+ */
 public class ModuloPrincipal extends JFrame implements WindowListener, ActionListener, KeyListener {
 
     private static final long serialVersionUID = 3L;
@@ -30,8 +41,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private static String Icons;
     private int index;
     private boolean operacion;
-    private String salida;
-    private ArrayList listadoActividades;
+    private String opcionSalida;
     private JMenuBar MenuBar;
     private JMenu menuArchivo;
     private JMenu menuConf;
@@ -47,7 +57,6 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private JMenuItem jmVerConector;
     private JPanel panelDash;
     private JPanel mainPanel;
-    private JPanel panelActividades;
     private JPanel panelAcciones;
     private JPanel JPTemp;
     private JLabel jlRazonSocial;
@@ -55,318 +64,381 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private JLabel jlNit;
     private JLabel jlDireccion;
     private JLabel JLTelefono;
-    private JLabel JLEmail;
-    private JLabel JLTitulo;
     private JLabel JLClientes;
     private JLabel JLempleados;
     private JLabel jlProveedores;
     private JLabel estadoServidor;
-    private JLabel jlInfActividad;
     private JButton moduloClientes;
     private JButton moduloEmpleados;
     private JButton moduloProveedores;
     private static JTabbedPane JTabsNiconEnterprise;
     private JTextField guiEstadoServidor;
-    private JScrollPane scrollLista;
+    private TitledBorder borderAcciones;
     private Empresa datosEmpresa;
     private Conection coneccion;
     private ConfigConector conector;
     private ConfigConectorDAO conectorDAO;
-    private JScrollPane scrollPanelAcciones;
-    private TitledBorder borderAcciones;
     private ActividadesPendientes panelPendientes;
-    private ConfigConectorDAO config;
     private ModuleConector module;
+    private JScrollPane scrollAcciones;
 
+    /**
+     * Este metodo constructor se encarga de inicializar todos los componentes
+     * de la interfaz grafica y de la ventana principal, crea el Dash y ajusta
+     * el sistema grafico, recibe como parametro un objeto del Tipo <b> Empresa
+     * </b>
+     * que se utilizará para mostrar información básica de la empresa en la
+     * interfaz principal.
+     *
+     * @param Empresa Informacion
+     */
     public ModuloPrincipal(Empresa Informacion) {
+
         setTitle(GlobalConfigSystem.getAplicationTitle());
         setSize(1320, 730);
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
-        setJMenuBar(this.MenuBar);
-
+        setJMenuBar(MenuBar);
         this.datosEmpresa = Informacion;
         Icons = GlobalConfigSystem.getIconsPath();
-        this.coneccion = Conection.obtenerInstancia();
-
+        coneccion = Conection.obtenerInstancia();
         crearModulo();
         createDash();
     }
 
+    /**
+     * Iniciliza, configura y posisiona todos los elementos graficos que
+     * componen el Gui de NiconEnterprise.
+     */
     private void crearModulo() {
-        this.MenuBar = new JMenuBar();
-        this.MenuBar.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.MenuBar.setBounds(0, 0, 1320, 25);
 
-        this.menuArchivo = new JMenu("Archivo");
-        this.menuArchivo.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.menuArchivo.setToolTipText("Abre herramientas de NiconEnterprise");
-        this.menuArchivo.setMnemonic('A');
+        MenuBar = new JMenuBar();
+        MenuBar.setFont(GlobalConfigSystem.getFontAplicationText());
+        MenuBar.setBounds(0, 0, 1320, 25);
 
-        this.menuConf = new JMenu("Configuración");
-        this.menuConf.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.menuConf.setToolTipText("Accede a las configuraciones básicas de la aplicación");
-        this.menuConf.setMnemonic('C');
+        menuArchivo = new JMenu("Archivo");
+        menuArchivo.setFont(GlobalConfigSystem.getFontAplicationText());
+        menuArchivo.setToolTipText("Abre herramientas de NiconEnterprise");
+        menuArchivo.setMnemonic('A');
 
-        this.menuEmpresa = new JMenu("Mi Empresa");
-        this.menuEmpresa.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.menuEmpresa.setToolTipText("Muestra todas las herramientas de configuracion de la empresa");
-        this.menuEmpresa.setMnemonic('E');
+        menuConf = new JMenu("Configuración");
+        menuConf.setFont(GlobalConfigSystem.getFontAplicationText());
+        menuConf.setToolTipText("Accede a las configuraciones básicas de la aplicación");
+        menuConf.setMnemonic('C');
 
-        this.menuAlmacen = new JMenu("Almacenes");
-        this.menuAlmacen.setFont(GlobalConfigSystem.getFontAplicationText());
+        menuEmpresa = new JMenu("Mi Empresa");
+        menuEmpresa.setFont(GlobalConfigSystem.getFontAplicationText());
+        menuEmpresa.setToolTipText("Muestra todas las herramientas de configuracion de la empresa");
+        menuEmpresa.setMnemonic('E');
 
-        this.JMIConfig_almacen = new JMenuItem("Configurar");
-        this.JMIConfig_almacen.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JMIConfig_almacen.setToolTipText("Configurar sistema de almacenes");
-        this.JMIConfig_almacen.setMnemonic('C');
-        this.JMIConfig_almacen.addActionListener(this);
+        menuAlmacen = new JMenu("Almacenes");
+        menuAlmacen.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.jmVerEmpresa = new JMenuItem("- Ver mi Empresa");
-        this.jmVerEmpresa.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmVerEmpresa.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuInformation.png")));
-        this.jmVerEmpresa.setToolTipText("Abre el visor de datos mostrando todos los datos actuales de la empresa");
-        this.jmVerEmpresa.addActionListener(this);
+        JMIConfig_almacen = new JMenuItem("Configurar");
+        JMIConfig_almacen.setFont(GlobalConfigSystem.getFontAplicationText());
+        JMIConfig_almacen.setToolTipText("Configurar sistema de almacenes");
+        JMIConfig_almacen.setMnemonic('C');
+        JMIConfig_almacen.addActionListener(this);
 
-        this.jmCrearConfConector = new JMenuItem("- Nuevo Conector");
-        this.jmCrearConfConector.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmCrearConfConector.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
-        this.jmCrearConfConector.setToolTipText("Permite conectar el sistema a un nuevo servidor de datos NiconEnterprise");
-        this.jmCrearConfConector.addActionListener(this);
+        jmVerEmpresa = new JMenuItem("- Ver mi Empresa");
+        jmVerEmpresa.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmVerEmpresa.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuInformation.png")));
+        jmVerEmpresa.setToolTipText("Abre el visor de datos mostrando todos los datos actuales de la empresa");
+        jmVerEmpresa.addActionListener(this);
 
-        this.jmDelConfConector = new JMenuItem("- Eliminar conector");
-        this.jmDelConfConector.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmDelConfConector.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
-        this.jmDelConfConector.setToolTipText("Elimina el archivo conector.conf que permite configurar la coneccion a la fuente de datos");
-        this.jmDelConfConector.addActionListener(this);
+        jmCrearConfConector = new JMenuItem("- Nuevo Conector");
+        jmCrearConfConector.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmCrearConfConector.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
+        jmCrearConfConector.setToolTipText("Permite conectar el sistema a un nuevo servidor de datos NiconEnterprise");
+        jmCrearConfConector.addActionListener(this);
 
-        this.jmVerConector = new JMenuItem("- Ver Conector");
-        this.jmVerConector.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmVerConector.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuInformation.png")));
-        this.jmVerConector.setToolTipText("Muestra detalles de la coneccion actual a la fuente de datos");
-        this.jmVerConector.addActionListener(this);
+        jmDelConfConector = new JMenuItem("- Eliminar conector");
+        jmDelConfConector.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmDelConfConector.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
+        jmDelConfConector.setToolTipText("Elimina el archivo conector.conf que permite configurar la coneccion a la fuente de datos");
+        jmDelConfConector.addActionListener(this);
 
-        this.jmConectar = new JMenuItem("- Conectar al servidor");
-        this.jmConectar.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmConectar.setToolTipText("Permite conectar el sistema al servidor de datos");
-        this.jmConectar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconServerOnline.png")));
-        this.jmConectar.addActionListener(this);
+        jmVerConector = new JMenuItem("- Ver Conector");
+        jmVerConector.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmVerConector.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuInformation.png")));
+        jmVerConector.setToolTipText("Muestra detalles de la coneccion actual a la fuente de datos");
+        jmVerConector.addActionListener(this);
 
-        this.jmDesconectar = new JMenuItem("- Desconectar el servidor");
-        this.jmDesconectar.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmDesconectar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconServerOffline.png")));
-        this.jmDesconectar.setToolTipText("Cierrra la conección entre el servidor de datos y el NiconEnterprise");
-        this.jmDesconectar.addActionListener(this);
+        jmConectar = new JMenuItem("- Conectar al servidor");
+        jmConectar.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmConectar.setToolTipText("Permite conectar el sistema al servidor de datos");
+        jmConectar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconServerOnline.png")));
+        jmConectar.addActionListener(this);
 
-        this.jmSalir = new JMenuItem("- Salir de NiconEnterprise");
-        this.jmSalir.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmSalir.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconShutdown.png")));
-        this.jmSalir.setToolTipText("Salir de " + GlobalConfigSystem.getAplicationTitle());
-        this.jmSalir.addActionListener(this);
+        jmDesconectar = new JMenuItem("- Desconectar el servidor");
+        jmDesconectar.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmDesconectar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconServerOffline.png")));
+        jmDesconectar.setToolTipText("Cierrra la conección entre el servidor de datos y el NiconEnterprise");
+        jmDesconectar.addActionListener(this);
 
-        this.menuArchivo.add(this.jmCrearConfConector);
-        this.menuArchivo.add(this.jmVerConector);
-        this.menuArchivo.add(this.jmDelConfConector);
-        this.menuArchivo.addSeparator();
-        this.menuArchivo.add(this.jmConectar);
-        this.menuArchivo.add(this.jmDesconectar);
-        this.menuArchivo.addSeparator();
-        this.menuArchivo.add(this.jmSalir);
+        jmSalir = new JMenuItem("- Salir de NiconEnterprise");
+        jmSalir.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmSalir.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconShutdown.png")));
+        jmSalir.setToolTipText("Salir de " + GlobalConfigSystem.getAplicationTitle());
+        jmSalir.addActionListener(this);
 
-        this.menuAlmacen.add(this.JMIConfig_almacen);
+        menuArchivo.add(jmCrearConfConector);
+        menuArchivo.add(jmVerConector);
+        menuArchivo.add(jmDelConfConector);
+        menuArchivo.addSeparator();
+        menuArchivo.add(jmConectar);
+        menuArchivo.add(jmDesconectar);
+        menuArchivo.addSeparator();
+        menuArchivo.add(jmSalir);
 
-        this.menuEmpresa.add(this.jmVerEmpresa);
+        menuAlmacen.add(JMIConfig_almacen);
 
-        this.menuConf.add(this.menuAlmacen);
+        menuEmpresa.add(jmVerEmpresa);
+        menuConf.add(menuAlmacen);
 
-        this.MenuBar.add(this.menuArchivo);
-        this.MenuBar.add(this.menuConf);
-        this.MenuBar.add(this.menuEmpresa);
+        MenuBar.add(menuArchivo);
+        MenuBar.add(menuConf);
+        MenuBar.add(menuEmpresa);
 
-        this.mainPanel = new JPanel();
-        this.mainPanel.setLayout(null);
-        this.mainPanel.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.mainPanel.setBounds(0, 25, 1320, 720);
-        this.mainPanel.add(this.MenuBar);
+        mainPanel = new JPanel();
+        mainPanel.setLayout(null);
+        mainPanel.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        mainPanel.setBounds(0, 25, 1320, 720);
+        mainPanel.add(MenuBar);
 
-        this.jlRazonSocial = new JLabel(this.datosEmpresa.getRazon_Social());
-        this.jlRazonSocial.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlRazonSocial.setBounds(10, 10, 700, 45);
-        this.jlRazonSocial.setFont(GlobalConfigSystem.getFontAplicationTitle());
+        jlRazonSocial = new JLabel(datosEmpresa.getRazon_Social());
+        jlRazonSocial.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlRazonSocial.setBounds(10, 10, 700, 45);
+        jlRazonSocial.setFont(GlobalConfigSystem.getFontAplicationTitle());
 
-        this.jlSlogan = new JLabel(this.datosEmpresa.getSlogan());
-        this.jlSlogan.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlSlogan.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlSlogan.setBounds(10, 50, 300, 19);
+        jlSlogan = new JLabel(datosEmpresa.getSlogan());
+        jlSlogan.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlSlogan.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlSlogan.setBounds(10, 50, 300, 19);
 
-        this.jlNit = new JLabel("Nit:  " + this.datosEmpresa.getNit());
-        this.jlNit.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.jlNit.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlNit.setBounds(10, 80, 300, 19);
+        jlNit = new JLabel("Nit:  " + datosEmpresa.getNit());
+        jlNit.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        jlNit.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlNit.setBounds(10, 80, 300, 19);
 
-        this.jlDireccion = new JLabel(this.datosEmpresa.getDireccion() + " / " + this.datosEmpresa.getCiudad() + "  / " + this.datosEmpresa.getDepartamento());
-        this.jlDireccion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.jlDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlDireccion.setBounds(10, 100, 300, 19);
+        jlDireccion = new JLabel(datosEmpresa.getDireccion() + " / " + datosEmpresa.getCiudad() + "  / " + datosEmpresa.getDepartamento());
+        jlDireccion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        jlDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlDireccion.setBounds(10, 100, 300, 19);
 
-        this.JLTelefono = new JLabel(this.datosEmpresa.getTelefono_fijo() + " / " + this.datosEmpresa.getTelefono_movil());
-        this.JLTelefono.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.JLTelefono.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLTelefono.setBounds(10, 120, 200, 20);
+        JLTelefono = new JLabel(datosEmpresa.getTelefono_fijo() + " / " + datosEmpresa.getTelefono_movil());
+        JLTelefono.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        JLTelefono.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLTelefono.setBounds(10, 120, 200, 20);
 
-        this.panelDash = new JPanel();
-        this.panelDash.setLayout(null);
-        this.panelDash.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.panelDash.setBounds(0, 0, 1280, 680);
+        panelDash = new JPanel();
+        panelDash.setLayout(null);
+        panelDash.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        panelDash.setBounds(0, 0, 1280, 680);
 
         JTabsNiconEnterprise = new JTabbedPane();
         JTabsNiconEnterprise.setFont(GlobalConfigSystem.getFontAplicationText());
         JTabsNiconEnterprise.setBounds(10, 20, 1280, 650);
-        JTabsNiconEnterprise.addTab(GlobalConfigSystem.getAplicationTitle(), this.panelDash);
+        JTabsNiconEnterprise.addTab(GlobalConfigSystem.getAplicationTitle(), panelDash);
 
-        this.mainPanel.add(JTabsNiconEnterprise);
+        mainPanel.add(JTabsNiconEnterprise);
 
         addWindowListener(this);
-        getContentPane().add(this.MenuBar);
-        getContentPane().add(this.mainPanel);
+        getContentPane().add(MenuBar);
+        getContentPane().add(mainPanel);
     }
 
+    /**
+     * este metodo se encarga de crear el panel del Dash, este panel es usado
+     * para brindar un rápido acceso al usuari a componentes comunes del
+     * sistema.
+     */
     private void createDash() {
-        this.panelPendientes = new ActividadesPendientes();
+        panelPendientes = new ActividadesPendientes();
 
-        this.borderAcciones = BorderFactory.createTitledBorder("");
-        this.borderAcciones.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.borderAcciones.setTitleFont(GlobalConfigSystem.getFontAplicationText());
+        borderAcciones = BorderFactory.createTitledBorder("Módulos");
+        borderAcciones.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
+        borderAcciones.setTitleFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.panelAcciones = new JPanel();
-        this.panelAcciones.setBorder(this.borderAcciones);
-        this.panelAcciones.setLayout(null);
-        this.panelAcciones.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.panelAcciones.setBounds(10, 160, 700, 420);
+        panelAcciones = new JPanel();
+        panelAcciones.setLayout(null);
+        panelAcciones.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        panelAcciones.setPreferredSize(new Dimension(700, 700));
 
-        this.moduloClientes = new JButton();
-        this.moduloClientes.setBounds(60, 50, 100, 100);
-        this.moduloClientes.addActionListener(this);
-        this.moduloClientes.setMnemonic('1');
-        this.moduloClientes.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconClient.png")));
+        scrollAcciones = new JScrollPane(panelAcciones, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollAcciones.setBounds(10, 160, 700, 420);
+        scrollAcciones.getViewport().setView(panelAcciones);
+        scrollAcciones.setBorder(borderAcciones);
 
-        this.moduloEmpleados = new JButton();
-        this.moduloEmpleados.setBounds(180, 50, 100, 100);
-        this.moduloEmpleados.setMnemonic('2');
-        this.moduloEmpleados.addActionListener(this);
-        this.moduloEmpleados.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconEmpleado.png")));
+        moduloClientes = new JButton();
+        moduloClientes.setBounds(60, 50, 100, 100);
+        moduloClientes.addActionListener(this);
+        moduloClientes.setMnemonic('1');
+        moduloClientes.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconClient.png")));
+        moduloClientes.setToolTipText("Acceder al módulo de clientes");
 
-        this.moduloProveedores = new JButton();
-        this.moduloProveedores.setBounds(300, 50, 100, 100);
-        this.moduloProveedores.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconProveedor.png")));
-        this.moduloProveedores.setToolTipText("Permite acceder al módulo de administracion de proveedores");
-        this.moduloProveedores.addActionListener(this);
+        moduloEmpleados = new JButton();
+        moduloEmpleados.setBounds(180, 50, 100, 100);
+        moduloEmpleados.setMnemonic('2');
+        moduloEmpleados.addActionListener(this);
+        moduloEmpleados.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconEmpleado.png")));
+        moduloEmpleados.setToolTipText("Acceder al módulo de empleados");
 
-        this.JLClientes = new JLabel("Clientes");
-        this.JLClientes.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLClientes.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLClientes.setBounds(80, 160, 200, 25);
+        moduloProveedores = new JButton();
+        moduloProveedores.setBounds(300, 50, 100, 100);
+        moduloProveedores.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconProveedor.png")));
+        moduloProveedores.setToolTipText("Permite acceder al módulo de administracion de proveedores");
+        moduloProveedores.addActionListener(this);
 
-        this.JLempleados = new JLabel("Empleados");
-        this.JLempleados.setBounds(190, 160, 150, 25);
-        this.JLempleados.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLempleados.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLClientes = new JLabel("Clientes");
+        JLClientes.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLClientes.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLClientes.setBounds(80, 160, 200, 25);
 
-        this.jlProveedores = new JLabel("Proveedores");
-        this.jlProveedores.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.jlProveedores.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jlProveedores.setBounds(307, 160, 150, 25);
+        JLempleados = new JLabel("Empleados");
+        JLempleados.setBounds(190, 160, 150, 25);
+        JLempleados.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLempleados.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.panelAcciones.add(this.moduloClientes);
-        this.panelAcciones.add(this.JLClientes);
-        this.panelAcciones.add(this.moduloEmpleados);
-        this.panelAcciones.add(this.JLempleados);
-        this.panelAcciones.add(this.moduloProveedores);
-        this.panelAcciones.add(this.jlProveedores);
+        jlProveedores = new JLabel("Proveedores");
+        jlProveedores.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        jlProveedores.setFont(GlobalConfigSystem.getFontAplicationText());
+        jlProveedores.setBounds(307, 160, 150, 25);
 
-        this.estadoServidor = new JLabel("Estado del Servidor");
-        this.estadoServidor.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.estadoServidor.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.estadoServidor.setBounds(1070, 568, 300, 20);
+        panelAcciones.add(moduloClientes);
+        panelAcciones.add(JLClientes);
+        panelAcciones.add(moduloEmpleados);
+        panelAcciones.add(JLempleados);
+        panelAcciones.add(moduloProveedores);
+        panelAcciones.add(jlProveedores);
 
-        this.guiEstadoServidor = new JTextField();
-        this.guiEstadoServidor.setEditable(false);
-        this.guiEstadoServidor.setBackground(GlobalConfigSystem.getColorActiveStatus());
-        this.guiEstadoServidor.setBounds(1210, 562, 30, 30);
+        estadoServidor = new JLabel("Estado del Servidor");
+        estadoServidor.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        estadoServidor.setFont(GlobalConfigSystem.getFontAplicationText());
+        estadoServidor.setBounds(1070, 568, 300, 20);
 
-        this.panelDash.add(this.jlRazonSocial);
-        this.panelDash.add(this.jlSlogan);
-        this.panelDash.add(this.jlNit);
-        this.panelDash.add(this.jlDireccion);
-        this.panelDash.add(this.JLTelefono);
-        this.panelDash.add(this.panelAcciones);
-        this.panelDash.add(this.estadoServidor);
-        this.panelDash.add(this.guiEstadoServidor);
-        this.panelDash.add(this.panelPendientes.obetenerPanelActividades());
+        guiEstadoServidor = new JTextField();
+        guiEstadoServidor.setEditable(false);
+        guiEstadoServidor.setBackground(GlobalConfigSystem.getColorActiveStatus());
+        guiEstadoServidor.setBounds(1210, 562, 30, 30);
+
+        panelDash.add(jlRazonSocial);
+        panelDash.add(jlSlogan);
+        panelDash.add(jlNit);
+        panelDash.add(jlDireccion);
+        panelDash.add(JLTelefono);
+        panelDash.add(scrollAcciones);
+        panelDash.add(estadoServidor);
+        panelDash.add(guiEstadoServidor);
+        panelDash.add(panelPendientes.obetenerPanelActividades());
     }
 
+    /**
+     * Este metodo permite agregar una nueva pestaña al gestor de pestañas del
+     * Dash, recibe como parametros esenciales el Panel ue se va a agregar y el
+     * nombre que rescibirá.
+     *
+     * @param panel
+     * @param name
+     */
     private void addTabbedPane(JPanel panel, String name) {
         TotalOpenTabs = JTabsNiconEnterprise.getTabCount();
         JTabsNiconEnterprise.addTab(name, panel);
         JTabsNiconEnterprise.setSelectedIndex(TotalOpenTabs);
     }
 
+    /**
+     * Este metodo permite eliminar una pestaña del gestor de pestañas del dash,
+     * recibe como parametros el nombre de la pestaña que se desea eliminar.
+     *
+     * @param nombre
+     */
     public static void removeTab(String nombre) {
         JTabsNiconEnterprise.remove(getIndexOfTab(nombre));
     }
 
+    /**
+     * Este metodo obtiene el indice de una pestaña que se encuentre dentro del
+     * Tab, recibe como parametro el nombre de la pestaña a buscar.
+     *
+     * @param Name
+     * @return int index
+     */
     public static int getIndexOfTab(String Name) {
         return JTabsNiconEnterprise.indexOfTab(Name);
     }
 
+    /**
+     * Este metodo brinda un metodo de salida del sistema limpio y eficiente, en
+     * el cual el usuario debe decidir si esta seguro de salir o no.
+     */
     private void salir() {
-        this.salida = JOptionPane.showInputDialog(this.rootPane, "Esta a punto de cerrar " + GlobalConfigSystem.getAplicationTitle() + ", ¿Esta seguro que desea salir?\n" + "                      Presione S para salir o N para cancelar", GlobalConfigSystem.getAplicationTitle(), 2);
-
-        if (this.salida.equals("")) {
-            JOptionPane.showMessageDialog(this.rootPane, "No ha Ingresado un parametro correcto, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
-        }
-        if ((this.salida.equals("S")) || (this.salida.equals("s"))) {
-            dispose();
-            System.exit(0);
-        }
+        opcionSalida = (String) JOptionPane.showInputDialog(rootPane, "Esta a punto de cerrar " + GlobalConfigSystem.getAplicationTitle() + ", ¿Esta seguro que desea salir?\n" + "                      Presione S para salir o N para cancelar", GlobalConfigSystem.getAplicationTitle(),JOptionPane.QUESTION_MESSAGE,new ImageIcon(getClass().getResource(Icons+"NiconHelpOption.png")),null,null);
+            if (opcionSalida.equals("")) {
+                    JOptionPane.showMessageDialog(this.rootPane, "No ha Ingresado un parametro correcto, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
+            }
+            if ((opcionSalida.equals("S")) || (opcionSalida.equals("s"))) {
+                System.exit(0);
+            }
     }
 
+    /**
+     * Este metodo permite desconectar el fronEnd de la fuente de datos, esta operacion de desconeccion debe ser
+     * realizada solo en casos necesarios pues inhabilitaria las transacciones de datos entre le front end y el backend.
+     */
     private void desconectar() {
-        this.operacion = this.coneccion.desconectar();
-        if (this.operacion) {
-            this.guiEstadoServidor.setBackground(GlobalConfigSystem.getColorInactiveStatus());
+        operacion = coneccion.desconectar();
+        if (operacion) {
+            guiEstadoServidor.setBackground(GlobalConfigSystem.getColorInactiveStatus());
             JOptionPane.showMessageDialog(this.rootPane, "El sistema se ha desconectado del servidor exitosamente.", GlobalConfigSystem.getAplicationTitle(), 2, new ImageIcon(getClass().getResource(Icons + "NiconWarning.png")));
         }
     }
 
-    private void conectar()
-            throws SQLException {
-        this.operacion = this.coneccion.conectar();
-        if (this.operacion) {
-            this.guiEstadoServidor.setBackground(GlobalConfigSystem.getColorActiveStatus());
-            JOptionPane.showMessageDialog(this.rootPane, "El sistema se ha conectado exitosamente al servidor.", GlobalConfigSystem.getAplicationTitle(), 1, new ImageIcon(getClass().getResource(Icons + "NiconPossitive.png")));
+    /**
+     * Este metodo permite reestablecer la coneccion del fronEnd con la fuente de datos.
+     * @throws SQLException 
+     */
+    private void conectar() {
+        try {
+            operacion = coneccion.conectar();
+                if (operacion) {
+                    guiEstadoServidor.setBackground(GlobalConfigSystem.getColorActiveStatus());
+                    JOptionPane.showMessageDialog(rootPane, "El sistema se ha conectado exitosamente al servidor.", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons+"NiconPositive.png")));
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "Oucrrió un ERROR y no se puede establecer la conección con la fuente de datos.", GlobalConfigSystem.getAplicationTitle(), JOptionPane.INFORMATION_MESSAGE, new javax.swing.ImageIcon(getClass().getResource(Icons+"NiconError.png")));
         }
     }
-
+    
+    /**
+     * Este metodo permite que el usuario pueda eliminar el archivo de configuracion de coneccion con la fuente de da
+     * datos, 
+     */
     private void eliminarArchivoConeccion() {
-        this.salida = JOptionPane.showInputDialog(this.rootPane, "¿ Esta a punto de ELIMINAR el archivo ./config/Conector. conf que define la conección\n con la fuente de datos, ¿ Esta seguro que desea continuar?:\n Presione S para eliminar N para cancelar.", GlobalConfigSystem.getAplicationTitle(), 2);
-        if ((this.salida.equals("S")) || (this.salida.equals("s"))) {
-            this.config = new ConfigConectorDAO();
-            if (this.config.deleteConfigFile()) {
-                JOptionPane.showMessageDialog(this.rootPane, "El archivo Conector.conf ha sido eliminado exitosamente, por favor configure nuevos parametros de coneccion\no espere a que el sistema configure un automaticamente", GlobalConfigSystem.getAplicationTitle(), 1);
+        opcionSalida = (String) JOptionPane.showInputDialog(rootPane, "¿ Esta a punto de ELIMINAR el archivo ./config/Conector.conf que define la conección\n con la fuente de datos, ¿ Esta seguro que desea continuar?:\n Presione S para eliminar o N para cancelar.", GlobalConfigSystem.getAplicationTitle(),JOptionPane.QUESTION_MESSAGE,new ImageIcon(getClass().getResource(Icons+"NiconWarning.png")),null,null);
+        if ((opcionSalida.equals("S")) || (opcionSalida.equals("s"))) {
+            conectorDAO = new ConfigConectorDAO();
+            if (conectorDAO.deleteConfigFile()) {
+                JOptionPane.showMessageDialog(rootPane, "El archivo Conector.conf ha sido eliminado exitosamente, por favor configure nuevos parametros de coneccion\no espere a que el sistema configure un automaticamente", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(Icons+"NiconPositive.png")));
             }
         }
     }
-
+    
+    /**
+     * Este metodo permite ver informacion técnica de la coneccion del frontEnd con la fuente de datos, activa la
+     * vista de ModuleConector la cual permite visualizar dicha información.
+     */
     private void verDetallesConector() {
         try {
-            this.conectorDAO = new ConfigConectorDAO();
-            this.conector = this.conectorDAO.loadConfig();
-            this.module = new ModuleConector(this.conector);
-            this.module.setVisible(true);
+            conectorDAO = new ConfigConectorDAO();
+            conector = conectorDAO.loadConfig();
+            module = new ModuleConector(conector);
+            module.setVisible(true);
         } catch (IOException ex) {
             Logger.getLogger(ModuloPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(rootPane, "NO se pudo cargar Conector.conf ocurrio un error:\n\n"+ex, GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE,new ImageIcon(getClass().getResource(Icons+"NiconError.png")));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ModuloPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -411,76 +483,69 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == this.JMIConfig_almacen) {
+        
+        if (ae.getSource() == JMIConfig_almacen) {
             GuiAlmacen ConfigAlmacen = new GuiAlmacen();
             ConfigAlmacen.setVisible(true);
         }
 
-        if (ae.getSource() == this.moduloClientes) {
-            this.index = getIndexOfTab("Clientes");
-
-            if (this.index == -1) {
+        if (ae.getSource() == moduloClientes) {
+            index = getIndexOfTab("Clientes");
+            if (index == -1) {
                 ModuloClientes panelClientes = new ModuloClientes();
-                this.JPTemp = panelClientes.obtenerModulo();
-                addTabbedPane(this.JPTemp, "Clientes");
+                addTabbedPane(panelClientes.obtenerModulo(),"Clientes");
             } else {
-                JTabsNiconEnterprise.setSelectedIndex(this.index);
+                JTabsNiconEnterprise.setSelectedIndex(index);
             }
         }
 
-        if (ae.getSource() == this.moduloEmpleados) {
-            this.index = getIndexOfTab("Empleados");
-            if (this.index == -1) {
+        if (ae.getSource() == moduloEmpleados) {
+            index = getIndexOfTab("Empleados");
+            if (index == -1) {
                 ModuloEmpleados adminEmpleados = new ModuloEmpleados();
-                this.JPTemp = adminEmpleados.getGuiPanel();
-                addTabbedPane(this.JPTemp, "Empleados");
+                addTabbedPane(adminEmpleados.getGuiPanel(), "Empleados");
             } else {
                 JTabsNiconEnterprise.setSelectedIndex(this.index);
             }
         }
 
-        if (ae.getSource() == this.moduloProveedores) {
-            this.index = getIndexOfTab("Proveedores");
-            if (this.index == -1) {
+        if (ae.getSource() == moduloProveedores) {
+            index = getIndexOfTab("Proveedores");
+            if (index == -1) {
                 ModuloProveedores adminProveedores = new ModuloProveedores();
-                this.JPTemp = adminProveedores.obtenerModulo();
-                addTabbedPane(this.JPTemp, "Proveedores");
+                addTabbedPane(adminProveedores.obtenerModulo(), "Proveedores");
             } else {
-                JTabsNiconEnterprise.setSelectedIndex(this.index);
+                JTabsNiconEnterprise.setSelectedIndex(index);
             }
         }
 
-        if (ae.getSource() == this.jmVerEmpresa) {
+        if (ae.getSource() == jmVerEmpresa) {
             VisorEmpresa visor = new VisorEmpresa();
             visor.mostrarVisor();
         }
 
-        if (ae.getSource() == this.jmSalir) {
+        if (ae.getSource() == jmSalir) {
             salir();
         }
 
-        if (ae.getSource() == this.jmDesconectar) {
+        if (ae.getSource() == jmDesconectar) {
             desconectar();
         }
 
-        if (ae.getSource() == this.jmConectar) {
-            try {
-                conectar();
-            } catch (SQLException ex) {
-                Logger.getLogger(ModuloPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        if (ae.getSource() == jmConectar) {
+                conectar();            
         }
 
-        if (ae.getSource() == this.jmDelConfConector) {
+        if (ae.getSource() == jmDelConfConector) {
             eliminarArchivoConeccion();
         }
 
-        if (ae.getSource() == this.jmCrearConfConector) {
+        if (ae.getSource() == jmCrearConfConector) {
             ModuleConector addConfig = new ModuleConector();
             addConfig.setVisible(true);
         }
 
-        if (ae.getSource() == this.jmVerConector) {
+        if (ae.getSource() == jmVerConector) {
             verDetallesConector();
         }
     }
