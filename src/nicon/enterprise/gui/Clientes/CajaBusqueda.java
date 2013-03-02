@@ -6,9 +6,12 @@ package nicon.enterprise.gui.Clientes;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ClienteDAO;
+import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.obj.Cliente;
 
 public class CajaBusqueda extends JDialog {
@@ -66,12 +69,16 @@ public class CajaBusqueda extends JDialog {
         if (this.ID.equals("")) {
             JOptionPane.showMessageDialog(this.rootPane, "No ha Ingresado parámetros a buscar", GlobalConfigSystem.getAplicationTitle(), 0);
         } else {
-            this.cliente = this.clienteDAO.buscarPorIdentificacion(this.ID);
-            if (this.cliente != null) {
-                ModuloClientes.mostrarDatos(this.cliente);
-                ModuloClientes.seleccionarCliente(this.ID);
-            } else {
-                JOptionPane.showMessageDialog(this.rootPane, "No se encontraron registros.", GlobalConfigSystem.getAplicationTitle(), 0);
+            try {
+                this.cliente = this.clienteDAO.buscarPorIdentificacion(this.ID);
+                if (this.cliente != null) {
+                    ModuloClientes.mostrarDatos(this.cliente);
+                    ModuloClientes.seleccionarCliente(this.ID);
+                } else {
+                    JOptionPane.showMessageDialog(this.rootPane, "No se encontraron registros.", GlobalConfigSystem.getAplicationTitle(), 0);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CajaBusqueda.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         dispose();

@@ -1,6 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated.
+ *
+ * NiconSystem Inc. Cll 9a#6a-09 Florida Valle del cauca Colombia 318 437 4382
+ * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
+ * Sanchez.
  */
 package nicon.enterprise.gui.Clientes;
 
@@ -11,30 +14,41 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JRException;
+
 import nicon.enterprise.gui.Clientes.activities.AdministradorActividades;
 import nicon.enterprise.gui.Clientes.activities.AsignarActividad;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ClienteDAO;
+import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.obj.Cliente;
 import nicon.enterprise.memData.BasicDataAplication;
 
+/**
+ * Este es modulo de administracion de clientes que permite administrar todos
+ * los componentes y acciones que el usuario pueda ejecutar en relacion con la
+ * información de todos los clientes,
+ *
+ * @author frederick
+ */
 public class ModuloClientes extends JPanel implements ActionListener, MouseListener {
 
     private static final long serialVersionUID = 3L;
+    
     private JPanel moduloClientes;
     private JPanel panelInformacion;
     private JPanel panelHerramientas;
     private JPanel panelBusqueda;
+    
     private JMenuBar menuClientes;
     private JMenu jmArchivo;
     private JMenu jmClientes;
@@ -84,7 +98,6 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JButton JBCrear;
     private JButton JBEditar;
     private JButton JBDelete;
-    private JButton jbExportar;
     private JButton jbCrearActividad;
     private ButtonGroup JGBOptions;
     private JRadioButton JRBNombres;
@@ -93,14 +106,12 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JComboBox JCListCity;
     private int selectedSearch;
     private static ArrayList listaClientes;
-    private static Iterator iterator;
     private static Cliente cliente;
     private static ClienteDAO clienteDAO;
     private static String[] vectorDatos;
     private static String Icons;
     private int index;
     private boolean stateOP;
-    private final int counter;
     private AsignarActividad asignacion;
     private JSeparator separator1;
     private JSeparator separator2;
@@ -111,132 +122,136 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         Icons = GlobalConfigSystem.getIconsPath();
         clienteDAO = new ClienteDAO();
         listaClientes = new ArrayList();
+        vectorDatos = new String[3];
         crearInterfaz();
         listarClientes();
         seleccionarPrimerRegistro();
-        this.counter = 0;
     }
 
     private void crearInterfaz() {
-        this.BorderInf = BorderFactory.createTitledBorder("");
-        this.BorderInf.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
+        BorderInf = BorderFactory.createTitledBorder("");
+        BorderInf.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
 
-        this.moduloClientes = new JPanel();
-        this.moduloClientes.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.moduloClientes.setLayout(null);
+        moduloClientes = new JPanel();
+        moduloClientes.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        moduloClientes.setLayout(null);
 
-        this.menuClientes = new JMenuBar();
-        this.menuClientes.setBounds(390, 0, 890, 20);
+        menuClientes = new JMenuBar();
+        menuClientes.setBounds(390, 0, 890, 20);
 
-        this.jmArchivo = new JMenu("Archivo");
-        this.jmArchivo.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmArchivo = new JMenu("Archivo");
+        jmArchivo.setMnemonic('A');
+        jmArchivo.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.jmClientes = new JMenu("Clientes");
-        this.jmClientes.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmClientes = new JMenu("Clientes");
+        jmClientes.setMnemonic('C');
+        jmClientes.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.jmExportar = new JMenu("Reportes");
-        this.jmExportar.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmExportar = new JMenu("Reportes");
+        jmExportar.setMnemonic('R');
+        jmExportar.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.jmVer = new JMenu("Ver");
-        this.jmVer.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmVer = new JMenu("Ver");
+        jmVer.setMnemonic('V');
+        jmVer.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.jmActividades = new JMenu("Actividades");
-        this.jmActividades.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmActividades = new JMenu("Actividades");
+        jmActividades.setMnemonic('t');
+        jmActividades.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.jmCerrar = new JMenuItem("- Cerrar Módulo");
-        this.jmCerrar.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmCerrar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuExit.png")));
-        this.jmCerrar.addActionListener(this);
+        jmCerrar = new JMenuItem("- Cerrar Módulo");
+        jmCerrar.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmCerrar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuExit.png")));
+        jmCerrar.addActionListener(this);
 
-        this.crearCliente = new JMenuItem("- Crear Cliente");
-        this.crearCliente.setToolTipText("Permite crear un nuevo cliente");
-        this.crearCliente.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.crearCliente.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuPersonAdd.png")));
-        this.crearCliente.addActionListener(this);
+        crearCliente = new JMenuItem("- Crear Cliente");
+        crearCliente.setToolTipText("Permite crear un nuevo cliente");
+        crearCliente.setFont(GlobalConfigSystem.getFontAplicationText());
+        crearCliente.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuPersonAdd.png")));
+        crearCliente.addActionListener(this);
 
-        this.editarCliente = new JMenuItem("- Editar Cliente");
-        this.editarCliente.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.editarCliente.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconUpdateMenu.png")));
-        this.editarCliente.setToolTipText("Permite editar los datos de un cliente");
-        this.editarCliente.addActionListener(this);
+        editarCliente = new JMenuItem("- Editar Cliente");
+        editarCliente.setFont(GlobalConfigSystem.getFontAplicationText());
+        editarCliente.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconUpdateMenu.png")));
+        editarCliente.setToolTipText("Permite editar los datos de un cliente");
+        editarCliente.addActionListener(this);
 
-        this.eliminarCliente = new JMenuItem("- Eliminar Cliente");
-        this.eliminarCliente.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.eliminarCliente.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
-        this.eliminarCliente.setToolTipText("Permite eliminar un cliente del sistema");
-        this.eliminarCliente.addActionListener(this);
+        eliminarCliente = new JMenuItem("- Eliminar Cliente");
+        eliminarCliente.setFont(GlobalConfigSystem.getFontAplicationText());
+        eliminarCliente.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
+        eliminarCliente.setToolTipText("Permite eliminar un cliente del sistema");
+        eliminarCliente.addActionListener(this);
 
-        this.busquedaID = new JMenuItem("- Buscar Identificación");
-        this.busquedaID.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.busquedaID.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconFind.png")));
-        this.busquedaID.setToolTipText("Permite buscar la información de un cliente desde el desktop");
-        this.busquedaID.addActionListener(this);
+        busquedaID = new JMenuItem("- Buscar Identificación");
+        busquedaID.setFont(GlobalConfigSystem.getFontAplicationText());
+        busquedaID.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconFind.png")));
+        busquedaID.setToolTipText("Permite buscar la información de un cliente desde el desktop");
+        busquedaID.addActionListener(this);
 
-        this.jmListarTodo = new JMenuItem("- Listar Todos los clientes");
-        this.jmListarTodo.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmListarTodo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconPdf.png")));
-        this.jmListarTodo.setToolTipText("Genera un reporte con todos los clientes registrados y los exporta a PDF");
-        this.jmListarTodo.addActionListener(this);
+        jmListarTodo = new JMenuItem("- Listar Todos los clientes");
+        jmListarTodo.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmListarTodo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconPdf.png")));
+        jmListarTodo.setToolTipText("Genera un reporte con todos los clientes registrados y los exporta a PDF");
+        jmListarTodo.addActionListener(this);
 
-        this.jmListarPorID = new JMenuItem("Listar Por Identificación");
-        this.jmListarPorID.setToolTipText("Genera un reporte en pdf ingresando el numero de cedula de un cliente");
-        this.jmListarPorID.addActionListener(this);
+        jmListarPorID = new JMenuItem("Listar Por Identificación");
+        jmListarPorID.setToolTipText("Genera un reporte en pdf ingresando el numero de cedula de un cliente");
+        jmListarPorID.addActionListener(this);
 
-        this.jmOrdenarAsc = new JMenuItem("- Ordenar Lista Asc");
-        this.jmOrdenarAsc.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmOrdenarAsc.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuUp.png")));
-        this.jmOrdenarAsc.setToolTipText("Permite ordenar la lista de clientes por referencia a nombres de modo ascendente");
-        this.jmOrdenarAsc.addActionListener(this);
+        jmOrdenarAsc = new JMenuItem("- Ordenar Lista Asc");
+        jmOrdenarAsc.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmOrdenarAsc.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuUp.png")));
+        jmOrdenarAsc.setToolTipText("Permite ordenar la lista de clientes por referencia a nombres de modo ascendente");
+        jmOrdenarAsc.addActionListener(this);
 
-        this.jmOrdenarDesc = new JMenuItem("- Ordenar Lista Desc");
-        this.jmOrdenarDesc.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmOrdenarDesc.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuDown.png")));
-        this.jmOrdenarDesc.addActionListener(this);
+        jmOrdenarDesc = new JMenuItem("- Ordenar Lista Desc");
+        jmOrdenarDesc.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmOrdenarDesc.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuDown.png")));
+        jmOrdenarDesc.addActionListener(this);
 
-        this.jmVerPrimero = new JMenuItem("- Ver Primer Registro");
-        this.jmVerPrimero.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmVerPrimero.setToolTipText("Muestra el primer registro de la tabla");
-        this.jmVerPrimero.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconFirstMenu.png")));
-        this.jmVerPrimero.addActionListener(this);
+        jmVerPrimero = new JMenuItem("- Ver Primer Registro");
+        jmVerPrimero.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmVerPrimero.setToolTipText("Muestra el primer registro de la tabla");
+        jmVerPrimero.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconFirstMenu.png")));
+        jmVerPrimero.addActionListener(this);
 
-        this.jmVerUltimo = new JMenuItem("- Ver último registro");
-        this.jmVerUltimo.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmVerUltimo.setToolTipText("Muestra el último registro de la tabla");
-        this.jmVerUltimo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconLastMenu.png")));
-        this.jmVerUltimo.addActionListener(this);
+        jmVerUltimo = new JMenuItem("- Ver último registro");
+        jmVerUltimo.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmVerUltimo.setToolTipText("Muestra el último registro de la tabla");
+        jmVerUltimo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconLastMenu.png")));
+        jmVerUltimo.addActionListener(this);
 
-        this.jmAbrirActividades = new JMenuItem("- Administrador de Actividades");
-        this.jmAbrirActividades.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconTimer.png")));
-        this.jmAbrirActividades.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.jmAbrirActividades.addActionListener(this);
+        jmAbrirActividades = new JMenuItem("- Administrador de Actividades");
+        jmAbrirActividades.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconTimer.png")));
+        jmAbrirActividades.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmAbrirActividades.addActionListener(this);
 
-        this.jmCrearTipoActividad = new JMenuItem("Crear Tipo Actividad");
-        this.jmCrearTipoActividad.setToolTipText("Permite crear un nuevo tipo de actividad en el sistema");
-        this.jmCrearTipoActividad.addActionListener(this);
+        jmCrearTipoActividad = new JMenuItem("Crear Tipo Actividad");
+        jmCrearTipoActividad.setToolTipText("Permite crear un nuevo tipo de actividad en el sistema");
+        jmCrearTipoActividad.addActionListener(this);
 
-        this.jmActividades.add(this.jmAbrirActividades);
-        this.jmActividades.add(this.jmCrearTipoActividad);
+        jmActividades.add(this.jmAbrirActividades);
+        jmActividades.add(this.jmCrearTipoActividad);
 
-        this.jmClientes.add(this.crearCliente);
-        this.jmClientes.add(this.editarCliente);
-        this.jmClientes.add(this.eliminarCliente);
-        this.jmClientes.addSeparator();
-        this.jmClientes.add(this.busquedaID);
+        jmClientes.add(this.crearCliente);
+        jmClientes.add(this.editarCliente);
+        jmClientes.add(this.eliminarCliente);
+        jmClientes.addSeparator();
+        jmClientes.add(this.busquedaID);
 
-        this.jmExportar.add(this.jmListarTodo);
-        this.jmArchivo.add(this.jmCerrar);
+        jmExportar.add(this.jmListarTodo);
+        jmArchivo.add(this.jmCerrar);
 
-        this.jmVer.add(this.jmOrdenarAsc);
-        this.jmVer.add(this.jmOrdenarDesc);
-        this.jmVer.addSeparator();
-        this.jmVer.add(this.jmVerPrimero);
-        this.jmVer.add(this.jmVerUltimo);
+        jmVer.add(this.jmOrdenarAsc);
+        jmVer.add(this.jmOrdenarDesc);
+        jmVer.addSeparator();
+        jmVer.add(this.jmVerPrimero);
+        jmVer.add(this.jmVerUltimo);
 
-        this.menuClientes.add(this.jmArchivo);
-        this.menuClientes.add(this.jmClientes);
-        this.menuClientes.add(this.jmExportar);
-        this.menuClientes.add(this.jmVer);
-        this.menuClientes.add(this.jmActividades);
+        menuClientes.add(this.jmArchivo);
+        menuClientes.add(this.jmClientes);
+        menuClientes.add(this.jmVer);
+        menuClientes.add(this.jmActividades);
 
         modelo = new DefaultTableModel();
         modelo.addColumn("Identificación");
@@ -250,14 +265,15 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         tablaClientes.setFont(GlobalConfigSystem.getFontAplicationText());
         tablaClientes.addMouseListener(this);
 
-        this.ScrollTable = new JScrollPane(tablaClientes);
-        this.ScrollTable.setBounds(0, 0, 390, 570);
+        ScrollTable = new JScrollPane(tablaClientes);
+        ScrollTable.setToolTipText("Listado de Clientes registrados");
+        ScrollTable.setBounds(0, 0, 390, 570);
 
-        this.panelInformacion = new JPanel();
-        this.panelInformacion.setLayout(null);
-        this.panelInformacion.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.panelInformacion.setBounds(420, 30, 600, 495);
-        this.panelInformacion.setBorder(this.BorderInf);
+        panelInformacion = new JPanel();
+        panelInformacion.setLayout(null);
+        panelInformacion.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        panelInformacion.setBounds(420, 30, 600, 495);
+        panelInformacion.setBorder(BorderInf);
 
         nombres = new JLabel();
         nombres.setForeground(GlobalConfigSystem.getForegroundAplicationText());
@@ -269,76 +285,76 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         identificacion.setFont(GlobalConfigSystem.getFontAplicationSubTitle());
         identificacion.setBounds(10, 60, 150, 16);
 
-        this.jlContacto = new JLabel("CONTACTO");
-        this.jlContacto.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.jlContacto.setFont(GlobalConfigSystem.getFontAplicationSubTitle());
-        this.jlContacto.setBounds(40, 130, 220, 15);
+        jlContacto = new JLabel("CONTACTO");
+        jlContacto.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        jlContacto.setFont(GlobalConfigSystem.getFontAplicationSubTitle());
+        jlContacto.setBounds(40, 130, 220, 15);
 
-        this.separator1 = new JSeparator();
-        this.separator1.setBounds(40, 155, 500, 5);
+        separator1 = new JSeparator();
+        separator1.setBounds(40, 155, 500, 5);
 
-        this.JLTel_fijo = new JLabel("Fijo:");
-        this.JLTel_fijo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLTel_fijo.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLTel_fijo.setBounds(153, 175, 150, 15);
+        JLTel_fijo = new JLabel("Fijo:");
+        JLTel_fijo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLTel_fijo.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLTel_fijo.setBounds(153, 175, 150, 15);
 
         telFijo = new JLabel();
         telFijo.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         telFijo.setFont(GlobalConfigSystem.getFontAplicationText());
         telFijo.setBounds(220, 175, 300, 15);
 
-        this.JLTel_movil = new JLabel("Móvil:");
-        this.JLTel_movil.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLTel_movil.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLTel_movil.setBounds(142, 200, 150, 15);
+        JLTel_movil = new JLabel("Móvil:");
+        JLTel_movil.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLTel_movil.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLTel_movil.setBounds(142, 200, 150, 15);
 
         telMovil = new JLabel();
         telMovil.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         telMovil.setFont(GlobalConfigSystem.getFontAplicationText());
         telMovil.setBounds(220, 200, 300, 15);
 
-        this.JLTel_alternativo = new JLabel("Alternativo:");
-        this.JLTel_alternativo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLTel_alternativo.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLTel_alternativo.setBounds(100, 225, 150, 15);
+        JLTel_alternativo = new JLabel("Alternativo:");
+        JLTel_alternativo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLTel_alternativo.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLTel_alternativo.setBounds(100, 225, 150, 15);
 
         telAlternativo = new JLabel();
         telAlternativo.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         telAlternativo.setFont(GlobalConfigSystem.getFontAplicationText());
         telAlternativo.setBounds(220, 225, 300, 15);
 
-        this.JLEmail = new JLabel("Email:");
-        this.JLEmail.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLEmail.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLEmail.setBounds(140, 250, 150, 15);
+        JLEmail = new JLabel("Email:");
+        JLEmail.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLEmail.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLEmail.setBounds(140, 250, 150, 15);
 
         email = new JLabel();
         email.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         email.setFont(GlobalConfigSystem.getFontAplicationText());
         email.setBounds(220, 250, 600, 15);
 
-        this.jlUbicacion = new JLabel("VIVE EN");
-        this.jlUbicacion.setForeground(GlobalConfigSystem.getForegroundAplicationText());
-        this.jlUbicacion.setFont(GlobalConfigSystem.getFontAplicationSubTitle());
-        this.jlUbicacion.setBounds(40, 290, 220, 20);
+        jlUbicacion = new JLabel("VIVE EN");
+        jlUbicacion.setForeground(GlobalConfigSystem.getForegroundAplicationText());
+        jlUbicacion.setFont(GlobalConfigSystem.getFontAplicationSubTitle());
+        jlUbicacion.setBounds(40, 290, 220, 20);
 
-        this.separator2 = new JSeparator();
-        this.separator2.setBounds(40, 315, 500, 5);
+        separator2 = new JSeparator();
+        separator2.setBounds(40, 315, 500, 5);
 
-        this.JLDireccion = new JLabel("Dirección:");
-        this.JLDireccion.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLDireccion.setBounds(110, 330, 150, 15);
+        JLDireccion = new JLabel("Dirección:");
+        JLDireccion.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLDireccion.setBounds(110, 330, 150, 15);
 
         direccion = new JLabel();
         direccion.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         direccion.setFont(GlobalConfigSystem.getFontAplicationText());
         direccion.setBounds(220, 330, 300, 15);
 
-        this.JLCiudad = new JLabel("Ciudad:");
-        this.JLCiudad.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-        this.JLCiudad.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLCiudad.setBounds(127, 355, 150, 15);
+        JLCiudad = new JLabel("Ciudad:");
+        JLCiudad.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
+        JLCiudad.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLCiudad.setBounds(127, 355, 150, 15);
 
         ciudad = new JLabel();
         ciudad.setForeground(GlobalConfigSystem.getForegroundAplicationText());
@@ -360,171 +376,205 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         jlTotalRegistros.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
         jlTotalRegistros.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        this.panelInformacion.add(nombres);
-        this.panelInformacion.add(identificacion);
-        this.panelInformacion.add(this.jlContacto);
-        this.panelInformacion.add(this.separator1);
-        this.panelInformacion.add(this.JLTel_fijo);
-        this.panelInformacion.add(telFijo);
-        this.panelInformacion.add(this.JLTel_movil);
-        this.panelInformacion.add(telMovil);
-        this.panelInformacion.add(this.JLTel_alternativo);
-        this.panelInformacion.add(telAlternativo);
-        this.panelInformacion.add(this.JLEmail);
-        this.panelInformacion.add(email);
+        panelInformacion.add(nombres);
+        panelInformacion.add(identificacion);
+        panelInformacion.add(this.jlContacto);
+        panelInformacion.add(this.separator1);
+        panelInformacion.add(this.JLTel_fijo);
+        panelInformacion.add(telFijo);
+        panelInformacion.add(this.JLTel_movil);
+        panelInformacion.add(telMovil);
+        panelInformacion.add(this.JLTel_alternativo);
+        panelInformacion.add(telAlternativo);
+        panelInformacion.add(this.JLEmail);
+        panelInformacion.add(email);
 
-        this.panelInformacion.add(this.jlUbicacion);
-        this.panelInformacion.add(this.separator2);
-        this.panelInformacion.add(this.JLDireccion);
-        this.panelInformacion.add(direccion);
-        this.panelInformacion.add(this.JLCiudad);
-        this.panelInformacion.add(ciudad);
-        this.panelInformacion.add(JLfecha_registro);
-        this.panelInformacion.add(fechaRegistro);
+        panelInformacion.add(this.jlUbicacion);
+        panelInformacion.add(this.separator2);
+        panelInformacion.add(this.JLDireccion);
+        panelInformacion.add(direccion);
+        panelInformacion.add(this.JLCiudad);
+        panelInformacion.add(ciudad);
+        panelInformacion.add(JLfecha_registro);
+        panelInformacion.add(fechaRegistro);
 
-        this.BorderTool = BorderFactory.createTitledBorder("");
-        this.BorderTool.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
+        BorderTool = BorderFactory.createTitledBorder("");
+        BorderTool.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
 
-        this.panelHerramientas = new JPanel();
-        this.panelHerramientas.setLayout(null);
-        this.panelHerramientas.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.panelHerramientas.setBounds(1020, 30, 250, 580);
-        this.panelHerramientas.setBorder(this.BorderTool);
+        panelHerramientas = new JPanel();
+        panelHerramientas.setLayout(null);
+        panelHerramientas.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        panelHerramientas.setBounds(1020, 30, 250, 580);
+        panelHerramientas.setBorder(this.BorderTool);
 
-        this.JBCrear = new JButton("Nuevo");
-        this.JBCrear.setBounds(10, 10, 115, 30);
-        this.JBCrear.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
-        this.JBCrear.setToolTipText("Crear un nuevo cliente en el sistema");
-        this.JBCrear.addActionListener(this);
+        JBCrear = new JButton("Nuevo");
+        JBCrear.setBounds(10, 10, 115, 30);
+        JBCrear.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
+        JBCrear.setToolTipText("Crear un nuevo cliente en el sistema");
+        JBCrear.addActionListener(this);
 
-        this.JBEditar = new JButton("Editar");
-        this.JBEditar.setBounds(128, 10, 115, 30);
-        this.JBEditar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconUpdateMenu.png")));
-        this.JBEditar.setToolTipText("Editar los datos del cliente seleccionado");
-        this.JBEditar.addActionListener(this);
+        JBEditar = new JButton("Editar");
+        JBEditar.setBounds(128, 10, 115, 30);
+        JBEditar.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconUpdateMenu.png")));
+        JBEditar.setToolTipText("Editar los datos del cliente seleccionado");
+        JBEditar.addActionListener(this);
 
-        this.JBDelete = new JButton("Eliminar");
-        this.JBDelete.setBounds(10, 50, 115, 30);
-        this.JBDelete.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
-        this.JBDelete.setToolTipText("Eliminar un cliente de la base de datos");
-        this.JBDelete.addActionListener(this);
+        JBDelete = new JButton("Eliminar");
+        JBDelete.setBounds(10, 50, 115, 30);
+        JBDelete.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
+        JBDelete.setToolTipText("Eliminar un cliente de la base de datos");
+        JBDelete.addActionListener(this);
 
-        this.jbCrearActividad = new JButton("Actividad");
-        this.jbCrearActividad.setToolTipText("Permite asiganar una Nueva actividad al cliente seleccionado...");
-        this.jbCrearActividad.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
-        this.jbCrearActividad.addActionListener(this);
-        this.jbCrearActividad.setBounds(128, 50, 115, 30);
+        jbCrearActividad = new JButton("Actividad");
+        jbCrearActividad.setToolTipText("Permite asiganar una Nueva actividad al cliente seleccionado...");
+        jbCrearActividad.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
+        jbCrearActividad.addActionListener(this);
+        jbCrearActividad.setBounds(128, 50, 115, 30);
 
-        this.SeparatorTools = new JSeparator();
-        this.SeparatorTools.setBounds(15, 105, 220, 5);
-        this.SeparatorTools.setBackground(Color.lightGray);
+        SeparatorTools = new JSeparator();
+        SeparatorTools.setBounds(15, 505, 220, 5);
+        SeparatorTools.setBackground(Color.lightGray);
 
-        this.JLListCity = new JLabel("Mostrar Clientes de:");
-        this.JLListCity.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JLListCity.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.JLListCity.setBounds(15, 115, 200, 25);
+        JLListCity = new JLabel("Mostrar Clientes de:");
+        JLListCity.setFont(GlobalConfigSystem.getFontAplicationText());
+        JLListCity.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        JLListCity.setBounds(15, 510, 200, 25);
 
-        this.JCListCity = new JComboBox(BasicDataAplication.getListCity());
-        this.JCListCity.addItem("Mostrar todas");
-        this.JCListCity.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JCListCity.setBounds(15, 140, 218, 30);
-        this.JCListCity.setToolTipText("Mostrar los clientes de una ciudad seleccionada en la lista");
-        this.JCListCity.addActionListener(this);
+        JCListCity = new JComboBox(BasicDataAplication.getListCity());
+        JCListCity.addItem("Mostrar todas");
+        JCListCity.setFont(GlobalConfigSystem.getFontAplicationText());
+        JCListCity.setBounds(15, 535, 218, 30);
+        JCListCity.setToolTipText("Mostrar los clientes de una ciudad seleccionada en la lista");
+        JCListCity.addActionListener(this);
 
-        this.panelHerramientas.add(this.JBCrear);
-        this.panelHerramientas.add(this.JBEditar);
-        this.panelHerramientas.add(this.JBDelete);
-        this.panelHerramientas.add(this.SeparatorTools);
-        this.panelHerramientas.add(this.JLListCity);
-        this.panelHerramientas.add(this.JCListCity);
-        this.panelHerramientas.add(this.jbCrearActividad);
+        panelHerramientas.add(JBCrear);
+        panelHerramientas.add(JBEditar);
+        panelHerramientas.add(JBDelete);
+        panelHerramientas.add(SeparatorTools);
+        panelHerramientas.add(JLListCity);
+        panelHerramientas.add(JCListCity);
+        panelHerramientas.add(jbCrearActividad);
 
-        this.BorderSearch = BorderFactory.createTitledBorder("Busqueda:");
-        this.BorderSearch.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
+        BorderSearch = BorderFactory.createTitledBorder("Busqueda:");
+        BorderSearch.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
 
-        this.panelBusqueda = new JPanel();
-        this.panelBusqueda.setBackground(GlobalConfigSystem.getBackgroundAplication());
-        this.panelBusqueda.setLayout(null);
-        this.panelBusqueda.setBounds(420, 523, 600, 100);
-        this.panelBusqueda.setBorder(this.BorderSearch);
+        panelBusqueda = new JPanel();
+        panelBusqueda.setBackground(GlobalConfigSystem.getBackgroundAplication());
+        panelBusqueda.setLayout(null);
+        panelBusqueda.setBounds(420, 523, 600, 100);
+        panelBusqueda.setBorder(BorderSearch);
 
-        this.JGBOptions = new ButtonGroup();
+        JGBOptions = new ButtonGroup();
 
-        this.JRBNombres = new JRadioButton("Por Nombres");
-        this.JRBNombres.setBounds(10, 30, 260, 30);
-        this.JRBNombres.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JRBNombres.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.JRBNombres.addActionListener(this);
+        JRBNombres = new JRadioButton("Por Nombres");
+        JRBNombres.setBounds(10, 30, 260, 30);
+        JRBNombres.setFont(GlobalConfigSystem.getFontAplicationText());
+        JRBNombres.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        JRBNombres.addActionListener(this);
 
-        this.JRBIdentificacion = new JRadioButton("Por Cédula");
-        this.JRBIdentificacion.setFont(GlobalConfigSystem.getFontAplicationText());
-        this.JRBIdentificacion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-        this.JRBIdentificacion.setBounds(10, 55, 260, 30);
-        this.JRBIdentificacion.addActionListener(this);
+        JRBIdentificacion = new JRadioButton("Por Cédula");
+        JRBIdentificacion.setFont(GlobalConfigSystem.getFontAplicationText());
+        JRBIdentificacion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+        JRBIdentificacion.setBounds(10, 55, 260, 30);
+        JRBIdentificacion.addActionListener(this);
 
-        this.JGBOptions.add(this.JRBNombres);
-        this.JGBOptions.add(this.JRBIdentificacion);
+        JGBOptions.add(JRBNombres);
+        JGBOptions.add(JRBIdentificacion);
 
-        this.JTSearchData = new JTextField("Ingrese los datos a Buscar:");
-        this.JTSearchData.setBounds(190, 45, 400, 28);
-        this.JTSearchData.setToolTipText("Ingrese el Nombre  la cédula para buscar información.");
-        this.JTSearchData.setFont(GlobalConfigSystem.getFontAplicationTextItalic());
-        this.JTSearchData.setForeground(Color.darkGray);
-        this.JTSearchData.addMouseListener(this);
-        this.JTSearchData.addKeyListener(new KeyAdapter() {
+        JTSearchData = new JTextField("Ingrese los datos a Buscar:");
+        JTSearchData.setBounds(190, 45, 400, 28);
+        JTSearchData.setToolTipText("Ingrese el Nombre o la cédula para buscar información.");
+        JTSearchData.setFont(GlobalConfigSystem.getFontAplicationTextItalic());
+        JTSearchData.setForeground(Color.darkGray);
+        JTSearchData.addMouseListener(this);
+        JTSearchData.addKeyListener(new KeyAdapter() {
+            /**
+             * en esta caja de busqueda el usuario ingresará la informacion a
+             * buscar de un cliente recibiendo parametros como los nombre o el
+             * numero de identificacion de una persona, la casa de busqueda
+             * posee un KeyListener que le permite escuchar cuando el usuario
+             * presiona la tecla ENTE(VK_ENTER) en cuyo casi indica el incio de
+             * la busqueda de informacion.
+             */
+            @Override
             public void keyPressed(KeyEvent ke) {
-                if (ke.getKeyCode() == 10) {
-                    if (ModuloClientes.this.selectedSearch == 0) {
-                        JOptionPane.showMessageDialog(null, "Por favor seleccione un criterio de busqueda\n      Por nombres / por cédula", GlobalConfigSystem.getAplicationTitle(), 0);
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (selectedSearch == 0) {
+                        JOptionPane.showMessageDialog(null, "Por favor seleccione un criterio de busqueda\n      -1 Por nombres     -2 por cédula", GlobalConfigSystem.getAplicationTitle(), JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
                     } else {
-                        if (ModuloClientes.this.selectedSearch == 1) {
-                            ModuloClientes.this.buscar(1, ModuloClientes.this.JTSearchData.getText());
+                        /**
+                         * el Usuaurio ha seleccionado la busqueda por la
+                         * identificacion del cliente.
+                         */
+                        if (selectedSearch == 1) {
+                            buscar(1, JTSearchData.getText());
                         }
-                        if (ModuloClientes.this.selectedSearch == 2) {
-                            ModuloClientes.this.buscar(2, ModuloClientes.this.JTSearchData.getText());
+                        /**
+                         * el Usuario ha seleccionado la buqueda por nombres.
+                         */
+                        if (selectedSearch == 2) {
+                            buscar(2, JTSearchData.getText());
                         }
                     }
                 }
             }
         });
-        this.panelBusqueda.add(this.JTSearchData);
-        this.panelBusqueda.add(this.JRBNombres);
-        this.panelBusqueda.add(this.JRBIdentificacion);
 
-        this.moduloClientes.add(this.menuClientes);
-        this.moduloClientes.add(this.ScrollTable);
-        this.moduloClientes.add(this.panelInformacion);
-        this.moduloClientes.add(this.panelHerramientas);
-        this.moduloClientes.add(this.panelBusqueda);
-        this.moduloClientes.add(jlTotalRegistros);
+        panelBusqueda.add(JTSearchData);
+        panelBusqueda.add(JRBNombres);
+        panelBusqueda.add(JRBIdentificacion);
+
+        moduloClientes.add(menuClientes);
+        moduloClientes.add(ScrollTable);
+        moduloClientes.add(panelInformacion);
+        moduloClientes.add(panelHerramientas);
+        moduloClientes.add(panelBusqueda);
+        moduloClientes.add(jlTotalRegistros);
     }
 
+    /**
+     * Este metodo retorna el panel del modulo de clientes ya creado
+     * anteriormente, para ser usado sobre un Jframe un JDialog u otro tipo de
+     * Contenedor
+     *
+     * @return JPanel moudloClientes
+     */
     public JPanel obtenerModulo() {
-        return this.moduloClientes;
+        return moduloClientes;
     }
 
-    private static void cargarDatos(ArrayList listado) {
-        try {
-            System.out.println("Iniciando carga de datos al Modulo de clientes");
-            vectorDatos = new String[3];
-            for (int i = 0; i < listado.size(); i++) {
-                cliente = (Cliente) listado.get(i);
-                vectorDatos[0] = cliente.getIdentificacion();
-                vectorDatos[1] = cliente.getNombres();
-                vectorDatos[2] = cliente.getApellidos();
-                modelo.addRow(vectorDatos);
-            }
-            actualizarContador();
-            System.out.println("Todos los clientes han sido cargados al modulo. total clientes registrados: " + modelo.getRowCount());
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error cargando datos de modulo: Clientes\n" + e.getMessage());
+    /**
+     * Este metodo permite cargar los datos almacenados en la tabla de clientes
+     * en la fuente de datos en la entidad de Clientes, recibe un ArrayList con
+     * objetos de tipo clientes que serán cargados al modelo de datos de la
+     * tabla y que posteriormente serán cargado a la vista tablaClientes.
+     *
+     * @param listaClientes
+     */
+    private static void cargarDatos(ArrayList listaClientes) {
+        for (int i = 0; i < listaClientes.size(); i++) {
+            cliente = (Cliente) listaClientes.get(i);
+            vectorDatos[0] = cliente.getIdentificacion();
+            vectorDatos[1] = cliente.getNombres();
+            vectorDatos[2] = cliente.getApellidos();
+            modelo.addRow(vectorDatos);
         }
+        actualizarContador();
     }
 
+    /**
+     * Este metodo permite actualizar los datos del contador de registros de la
+     * tabla de cliente.
+     */
     private static void actualizarContador() {
         jlTotalRegistros.setText("Total registros:" + String.valueOf(modelo.getRowCount()));
     }
 
+    /**
+     * Este metodo permite recargar la tabla de clientes nuevamente con datos
+     * nuevos desde la base de datos, limpia el modelo de datos de todos los
+     * registros de igual forma que limpia el ArrayList.
+     */
     public static void recargarDatos() {
         try {
             modelo.getDataVector().removeAllElements();
@@ -536,27 +586,42 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         }
     }
 
+    /**
+     * retorna el cliente seleccionado en la tabla de clientes, si hay fila selccionada en la tabla obtiene el objeto
+     * de tipo Cliente del ArrayList de clientes obtenido del API ClienteDAO, sino hay fila selccionada el cliente es
+     * null..
+     *
+     * @return Cliente cliente
+     */
     public Cliente obtenerSeleccionado() {
-        try {
-            this.index = obtenerIndiceSeleccionado();
-            if (this.index >= 0) {
-                cliente = (Cliente) listaClientes.get(this.index);
+        index = obtenerIndiceSeleccionado();
+            if (index >= 0) {
+                cliente = (Cliente) listaClientes.get(index);
             } else {
                 cliente = null;
             }
-        } catch (Exception e) {
-        }
         return cliente;
     }
 
+    /**
+     * obtiene un entero con el indice apuntando a la fila actualmente seleccionada en la tabla de clientes
+     * @return 
+     */
     private int obtenerIndiceSeleccionado() {
-        this.index = tablaClientes.getSelectedRow();
-        if (this.index < 0) {
-            JOptionPane.showMessageDialog(null, "No ha seleccionado nigún cliente en la lista", GlobalConfigSystem.getAplicationTitle(), 0);
-        }
-        return this.index;
+        index = tablaClientes.getSelectedRow();
+            if (index < 0) {
+                JOptionPane.showMessageDialog(null, "NO ha seleccionada ninguna fila en la tabla de clientes", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(Icons+"NiconError.png")));
+            }
+        return index;
     }
 
+    /**
+     * este metodo es el encargado de ajustar las variables de tipo JLabel mostrando la informacion del objeto de
+     * tipo Cliente recibido, es invocado al momento de buscar datos, o cuando el usuario selecciona un objeto de la
+     * lsta de la tabla de clientes.
+     * 
+     * @param cliente 
+     */
     protected static void mostrarDatos(Cliente cliente) {
         nombres.setText(cliente.getNombres() + " " + cliente.getApellidos());
         identificacion.setText(cliente.getIdentificacion());
@@ -569,6 +634,13 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         fechaRegistro.setText(cliente.getFecha_registro());
     }
 
+    /**
+     * Interfaz para la busqueda de datos de un cliente contra la fuente de datos, recibe como parametros la opcion de
+     * busqueda y los datos a buscar dentro de la fuente de datos.
+     * 
+     * @param opcionBusqueda
+     * @param datos 
+     */
     public void buscar(int opcionBusqueda, String datos) {
         if (opcionBusqueda == 1) {
             buscarInformacionPorID(datos);
@@ -579,42 +651,71 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     }
 
     private void buscarInformacionPorID(String ID) {
-        cliente = clienteDAO.buscarPorIdentificacion(ID);
-        if (cliente != null) {
-            mostrarDatos(cliente);
-            seleccionarCliente(cliente.getIdentificacion());
-        } else {
-            JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(), 2, new ImageIcon(getClass().getResource(Icons + "NiconWarning.png")));
+        try {
+            cliente = clienteDAO.buscarPorIdentificacion(ID);
+            if (cliente != null) {
+                mostrarDatos(cliente);
+                seleccionarCliente(cliente.getIdentificacion());
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
+        
+            
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void buscarInformacionPorNombres(String Nombres) {
-        cliente = clienteDAO.buscarPorNombres(Nombres);
-        if (cliente != null) {
-            mostrarDatos(cliente);
-            seleccionarCliente(cliente.getIdentificacion());
-        } else {
-            JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(), 2);
+        try {
+            cliente = clienteDAO.buscarPorNombres(Nombres);
+            if (cliente != null) {
+                mostrarDatos(cliente);
+                seleccionarCliente(cliente.getIdentificacion());
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
+              }
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
+    /**
+     * metodo que permite seleciconar y mostrar el primer registro de tabla de la lista de clientes.
+     */
     private void seleccionarPrimerRegistro() {
         tablaClientes.changeSelection(0, 0, false, false);
         mostrarDatos(obtenerSeleccionado());
     }
 
+    /**
+     * metodo que permite seleccionar y mostrar el utlimo registro de la tabla de la lista de clientes.
+     */
     private void seleccionarUltimoRegistro() {
         tablaClientes.changeSelection(modelo.getRowCount() - 1, 0, false, false);
         mostrarDatos(obtenerSeleccionado());
     }
 
+    /**
+     * Este metodo permite cargar la tabla de clientes con el listado filtrado por clientes identificados por 
+     * ciudad.
+     * @param ciudad 
+     */
     private void listaClientesPorCiudad(String ciudad) {
-        listaClientes.clear();
-        modelo.getDataVector().removeAllElements();
-        listaClientes = clienteDAO.listarClientesPorCiudad(ciudad);
-        cargarDatos(listaClientes);
+        try {
+            listaClientes.clear();
+            modelo.getDataVector().removeAllElements();
+            listaClientes = clienteDAO.listarClientesPorCiudad(ciudad);
+            cargarDatos(listaClientes);
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    /**
+     * este metodo permite cargar el listado de todos los clientes almacenados en la fuente de datos en la tabla de
+     * clientes, hce uso del API ClienteDAO.
+     */
     private void listarClientes() {
         try {
             listaClientes.clear();
@@ -626,26 +727,43 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         }
     }
 
+    /**
+     * metodo que permite listar los clientes por orden alfabetico ascendente.
+     */
     private void listarClientesOrderAsc() {
-        listaClientes.clear();
-        modelo.getDataVector().removeAllElements();
-        listaClientes = clienteDAO.listarClientesOrdenadosPorNombre("asc");
-        cargarDatos(listaClientes);
+        try {
+            listaClientes.clear();
+            modelo.getDataVector().removeAllElements();
+            listaClientes = clienteDAO.listarClientesOrdenadosPorNombre("asc");
+            cargarDatos(listaClientes);
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    /**
+     * metodo que permite listar los clientes por orden alfabetico descendente.
+     */
     private void listarClientesOrderDesc() {
-        listaClientes.clear();
-        modelo.getDataVector().removeAllElements();
-        listaClientes = clienteDAO.listarClientesOrdenadosPorNombre("desc");
-        cargarDatos(listaClientes);
+        try {
+            listaClientes.clear();
+            modelo.getDataVector().removeAllElements();
+            listaClientes = clienteDAO.listarClientesOrdenadosPorNombre("desc");
+            cargarDatos(listaClientes);
+        } catch (SQLException ex) {
+            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    /**
+     * 
+     */
     private void eliminarCliente() {
         cliente = obtenerSeleccionado();
         try {
             clienteDAO = new ClienteDAO(cliente);
-            this.stateOP = clienteDAO.eliminarCliente();
-            if (this.stateOP) {
+            stateOP = clienteDAO.eliminarCliente();
+            if (stateOP) {
                 JOptionPane.showMessageDialog(null, "El cliente ha sido eliminado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
                 recargarDatos();
             } else {
@@ -668,11 +786,11 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private void crearActividad() {
         cliente = obtenerSeleccionado();
         if (cliente != null) {
-            this.asignacion = new AsignarActividad(cliente.getIdentificacion());
-            this.asignacion.setVisible(true);
+            asignacion = new AsignarActividad(cliente.getIdentificacion());
+            asignacion.setVisible(true);
         } else {
-            this.asignacion = new AsignarActividad();
-            this.asignacion.setVisible(true);
+            asignacion = new AsignarActividad();
+            asignacion.setVisible(true);
         }
         cliente = null;
     }

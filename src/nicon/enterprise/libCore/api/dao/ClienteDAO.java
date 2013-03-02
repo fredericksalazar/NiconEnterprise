@@ -1,8 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated.
+ *
+ * NiconSystem Inc. Cll 9a#6a-09 Florida Valle del cauca Colombia 318 437 4382
+ * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
+ * Sanchez.
  */
-package nicon.enterprise.libCore.dao;
+package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
@@ -13,13 +16,24 @@ import nicon.enterprise.libCore.Conection;
 import nicon.enterprise.libCore.NiconAdminReport;
 import nicon.enterprise.libCore.obj.Cliente;
 
+/**
+ * ClienteDAO es la interfaz de metodos de todo el modulo de clientes, define
+ * herramientas que el usuario puede usar para registrar, actualizar y o
+ * eliminar registros de la fuente de datos, este Interfaz ademas permite
+ * mediante los metodos definidos buscar informacion estadistica de los
+ * clientes.
+ *
+ * @author frederick
+ */
 public class ClienteDAO {
+    
+    private final String URL_REPORT="/Nicon/Enterprise/LibCore/rsc/ListaClientes.jasper";
 
     private Cliente cliente;
     private boolean state = false;
     private String sentencia;
     private int ExecuteSentence;
-    private int contador;
+    private int totalRegistros;
     private ArrayList listaClientes;
     private ResultSet datosConsulta;
     private String impresion;
@@ -27,203 +41,262 @@ public class ClienteDAO {
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
 
+    /**
+     * Metodo constructor que recibe como parametro un objeto de tipo Cliente
+     * que será usado para el registro o e eliminacion de registros de la fuente
+     * de datos.
+     *
+     * @param cliente
+     */
     public ClienteDAO(Cliente cliente) {
         this.cliente = cliente;
         this.coneccion = Conection.obtenerInstancia();
     }
 
+    /**
+     * Este metodo constructor permite acceder a los metodos que define el api
+     * como metodos de consulta de informacion y busqueda.
+     */
     public ClienteDAO() {
-        this.coneccion = Conection.obtenerInstancia();
+        listaClientes = new ArrayList();
+        coneccion = Conection.obtenerInstancia();
+        adminReport = new NiconAdminReport();
     }
 
-    public boolean crearCliente()
-            throws SQLException {
-        if (this.cliente != null) {
-            this.sentencia = ("Insert Into Clientes Values(" + this.cliente.getIdentificacion() + ",'" + this.cliente.getNombres() + "','" + this.cliente.getApellidos() + "','" + this.cliente.getCiudad() + "','" + this.cliente.getDireccion() + "','" + this.cliente.getProvincia() + "','" + this.cliente.getTelefono_fijo() + "','" + this.cliente.getTelefono_movil() + "','" + this.cliente.getTelefono_alternativo() + "','" + this.cliente.getEmail() + "',current_timestamp," + this.cliente.getCodigoAlmacen() + ");");
-            this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentencia);
-            if (this.ExecuteSentence == 0) {
-                this.state = true;
-                this.cliente = null;
+    /**
+     * este metodo permite ingresar a la entidad de clientes un nuevo registro
+     * con el objeto de tipo cliente que recibe del constructor, se evalua el
+     * estado del objeto cliente en caso de ser null el estado de la operacion
+     * pasa a ser false en caso contrario intenta ejecutar la sentencia mediante
+     * la interfaz de coneccion NiconDB.
+     *
+     * @return boolean stateOP
+     * @throws SQLException
+     */
+    public boolean crearCliente() throws SQLException {
+        if (cliente != null) {
+            sentencia = "INSERT INTO Clientes VALUES(" + this.cliente.getIdentificacion() + ",'" + this.cliente.getNombres() + "','" + this.cliente.getApellidos() + "','" + this.cliente.getCiudad() + "','" + this.cliente.getDireccion() + "','" + this.cliente.getProvincia() + "','" + this.cliente.getTelefono_fijo() + "','" + this.cliente.getTelefono_movil() + "','" + this.cliente.getTelefono_alternativo() + "','" + this.cliente.getEmail() + "',current_timestamp," + this.cliente.getCodigoAlmacen() + ");";
+            ExecuteSentence = coneccion.ejecutarSentencia(sentencia);
+            if (ExecuteSentence == 0) {
+                state = true;
             } else {
-                this.state = false;
+                state = false;
             }
         } else {
-            this.state = false;
+            state = false;
         }
-        return this.state;
+        cliente = null;
+        return state;
     }
 
-    public boolean eliminarCliente()
-            throws SQLException {
-        this.sentencia = ("delete from Clientes where identificacion=" + this.cliente.getIdentificacion() + ";");
-        this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentencia);
+    /**
+     * Este metodo permite elimnar los registros de un cliente dentro de la
+     * fuente de datos, en caso de que el cliente no posea dependencias de
+     * informacion puede ser eliminado en caso de que posea dependencias el
+     * sistema no permitira la eliminacion de ningun tipo de registros.
+     *
+     * @return stateOP
+     * @throws SQLException
+     */
+    public boolean eliminarCliente() throws SQLException {
+        sentencia = "DELETE FROM Clientes WHERE Clientes.identificacion=" + cliente.getIdentificacion() + ";";
+        ExecuteSentence = coneccion.ejecutarSentencia(sentencia);
+        if (ExecuteSentence == 0) {
+            state = true;
+        } else {
+            state = false;
+        }
+        return state;
+    }
+
+    /**
+     * Metodo que permite la actualizacion de el numero de identificacion de un
+     * usuario registrado dentro de la
+     *
+     * @param oldID
+     * @param NewID
+     * @return
+     */
+    public boolean actualizarIdentificacion(String oldID, String NewID) throws SQLException {
+        sentencia = "UPDATE Clientes SET identificacion = " + NewID + " where identificacion=" + oldID + ";";
+        ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentencia);
         if (this.ExecuteSentence == 0) {
-            this.state = true;
+            state = true;
         } else {
-            this.state = false;
+            state = false;
         }
-
-        return this.state;
+        return state;
     }
 
-    public boolean actualizarIdentificacion(String oldID, String NewID) {
-        try {
-            this.sentencia = ("update Clientes set identificacion = " + NewID + " where identificacion=" + oldID + ";");
-            this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentencia);
-
-            if (this.ExecuteSentence == 0) {
-                this.state = true;
-            } else {
-                this.state = false;
-            }
-        } catch (Exception e) {
-            System.out.println("Ocurrio un error en Cliente.updateIdentificationClient() detail:\n" + e);
+    /**
+     * Este metodo permite actualizar la informacion de un cliente, recibe como
+     * parametros la cedula, el campo a actualizar y el nuevo dato a ingresar.
+     *
+     * @param cedula
+     * @param campo
+     * @param dato
+     * @return boolean stateOP
+     */
+    public boolean actualizarDatoCliente(String cedula, String campo, String dato) throws SQLException {
+        sentencia = "UPDATE Clientes SET " + campo + " = '" + dato + "' WHERE identificacion=" + cedula + ";";
+        ExecuteSentence = coneccion.ejecutarSentencia(sentencia);
+        if (ExecuteSentence == 0) {
+            state = true;
+        } else {
+            state = false;
         }
-        return this.state;
+        return state;
     }
 
-    public boolean actualizarDatoCliente(String cedula, String campo, String dato) {
-        try {
-            this.sentencia = ("update Clientes set " + campo + " = '" + dato + "' where identificacion=" + cedula + ";");
-            this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentencia);
-            if (this.ExecuteSentence == 0) {
-                this.state = true;
-            } else {
-                this.state = false;
-            }
-        } catch (Exception e) {
-            System.out.println("Ocurrio un error en Cliente.updateDataClient() \n:" + e);
+    /**
+     * Este metodo permite obtener un listado con toda la informacion de todos
+     * los clientes registrados en la base de datos, los ordenado por el nombre
+     * de forma ascendente
+     *
+     * @return listaClientes
+     * @throws SQLException
+     */
+    public ArrayList listarClientes() throws SQLException {
+        sentencia = "SELECT  * FROM Clientes ORDER BY nombres ASC;";
+        datosConsulta = coneccion.consultarDatos(sentencia);
+        while (datosConsulta.next()) {
+            cliente = new Cliente(datosConsulta.getString("identificacion"), datosConsulta.getString("nombres"), datosConsulta.getString("apellidos"), datosConsulta.getString("ciudad"), datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"), datosConsulta.getString("telefono_fijo"), datosConsulta.getString("telefono_movil"), datosConsulta.getString("telefono_alternativo"), datosConsulta.getString("email"), String.valueOf(datosConsulta.getDate("fecha_registro")), datosConsulta.getInt("Almacenes_idAlmacenes"));
+            listaClientes.add(cliente);
         }
-        return this.state;
+        cliente = null;
+        datosConsulta.close();
+        return listaClientes;
     }
 
-    public ArrayList listarClientes()
-            throws SQLException {
-        this.listaClientes = new ArrayList();
-        this.sentencia = "select * from Clientes;";
-        this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-        while (this.datosConsulta.next()) {
-            this.cliente = new Cliente(this.datosConsulta.getString("identificacion"), this.datosConsulta.getString("nombres"), this.datosConsulta.getString("apellidos"), this.datosConsulta.getString("ciudad"), this.datosConsulta.getString("direccion"), this.datosConsulta.getString("Departamento"), this.datosConsulta.getString("telefono_fijo"), this.datosConsulta.getString("telefono_movil"), this.datosConsulta.getString("telefono_alternativo"), this.datosConsulta.getString("email"), String.valueOf(this.datosConsulta.getDate("fecha_registro")), this.datosConsulta.getInt("Almacenes_idAlmacenes"));
-            this.listaClientes.add(this.cliente);
+    /**
+     * este metodo permite obtener un listado de todos los clientes ordenados
+     * por nombres ascendennte o de forma descendente, recibe como parametro la
+     * opcion de ordenamiento.
+     */
+    public ArrayList listarClientesOrdenadosPorNombre(String opcion) throws SQLException {
+
+        if (opcion.equals("asc")) {
+            sentencia = "SELECT  * FROM Clientes ORDER BY nombres ASC;";
         }
-        this.datosConsulta.close();
-        return this.listaClientes;
+        if (opcion.equals("desc")) {
+            sentencia = "SELECT * FROM Clientes ORDER BY nombres DESC;";
+        }
+        datosConsulta = coneccion.consultarDatos(sentencia);        
+            while (datosConsulta.next()) {
+                cliente = new Cliente(datosConsulta.getString("identificacion"), datosConsulta.getString("nombres"), datosConsulta.getString("apellidos"), datosConsulta.getString("ciudad"), datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"), datosConsulta.getString("telefono_fijo"), datosConsulta.getString("telefono_movil"), datosConsulta.getString("telefono_alternativo"), datosConsulta.getString("email"), String.valueOf(datosConsulta.getDate("fecha_registro")), datosConsulta.getInt("Almacenes_idAlmacenes"));
+                listaClientes.add(cliente);
+            }
+        cliente = null;
+        datosConsulta.close();
+        return listaClientes;
     }
 
-    public ArrayList listarClientesOrdenadosPorNombre(String opcion) {
-        try {
-            this.listaClientes = new ArrayList();
-            if (opcion.equals("asc")) {
-                this.sentencia = "select * from Clientes Order By nombres asc;";
-            }
-            if (opcion.equals("desc")) {
-                this.sentencia = "select * from Clientes Order By nombres Desc;";
-            }
-            this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-            while (this.datosConsulta.next()) {
-                this.cliente = new Cliente(this.datosConsulta.getString("identificacion"), this.datosConsulta.getString("nombres"), this.datosConsulta.getString("apellidos"), this.datosConsulta.getString("ciudad"), this.datosConsulta.getString("direccion"), this.datosConsulta.getString("Departamento"), this.datosConsulta.getString("telefono_fijo"), this.datosConsulta.getString("telefono_movil"), this.datosConsulta.getString("telefono_alternativo"), this.datosConsulta.getString("email"), String.valueOf(this.datosConsulta.getDate("fecha_registro")), this.datosConsulta.getInt("Almacenes_idAlmacenes"));
-                this.listaClientes.add(this.cliente);
-            }
-            this.datosConsulta.close();
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error al obtener listado de clientes ordenados (API ClienteDAO):\n" + e.getMessage());
-        }
-        return this.listaClientes;
+    /**
+     * este metodo permite listar todos los clientes que residan en ala misma ciudad, recibe como parametros el
+     * nombre de la ciudad con la que se agruparán los registros obtenidos.
+     * @param ciudad
+     * @return listaClientes
+     */
+    public ArrayList listarClientesPorCiudad(String ciudad) throws SQLException {        
+            sentencia = "SELECT  * FROM Clientes WHERE  ciudad='" + ciudad + "' ORDER BY nombres ASC;";
+            datosConsulta = coneccion.consultarDatos(sentencia);
+                while (datosConsulta.next()) {
+                    cliente = new Cliente(datosConsulta.getString("identificacion"),datosConsulta.getString("nombres"),datosConsulta.getString("apellidos"),datosConsulta.getString("ciudad"),datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"),datosConsulta.getString("telefono_fijo"),datosConsulta.getString("telefono_movil"),datosConsulta.getString("telefono_alternativo"),datosConsulta.getString("email"), String.valueOf(datosConsulta.getDate("fecha_registro")),datosConsulta.getInt("Almacenes_idAlmacenes"));
+                    listaClientes.add(cliente);
+                }
+            cliente=null;
+            datosConsulta.close();
+        return listaClientes;
     }
 
-    public ArrayList listarClientesPorCiudad(String ciudad) {
-        try {
-            this.listaClientes = new ArrayList();
-            this.sentencia = ("select * from Clientes where ciudad='" + ciudad + "';");
-            this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-            while (this.datosConsulta.next()) {
-                this.cliente = new Cliente(this.datosConsulta.getString("identificacion"), this.datosConsulta.getString("nombres"), this.datosConsulta.getString("apellidos"), this.datosConsulta.getString("ciudad"), this.datosConsulta.getString("direccion"), this.datosConsulta.getString("Departamento"), this.datosConsulta.getString("telefono_fijo"), this.datosConsulta.getString("telefono_movil"), this.datosConsulta.getString("telefono_alternativo"), this.datosConsulta.getString("email"), String.valueOf(this.datosConsulta.getDate("fecha_registro")), this.datosConsulta.getInt("Almacenes_idAlmacenes"));
-                this.listaClientes.add(this.cliente);
-            }
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error al obtener el listado de clientes (API ClienteDAO):\n" + e.getMessage());
-        }
-        return this.listaClientes;
+    /**
+     * este metodo permite buscar los datos de un cliente por el numero de identificacion registrado como primey Key
+     * dentro de la fuente de datos.
+     * 
+     * @param identificacion
+     * @return Cliente cliente
+     */
+    public Cliente buscarPorIdentificacion(String identificacion) throws SQLException {        
+            sentencia = "SELECT  `nombres`, `apellidos`, `ciudad`, `direccion`, `Departamento`, `telefono_fijo`, `telefono_movil`, `Telefono_alternativo`, `email`, `fecha_registro`, `Almacenes_idAlmacenes` FROM `Clientes` WHERE identificacion=" + identificacion + ";";
+            datosConsulta = coneccion.consultarDatos(sentencia);            
+                if (datosConsulta.next()) {
+                    cliente = new Cliente(datosConsulta.getString(1), datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4), datosConsulta.getString(5), datosConsulta.getString(6), datosConsulta.getString(7), datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));
+                } else {
+                    cliente = null;
+                } 
+                datosConsulta.close();
+        return cliente;
     }
 
-    public Cliente buscarPorIdentificacion(String identificacion) {
-        try {
-            this.sentencia = ("select * from Clientes where identificacion=" + identificacion + ";");
-            this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-            if (this.datosConsulta.next()) {
-                this.cliente = new Cliente(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getInt(11));
-            } else {
-                this.cliente = null;
-            }
-        } catch (Exception e) {
-            System.err.println(getClass().getPackage() + getClass().getName() + "Ocurrio un error buscando datos del cliente con ID: " + identificacion);
-        }
-        return this.cliente;
+    /**
+     * Este metodo permite bucar registros de un cliente usando el nombre como parametro de busqeuda de datos.
+     * @param Nombres
+     * @return 
+     */
+    public Cliente buscarPorNombres(String Nombres) throws SQLException {
+            sentencia = "SELECT distinct * FROM Clientes WHERE nombres='" + Nombres + "';";
+            datosConsulta = coneccion.consultarDatos(sentencia);
+                if (datosConsulta.next()) {
+                    cliente = new Cliente(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));
+                } else {
+                    cliente = null;
+                }
+            datosConsulta.close();        
+        return cliente;
     }
 
-    public Cliente buscarPorNombres(String Nombres) {
-        try {
-            this.sentencia = ("select distinct * from Clientes where nombres='" + Nombres + "';");
-            this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-            if (this.datosConsulta.next()) {
-                this.cliente = new Cliente(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getInt(11));
-            } else {
-                this.cliente = null;
-            }
-            this.datosConsulta.close();
-        } catch (Exception e) {
-            System.err.println(getClass().getPackage() + getClass().getName() + "Ocurrio un error buscando datos del cliente con Nombres: " + Nombres);
-        }
-        return this.cliente;
+    /**
+     * valida la existencia de un cliente dentro de la base de datos recibiendo como parametros el nombre y los apellidos
+     * del cliente a registrar, en caso de encontrar registros retorna un objeto de tipo Cliente con la informacion recibida
+     * en caso de no encontrar ningun registro el dato a retornar es null.
+     * 
+     * @param nombres
+     * @param apellidos
+     * @return 
+     */
+    public Cliente validarCliente(String nombres, String apellidos) throws SQLException {
+            sentencia = "SELECT DISTINCT * FROM WHERE nombres='" + nombres + "' AND apellidos='" + apellidos + "';";
+            datosConsulta = coneccion.consultarDatos(sentencia);
+                if (datosConsulta.next()) {
+                        cliente = new Cliente(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6), this.datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));
+                } else {
+                        cliente = null;
+                }
+            datosConsulta.close();       
+        return cliente;
     }
 
-    public Cliente validarCliente(String nombres, String apellidos) {
-        try {
-            this.sentencia = ("select distinct * from Clientes where nombres='" + nombres + "' and apellidos='" + apellidos + "';");
-            this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-            if (this.datosConsulta.next()) {
-                this.cliente = new Cliente(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getInt(11));
-            } else {
-                this.cliente = null;
-            }
-            this.datosConsulta.close();
-        } catch (SQLException e) {
-            System.err.println("ocurrio un error en ClienteDAO.validarCliente():\n" + e);
-        }
-        return this.cliente;
+    /**
+     * este metodo retorna el total de registros en la entidad de clientes de la base de datos, el conteo se hace en
+     * la columna de Clientes.identificacion, en caso de poder ejecutar la sentencia y obtener resultados castea a 
+     * Integer el resultado y lo retorna, en caso de no haber registros en el resultSet retorna 0
+     * 
+     * @return Int totalRegistros
+     */
+    public int obtenerTotalRegistros() throws SQLException {
+            sentencia = "SELETC COUNT(identificacion) FROM Clientes;";
+            datosConsulta = coneccion.consultarDatos(sentencia);
+                if (datosConsulta.next()) {
+                        totalRegistros = datosConsulta.getInt(1);
+                } else {
+                        totalRegistros = 0;
+                }
+                datosConsulta.close();        
+        return  totalRegistros;
     }
 
-    public int obtenerTotalRegistros() {
-        try {
-            this.sentencia = "select count(identificacion) from Clientes;";
-            this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
-            if (this.datosConsulta.next()) {
-                this.contador = this.datosConsulta.getInt(1);
-            } else {
-                this.contador = 0;
+    /**
+     * Este metodo permite generar un listado en pdf de todos los cliente registrados en la basse de datos, ese archiv
+     * por lo general este archivo pdf solo sera visualizado usando el JasperViewer que ofrece el API JasperReport,
+     * 
+     * @throws JRException 
+     */
+    public void exportarTodosPDF() throws JRException {
+            if(adminReport!=null){            
+                    reporte = adminReport.compilarReporte(URL_REPORT);
+                    adminReport.verReporte(reporte);
             }
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error en ClienteDAO.obtenerTotalRegistros():\n" + e);
-        }
-        return this.contador;
-    }
-
-    public void exportarTodosPDF()
-        throws JRException {
-        this.adminReport = new NiconAdminReport();
-        this.reporte = this.adminReport.compilarReporte("/Nicon/Enterprise/LibCore/rsc/ListaClientes.jasper");
-        this.adminReport.verReporte(this.reporte);
-    }
-
-    public void imprimirTodos() {
-        try {
-            this.listaClientes = listarClientes();
-            for (int i = 0; i < this.listaClientes.size(); i++) {
-                this.cliente = ((Cliente) this.listaClientes.get(i));
-                this.impresion = (this.impresion + this.cliente.toString() + "\n");
-            }
-            System.out.println(this.impresion);
-        } catch (Exception e) {
-        }
+            reporte=null;
+            adminReport=null;
     }
 }

@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.obj.Almacen;
-import nicon.enterprise.libCore.dao.ClienteDAO;
 import nicon.enterprise.libCore.obj.*;
 import nicon.enterprise.memData.BasicDataAplication;
 
@@ -234,12 +234,16 @@ public class Ingreso extends JDialog implements ActionListener {
   }
 
   private void verificarCliente() {
-    this.id = this.JTIdentificacion.getText();
-    this.cliente = this.clienteDAO.buscarPorIdentificacion(this.id);
-    if (this.cliente != null) {
-      JOptionPane.showMessageDialog(this.rootPane, "El cliente ya esta regisrado en el sistema, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
-      dispose();
-    }
+      try {
+          this.id = this.JTIdentificacion.getText();
+          this.cliente = this.clienteDAO.buscarPorIdentificacion(this.id);
+          if (this.cliente != null) {
+            JOptionPane.showMessageDialog(this.rootPane, "El cliente ya esta regisrado en el sistema, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
+            dispose();
+          }
+      } catch (SQLException ex) {
+          Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }
 
   private boolean getAndVerifiyDataClient()
@@ -270,33 +274,37 @@ public class Ingreso extends JDialog implements ActionListener {
 
   private void guardarDatos()
   {
-    this.cliente = new Cliente(this.id, this.nombres, this.apellidos, this.ciudad, this.direccion, this.departamento, this.tel_fijo, this.tel_movil, this.tel_aternativo, this.email, 1);
-    this.clienteDAO = new ClienteDAO();
-    this.validacion = this.clienteDAO.validarCliente(this.cliente.getNombres(), this.cliente.getApellidos());
-    if (this.validacion != null) {
-      this.id = this.validacion.getIdentificacion();
-      this.nombres = this.validacion.getNombres();
-      this.apellidos = this.validacion.getApellidos();
-      JOptionPane.showMessageDialog(this.rootPane, "Actualmente hay registrado un cliente en la base de datos con informacion similar:\n\nIdentificación: " + this.validacion.getIdentificacion().toUpperCase() + "\n Nombres: " + this.validacion.getNombres().toUpperCase() + "\n Apellidos:" + this.validacion.getApellidos().toUpperCase() + "\n\nNo puede registrar el nuevo Cliente.", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconWarning.png")));
-
-      dispose();
-      this.cliente = null;
-      this.validacion = null;
-      this.clienteDAO = null;
-    } else {
       try {
-        this.clienteDAO = new ClienteDAO(this.cliente);
-        if (this.clienteDAO.crearCliente()) {
-          ModuloClientes.recargarDatos();
-          JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido registrado exitosamente en el sistema", GlobalConfigSystem.getAplicationTitle(), 1, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
-          this.cliente = null;
-          this.clienteDAO = null;
-          dispose();
-        }
+          this.cliente = new Cliente(this.id, this.nombres, this.apellidos, this.ciudad, this.direccion, this.departamento, this.tel_fijo, this.tel_movil, this.tel_aternativo, this.email, 1);
+          this.clienteDAO = new ClienteDAO();
+          this.validacion = this.clienteDAO.validarCliente(this.cliente.getNombres(), this.cliente.getApellidos());
+          if (this.validacion != null) {
+            this.id = this.validacion.getIdentificacion();
+            this.nombres = this.validacion.getNombres();
+            this.apellidos = this.validacion.getApellidos();
+            JOptionPane.showMessageDialog(this.rootPane, "Actualmente hay registrado un cliente en la base de datos con informacion similar:\n\nIdentificación: " + this.validacion.getIdentificacion().toUpperCase() + "\n Nombres: " + this.validacion.getNombres().toUpperCase() + "\n Apellidos:" + this.validacion.getApellidos().toUpperCase() + "\n\nNo puede registrar el nuevo Cliente.", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconWarning.png")));
+
+            dispose();
+            this.cliente = null;
+            this.validacion = null;
+            this.clienteDAO = null;
+          } else {
+            try {
+              this.clienteDAO = new ClienteDAO(this.cliente);
+              if (this.clienteDAO.crearCliente()) {
+                ModuloClientes.recargarDatos();
+                JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido registrado exitosamente en el sistema", GlobalConfigSystem.getAplicationTitle(), 1, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
+                this.cliente = null;
+                this.clienteDAO = null;
+                dispose();
+              }
+            } catch (SQLException ex) {
+              Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          }
       } catch (SQLException ex) {
-        Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
       }
-    }
   }
 
   @Override

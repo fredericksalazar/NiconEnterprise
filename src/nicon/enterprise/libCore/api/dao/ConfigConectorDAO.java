@@ -38,8 +38,7 @@ public class ConfigConectorDAO {
             if (NiconLibTools.verifyExistDir(this.path)) {
                 String filePath = NiconLibTools.writeObjectToFile(this.config, this.path, this.nameFile);
                 this.state = true;
-//                JOptionPane.showMessageDialog(null, "Archivo escritor en:\n" + filePath, GlobalConfigSystem.getAplicationTitle(), 1);
-            } else {
+           } else {
                 NiconLibTools.createDirectory(this.path);
                 createConfigFile();
             }

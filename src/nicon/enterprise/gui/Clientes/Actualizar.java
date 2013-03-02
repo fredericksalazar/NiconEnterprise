@@ -6,10 +6,13 @@ package nicon.enterprise.gui.Clientes;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ClienteDAO;
+import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.obj.Cliente;
 
 public class Actualizar extends JDialog implements ActionListener {
@@ -121,16 +124,24 @@ public class Actualizar extends JDialog implements ActionListener {
     private void getInputData() {
         String campo = (String) this.JCOptions.getSelectedItem();
         if (campo.equals("identificacion")) {
-            String cedula = this.JTinput.getText();
-            String cedulaActual = this.cliente.getIdentificacion();
-            this.clienteDAO.actualizarIdentificacion(cedula, cedulaActual);
-            dispose();
-        } else {
-            String dato = this.JTinput.getText();
-            boolean ActualizarDatos = this.clienteDAO.actualizarDatoCliente(this.cliente.getIdentificacion(), campo, dato);
-            if (ActualizarDatos) {
-                JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido actualizado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+            try {
+                String cedula = this.JTinput.getText();
+                String cedulaActual = this.cliente.getIdentificacion();
+                this.clienteDAO.actualizarIdentificacion(cedula, cedulaActual);
                 dispose();
+            } catch (SQLException ex) {
+                Logger.getLogger(Actualizar.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                String dato = this.JTinput.getText();
+                boolean ActualizarDatos = this.clienteDAO.actualizarDatoCliente(this.cliente.getIdentificacion(), campo, dato);
+                if (ActualizarDatos) {
+                    JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido actualizado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+                    dispose();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Actualizar.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
