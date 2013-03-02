@@ -12,6 +12,7 @@ import java.awt.event.FocusEvent;
 import java.sql.Date;
 import java.util.ArrayList;
 import javax.swing.*;
+
 import nicon.enterprise.gui.Clientes.CrearTipoActividad;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconLibTools;
@@ -19,7 +20,7 @@ import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.dao.ActividadDAO;
 import nicon.enterprise.libCore.dao.TipoActividadDAO;
 import nicon.enterprise.libCore.obj.Actividad;
-import nicon.enterprise.libCore.obj.Cliente;
+import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.libCore.obj.TipoActividad;
 
 public class AsignarActividad extends JDialog implements ActionListener {
@@ -33,15 +34,18 @@ public class AsignarActividad extends JDialog implements ActionListener {
     private JLabel jlDescripcion;
     private JLabel jlFecha;
     private JLabel jlEstado;
+    
     private JTextField jtCodigo;
     private JTextField jtNombre;
     private JTextField jtIdCliente;
     private JTextArea jtDescripcion;
     private JDateChooser jdFechaAsignacion;
+    
     private Actividad actividad;
     private ActividadDAO actividadDAO;
     private TipoActividad tipoActividad;
     private TipoActividadDAO tipoActividadDAO;
+    
     private JComboBox jcTipoActividad;
     private ArrayList listaTipoActividad;
     private String[] lista;
@@ -55,7 +59,6 @@ public class AsignarActividad extends JDialog implements ActionListener {
     private Date fecha;
     private boolean estadoActividad;
     private JButton jbAddTipo;
-    private JButton jbAddCliente;
     private JButton jbGrabar;
     private JButton jbCancelar;
     private Cliente cliente;

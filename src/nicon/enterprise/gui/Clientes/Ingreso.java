@@ -16,7 +16,7 @@ import javax.swing.border.TitledBorder;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.obj.Almacen;
-import nicon.enterprise.libCore.obj.*;
+import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.memData.BasicDataAplication;
 
 public class Ingreso extends JDialog implements ActionListener {

@@ -5,6 +5,7 @@
  * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
  * Sanchez.
  */
+
 package nicon.enterprise.gui.Clientes;
 
 import java.awt.Color;
@@ -30,7 +31,7 @@ import nicon.enterprise.gui.Clientes.activities.AsignarActividad;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
-import nicon.enterprise.libCore.obj.Cliente;
+import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.memData.BasicDataAplication;
 
 /**
@@ -68,12 +69,14 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JMenuItem jmVerUltimo;
     private JMenuItem jmAbrirActividades;
     private JMenuItem jmCrearTipoActividad;
+    
     private static DefaultTableModel modelo;
     private static JTable tablaClientes;
     private JScrollPane ScrollTable;
     private TitledBorder BorderInf;
     private TitledBorder BorderTool;
     private TitledBorder BorderSearch;
+    
     private JLabel JLTel_fijo;
     private JLabel JLTel_movil;
     private JLabel JLTel_alternativo;
@@ -83,6 +86,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JLabel JLListCity;
     private JLabel jlContacto;
     private JLabel jlUbicacion;
+    
     private static JLabel nombres;
     private static JLabel identificacion;
     private static JLabel JLfecha_registro;
@@ -94,6 +98,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private static JLabel ciudad;
     private static JLabel email;
     private static JLabel fechaRegistro;
+    
     private JTextField JTSearchData;
     private JButton JBCrear;
     private JButton JBEditar;
@@ -104,14 +109,18 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JRadioButton JRBIdentificacion;
     private JSeparator SeparatorTools;
     private JComboBox JCListCity;
-    private int selectedSearch;
+    
+    
     private static ArrayList listaClientes;
     private static Cliente cliente;
     private static ClienteDAO clienteDAO;
     private static String[] vectorDatos;
     private static String Icons;
+    
+    private int selectedSearch;
     private int index;
     private boolean stateOP;
+    
     private AsignarActividad asignacion;
     private JSeparator separator1;
     private JSeparator separator2;

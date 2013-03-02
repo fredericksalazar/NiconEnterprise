@@ -5,6 +5,7 @@
  * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
  * Sanchez.
  */
+
 package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
@@ -14,7 +15,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 import nicon.enterprise.libCore.Conection;
 import nicon.enterprise.libCore.NiconAdminReport;
-import nicon.enterprise.libCore.obj.Cliente;
+import nicon.enterprise.libCore.api.obj.Cliente;
 
 /**
  * ClienteDAO es la interfaz de metodos de todo el modulo de clientes, define
@@ -220,7 +221,7 @@ public class ClienteDAO {
             sentencia = "SELECT  `nombres`, `apellidos`, `ciudad`, `direccion`, `Departamento`, `telefono_fijo`, `telefono_movil`, `Telefono_alternativo`, `email`, `fecha_registro`, `Almacenes_idAlmacenes` FROM `Clientes` WHERE identificacion=" + identificacion + ";";
             datosConsulta = coneccion.consultarDatos(sentencia);            
                 if (datosConsulta.next()) {
-                    cliente = new Cliente(datosConsulta.getString(1), datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4), datosConsulta.getString(5), datosConsulta.getString(6), datosConsulta.getString(7), datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));
+                    cliente = new Cliente(identificacion,datosConsulta.getString("nombres"), datosConsulta.getString("apellidos"),datosConsulta.getString("ciudad"),datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"), datosConsulta.getString("telefono_fijo"), datosConsulta.getString("telefono_movil"), datosConsulta.getString("Telefono_alternativo"),datosConsulta.getString("email"),datosConsulta.getString("fecha_registro"),datosConsulta.getInt("Almacenes_idAlmacenes"));
                 } else {
                     cliente = null;
                 } 
