@@ -26,7 +26,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JRException;
 
-import nicon.enterprise.gui.Clientes.activities.AdministradorActividades;
+import nicon.enterprise.gui.Clientes.activities.Actividad_Administrador;
 import nicon.enterprise.gui.Clientes.activities.AsignarActividad;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
@@ -852,7 +852,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         }
 
         if (ae.getSource() == this.jmAbrirActividades) {
-            AdministradorActividades activitiesAdmin = new AdministradorActividades();
+            Actividad_Administrador activitiesAdmin = new Actividad_Administrador();
             activitiesAdmin.setVisible(true);
         }
 

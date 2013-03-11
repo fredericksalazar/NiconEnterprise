@@ -18,7 +18,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import nicon.enterprise.gui.Clientes.ModuloClientes;
-import nicon.enterprise.gui.Clientes.activities.ActividadesPendientes;
+import nicon.enterprise.gui.Clientes.activities.Actividad_ListadoPendientes;
 import nicon.enterprise.gui.Empleados.ModuloEmpleados;
 import nicon.enterprise.gui.Empresa.VisorEmpresa;
 import nicon.enterprise.gui.Proveedores.ModuloProveedores;
@@ -85,7 +85,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private Conection coneccion;
     private ConfigConector conector;
     private ConfigConectorDAO conectorDAO;
-    private ActividadesPendientes panelPendientes;
+    private Actividad_ListadoPendientes panelPendientes;
     private ModuleConector module;
     private JScrollPane scrollAcciones;
 
@@ -262,7 +262,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
      * sistema.
      */
     private void createDash() {
-        panelPendientes = new ActividadesPendientes();
+        panelPendientes = new Actividad_ListadoPendientes();
 
         borderAcciones = BorderFactory.createTitledBorder("Módulos");
         borderAcciones.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
