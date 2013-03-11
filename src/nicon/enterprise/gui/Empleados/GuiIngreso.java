@@ -357,8 +357,8 @@ public class GuiIngreso extends JDialog  implements ActionListener{
   private void registrarContratacion() {
     try {
       this.registroContrato = new ContratoEmpleadoDAO();
-      this.empleado = new Empleado(this.identificacion, this.nombres, this.apellidos, NiconLibTools.dateFormatSimple(this.fechaNacimiento), this.lugarNacimiento, this.estadoCivil, this.direccion, this.barrio, this.ciudad, this.telFijo, this.telMovil, this.email, true);
-      this.contratoEmpleado = new ContratoEmpleado(NiconLibTools.dateFormatSimple(this.fechaContratacion), this.cargo, this.salario, this.tiempoContrato, this.tipoContrato, NiconLibTools.dateFormatSimple(this.inicioFunciones), this.empleado.getIdentificacion(), this.observaciones);
+      this.empleado = new Empleado(this.identificacion, this.nombres, this.apellidos, NiconLibTools.parseToMysqlStringDate(this.fechaNacimiento), this.lugarNacimiento, this.estadoCivil, this.direccion, this.barrio, this.ciudad, this.telFijo, this.telMovil, this.email, true);
+      this.contratoEmpleado = new ContratoEmpleado(NiconLibTools.parseToMysqlStringDate(this.fechaContratacion), this.cargo, this.salario, this.tiempoContrato, this.tipoContrato, NiconLibTools.parseToMysqlStringDate(this.inicioFunciones), this.empleado.getIdentificacion(), this.observaciones);
       this.registro = new EmpleadoDAO(this.empleado);
       this.registroContrato = new ContratoEmpleadoDAO(this.contratoEmpleado);
       boolean crearEmpleado = this.registro.crearEmpleado();

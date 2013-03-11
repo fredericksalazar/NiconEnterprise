@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 import nicon.enterprise.gui.Clientes.CrearTipoActividad;
@@ -237,17 +240,21 @@ public class AsignarActividad extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this.rootPane, "Hay datos importantes sin ingresar, verifiqeu e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
             this.jbGrabar.setEnabled(false);
         } else {
-            this.jbGrabar.setEnabled(true);
-            this.indiceActividad += 1;
-            this.actividad = new Actividad(this.nombreActividad, this.descripcion, this.indiceActividad, this.idCliente, NiconLibTools.dateFormatSimple(this.fecha), this.estadoActividad, null);
-            this.actividadDAO = new ActividadDAO(this.actividad);
-            boolean crearActividad = this.actividadDAO.crearActividad();
-            if (crearActividad) {
-                JOptionPane.showMessageDialog(this.rootPane, "La nueva actividad ha sido asignada al cliente exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this.rootPane, "La actividad no pudo ser asignada ocurrio un error en el proceso", GlobalConfigSystem.getAplicationTitle(), 0);
-                dispose();
+            try {
+                this.jbGrabar.setEnabled(true);
+                this.indiceActividad += 1;
+                this.actividad = new Actividad(this.nombreActividad, this.descripcion, this.indiceActividad, this.idCliente, NiconLibTools.parseToMysqlStringDate(this.fecha), this.estadoActividad, null);
+                this.actividadDAO = new ActividadDAO(this.actividad);
+                boolean crearActividad = this.actividadDAO.crearActividad();
+                if (crearActividad) {
+                    JOptionPane.showMessageDialog(this.rootPane, "La nueva actividad ha sido asignada al cliente exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this.rootPane, "La actividad no pudo ser asignada ocurrio un error en el proceso", GlobalConfigSystem.getAplicationTitle(), 0);
+                    dispose();
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(AsignarActividad.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

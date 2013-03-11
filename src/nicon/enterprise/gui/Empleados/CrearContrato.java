@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -242,7 +243,7 @@ public class CrearContrato {
             Date inicioFunciones = this.jtInicioFunciones.getDate();
             String observaciones = this.jtObservaciones.getText();
 
-            this.contratoEmpleado = new ContratoEmpleado(NiconLibTools.dateFormatSimple(fechaContratacion), cargo, salario.doubleValue(), tiempoContratado, tipoContrato, NiconLibTools.dateFormatSimple(inicioFunciones), identificacion, observaciones);
+            this.contratoEmpleado = new ContratoEmpleado(NiconLibTools.parseToMysqlStringDate(fechaContratacion), cargo, salario.doubleValue(), tiempoContratado, tipoContrato, NiconLibTools.parseToMysqlStringDate(inicioFunciones), identificacion, observaciones);
             this.contratoDAO = new ContratoEmpleadoDAO(this.contratoEmpleado);
             this.registro = this.contratoDAO.registrarContrato();
             if (this.registro == true) {
@@ -258,6 +259,8 @@ public class CrearContrato {
                 this.estado = false;
             }
         } catch (SQLException ex) {
+            Logger.getLogger(CrearContrato.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(CrearContrato.class.getName()).log(Level.SEVERE, null, ex);
         }
         return this.estado;

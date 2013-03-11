@@ -71,7 +71,7 @@ public class ActividadDAO {
             this.sentencia = ("select TituloActividad,DescripcionActividad,TipoActividad.Titulo,identificacion,nombres,apellidos,direccion,FechaAsignacion,EstadoActividad,FechaRegistro from Actividades,TipoActividad,Clientes where TipoActividad.codigo=TipoActividad_codigo and Clientes.identificacion=Clientes_identificacion and idActividad=" + ID + "; ");
             this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
             if (this.datosConsulta.next()) {
-                this.actividad = new Actividad(this.datosConsulta.getInt(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getInt(4), this.datosConsulta.getString(5), NiconLibTools.dateFormatSimple(this.datosConsulta.getDate(6)), this.datosConsulta.getBoolean(7), String.valueOf(this.datosConsulta.getDate(8)));
+                this.actividad = new Actividad(this.datosConsulta.getInt(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getInt(4), this.datosConsulta.getString(5), NiconLibTools.parseToMysqlStringDate(this.datosConsulta.getDate(6)), this.datosConsulta.getBoolean(7), String.valueOf(this.datosConsulta.getDate(8)));
                 this.datosConsulta.close();
             } else {
                 this.actividad = null;
@@ -107,7 +107,7 @@ public class ActividadDAO {
             this.sentencia = ("select * from Actividades where idActividad='" + titulo + "';");
             this.datosConsulta = this.coneccion.consultarDatos(this.sentencia);
             if (this.datosConsulta.next()) {
-                this.actividad = new Actividad(this.datosConsulta.getInt(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getInt(4), this.datosConsulta.getString(5), NiconLibTools.dateFormatSimple(this.datosConsulta.getDate(6)), this.datosConsulta.getBoolean(7), String.valueOf(this.datosConsulta.getDate(8)));
+                this.actividad = new Actividad(this.datosConsulta.getInt(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getInt(4), this.datosConsulta.getString(5), NiconLibTools.parseToMysqlStringDate(this.datosConsulta.getDate(6)), this.datosConsulta.getBoolean(7), String.valueOf(this.datosConsulta.getDate(8)));
                 this.datosConsulta.close();
             }
         } catch (Exception e) {

@@ -46,7 +46,7 @@ public class GlobalConfigSystem {
         FontAplicationSubTitle = new Font("Ubuntu", 0, 18);
         FontAplicationName = new Font("Ubuntu", 0, 37);
 
-        AplicationTitle = "NiconEnterprise V 0.1.45";
+        AplicationTitle = "NiconEnterprise V 0.1.51";
         iconsPath = "/nicon/enterprise/gui/Images/";
         exportationPath = "./Archivos";
         expPathPDF = "./Pdf";

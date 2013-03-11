@@ -68,7 +68,7 @@ public class ContratoEmpleadoDAO
       this.sentence = ("SELECT * FROM  ContratosEmpleados WHERE IDempleado='" + IDempleado + "' AND EstadoContrato=true;");
       this.dataSentence = this.coneccion.consultarDatos(this.sentence);
       if (this.dataSentence.next()) {
-        this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.dateFormatSimple(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IDempleado, this.dataSentence.getString(9));
+        this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IDempleado, this.dataSentence.getString(9));
         System.out.println("Contrato Activo Encontrado Nº : " + this.contrato.getIdContrato());
       } else {
         System.out.println("No se Encontró ningun contrato para el ID: " + IDempleado);
@@ -124,7 +124,7 @@ public class ContratoEmpleadoDAO
       if (this.dataSentence.next()) {
         this.dataSentence.beforeFirst();
         while (this.dataSentence.next()) {
-          this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.dateFormatSimple(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IdEmpleado, this.dataSentence.getString(9));
+          this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IdEmpleado, this.dataSentence.getString(9));
           this.contratos.add(this.counter, this.contrato);
           this.counter += 1;
         }
@@ -145,7 +145,7 @@ public class ContratoEmpleadoDAO
       this.sentence = "select * from ContratosEmpleados;";
       this.dataSentence = this.coneccion.consultarDatos(this.sentence);
       while (this.dataSentence.next()) {
-        this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.dateFormatSimple(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), this.dataSentence.getString(9), this.dataSentence.getString(10));
+        this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), this.dataSentence.getString(9), this.dataSentence.getString(10));
         this.contratos.add(this.counter, this.contrato);
         this.counter += 1;
       }

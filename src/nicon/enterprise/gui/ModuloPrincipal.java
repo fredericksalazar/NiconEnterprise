@@ -24,8 +24,8 @@ import nicon.enterprise.gui.Empresa.VisorEmpresa;
 import nicon.enterprise.gui.Proveedores.ModuloProveedores;
 import nicon.enterprise.libCore.Conection;
 import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.api.obj.Empresa;
-import nicon.enterprise.libCore.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
 /**
@@ -41,13 +41,15 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private static int TotalOpenTabs;
     private static String Icons;
     private int index;
-    private boolean operacion;
+    private boolean operacion;    
     private String opcionSalida;
+    
     private JMenuBar MenuBar;
     private JMenu menuArchivo;
     private JMenu menuConf;
     private JMenu menuEmpresa;
     private JMenu menuAlmacen;
+    
     private JMenuItem JMIConfig_almacen;
     private JMenuItem jmVerEmpresa;
     private JMenuItem jmSalir;
@@ -56,9 +58,11 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private JMenuItem jmCrearConfConector;
     private JMenuItem jmDelConfConector;
     private JMenuItem jmVerConector;
+    
     private JPanel panelDash;
     private JPanel mainPanel;
     private JPanel panelAcciones;
+    
     private JLabel jlRazonSocial;
     private JLabel jlSlogan;
     private JLabel jlNit;
@@ -68,12 +72,15 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private JLabel JLempleados;
     private JLabel jlProveedores;
     private JLabel estadoServidor;
+    
     private JButton moduloClientes;
     private JButton moduloEmpleados;
     private JButton moduloProveedores;
+    
     private static JTabbedPane JTabsNiconEnterprise;
     private JTextField guiEstadoServidor;
     private TitledBorder borderAcciones;
+    
     private Empresa datosEmpresa;
     private Conection coneccion;
     private ConfigConector conector;

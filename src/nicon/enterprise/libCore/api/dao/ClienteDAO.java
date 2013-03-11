@@ -11,8 +11,10 @@ package nicon.enterprise.libCore.api.dao;
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
+
 import nicon.enterprise.libCore.Conection;
 import nicon.enterprise.libCore.NiconAdminReport;
 import nicon.enterprise.libCore.api.obj.Cliente;
@@ -255,8 +257,8 @@ public class ClienteDAO {
      * @param apellidos
      * @return 
      */
-    public Cliente validarCliente(String nombres, String apellidos) throws SQLException {
-            sentencia = "SELECT DISTINCT * FROM WHERE nombres='" + nombres + "' AND apellidos='" + apellidos + "';";
+    public Cliente validarCliente(String nombres, String apellidos,String ciudad) throws SQLException {
+            sentencia = "SELECT DISTINCT * FROM Clientes WHERE nombres='" + nombres + "' AND apellidos='" + apellidos + "' AND ciudad='"+ciudad+"';";
             datosConsulta = coneccion.consultarDatos(sentencia);
                 if (datosConsulta.next()) {
                         cliente = new Cliente(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6), this.datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));

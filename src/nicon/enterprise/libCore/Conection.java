@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import nicon.enterprise.libCore.dao.ConfigConectorDAO;
+import nicon.enterprise.libCore.api.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
 public class Conection {

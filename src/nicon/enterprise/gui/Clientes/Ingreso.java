@@ -1,52 +1,79 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated.
+ *
+ * NiconSystem Inc. Cll 9a#6a-09 Florida Valle del cauca Colombia 318 437 4382
+ * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
+ * Sanchez.
  */
+
 package nicon.enterprise.gui.Clientes;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import java.sql.SQLException;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
-import nicon.enterprise.libCore.api.obj.Almacen;
 import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.memData.BasicDataAplication;
 
+/**
+ * Esta clase representa una vista para la creacion de nuevos clientees, le permite al usuario poder 
+ * ingresar los datos de la informacion basica del usuario.
+ * 
+ * @author Frederick Adolfo Salazar Sanchez
+ */
 public class Ingreso extends JDialog implements ActionListener {
     
   private static final long serialVersionUID = 4L;
-  private JPanel JPGui;
-  private JPanel JPInput;
+  
+  private JPanel panelPrincipal;
+  private JPanel panelContenedor;
+  
   private TitledBorder BorderInput;
+  
   private JButton JBgrabar;
   private JButton JBCancelar;
-  private JButton JBLimpiar;
-  private JLabel JLTitulo;
-  private JLabel JLIdentificacion;
-  private JLabel JLNombres;
-  private JLabel JLApellidos;
-  private JLabel JLCiudad;
-  private JLabel JLDireccion;
-  private JLabel JLDepartamento;
-  private JLabel JLTel_fijo;
-  private JLabel JLTel_movil;
-  private JLabel JLTel_alternativo;
-  private JLabel JLEmail;
-  private JTextField JTIdentificacion;
-  private JTextField JTNombres;
-  private JTextField JTApellidos;
-  private JTextField JTDireccion;
-  private JTextField JTTel_fijo;
-  private JTextField JTTel_movil;
-  private JTextField JTTel_alternativo;
+  
+  private JLabel titulo;
+  private JLabel identificacion;
+  private JLabel jlNombres;
+  private JLabel jlapellidos;
+  private JLabel jlCiudad;
+  private JLabel jlDireccion;
+  private JLabel jlDepartamento;
+  private JLabel jlTelefono_fijo;
+  private JLabel jlTelefono_movil;
+  private JLabel jlTelefono_alternativo;
+  private JLabel jlEmail;
+  
+  private JTextField jtIdentificacion;
+  private JTextField jtNombres;
+  private JTextField jtApellidos;
+  private JTextField jtDireccion;
+  private JTextField jtTelefono_fijo;
+  private JTextField jtTelefono_movil;
+  private JTextField jtTelefono_alternativo;
   private JTextField JTEmail;
+  
   private String id;
   private String nombres;
   private String apellidos;
@@ -57,266 +84,297 @@ public class Ingreso extends JDialog implements ActionListener {
   private String tel_movil;
   private String tel_aternativo;
   private String email;
-  private JComboBox JCciudades;
-  private JComboBox JCDpto;
-  private Almacen almacen;
+  
+  private JComboBox jcCiudades;
+  private JComboBox jcDepartamento;
+  
   private Cliente cliente;
   private ClienteDAO clienteDAO;
   private Cliente validacion;
+    private boolean estadoValidacion;
 
-  public Ingreso()
-  {
+  public Ingreso(){
     setTitle(GlobalConfigSystem.getAplicationTitle());
     setSize(800, 600);
     setLocationRelativeTo(null);
     setUndecorated(true);
     setModal(true);
     loadComponents();
-    this.clienteDAO = new ClienteDAO();
-    this.almacen = new Almacen();
+    clienteDAO = new ClienteDAO();
   }
 
-  private void loadComponents()
-  {
-    this.JPGui = new JPanel();
-    this.JPGui.setBackground(GlobalConfigSystem.getBackgroundAplicationPanel());
-    this.JPGui.setBounds(0, 0, 500, 500);
-    this.JPGui.setLayout(null);
+  private void loadComponents(){
+    panelPrincipal = new JPanel();
+    panelPrincipal.setBackground(GlobalConfigSystem.getBackgroundAplicationPanel());
+    panelPrincipal.setBounds(0, 0, 500, 500);
+    panelPrincipal.setLayout(null);
 
-    this.BorderInput = BorderFactory.createTitledBorder("");
+    BorderInput = BorderFactory.createTitledBorder("");
 
-    this.JPInput = new JPanel();
-    this.JPInput.setBackground(GlobalConfigSystem.getBackgroundAplication());
-    this.JPInput.setBounds(50, 85, 700, 470);
-    this.JPInput.setBorder(this.BorderInput);
-    this.JPInput.setLayout(null);
+    panelContenedor = new JPanel();
+    panelContenedor.setBackground(GlobalConfigSystem.getBackgroundAplication());
+    panelContenedor.setBounds(50, 85, 700, 470);
+    panelContenedor.setBorder(BorderInput);
+    panelContenedor.setLayout(null);
 
-    this.JLTitulo = new JLabel("Creación de Nuevo Cliente");
-    this.JLTitulo.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());
-    this.JLTitulo.setFont(GlobalConfigSystem.getFontAplicationTitle());
-    this.JLTitulo.setBounds(200, 15, 600, 40);
+    titulo = new JLabel("Ingrese los datos del Cliente:");
+    titulo.setForeground(GlobalConfigSystem.getForegroundAplicationText());
+    titulo.setFont(GlobalConfigSystem.getFontAplicationTitle());
+    titulo.setBounds(50, 15, 600,45);
 
-    this.JLIdentificacion = new JLabel("Ingrese la cédula:");
-    this.JLIdentificacion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLIdentificacion.setBounds(25, 20, 160, 20);
-    this.JLIdentificacion.setFont(GlobalConfigSystem.getFontAplicationText());
+    identificacion = new JLabel("Número de Identificación:");
+    identificacion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    identificacion.setBounds(25, 20, 160, 20);
+    identificacion.setFont(GlobalConfigSystem.getFontAplicationText());
 
-    this.JLNombres = new JLabel("Ingrese los Nombres:");
-    this.JLNombres.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLNombres.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLNombres.setBounds(25, 60, 160, 20);
+    jlNombres = new JLabel("Ingrese los Nombres:");
+    jlNombres.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlNombres.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlNombres.setBounds(25, 60, 160, 20);
 
-    this.JLApellidos = new JLabel("Ingrese los apellidos:");
-    this.JLApellidos.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLApellidos.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLApellidos.setBounds(25, 100, 160, 20);
+    jlapellidos = new JLabel("Ingrese los apellidos:");
+    jlapellidos.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlapellidos.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlapellidos.setBounds(25, 100, 160, 20);
 
-    this.JLCiudad = new JLabel("Ingrese la ciudad de residencia:");
-    this.JLCiudad.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLCiudad.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLCiudad.setBounds(25, 140, 300, 20);
+    jlCiudad = new JLabel("Ingrese la ciudad de residencia:");
+    jlCiudad.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlCiudad.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlCiudad.setBounds(25, 140, 300, 20);
 
-    this.JLDireccion = new JLabel("Ingrese la dirección:");
-    this.JLDireccion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLDireccion.setBounds(25, 180, 300, 20);
+    jlDireccion = new JLabel("Ingrese la dirección:");
+    jlDireccion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlDireccion.setBounds(25, 180, 300, 20);
 
-    this.JLDepartamento = new JLabel("Ingrese el Departamento:");
-    this.JLDepartamento.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLDepartamento.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLDepartamento.setBounds(25, 220, 300, 20);
+    jlDepartamento = new JLabel("Ingrese el Departamento:");
+    jlDepartamento.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlDepartamento.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlDepartamento.setBounds(25, 220, 300, 20);
 
-    this.JLTel_fijo = new JLabel("Ingrese el número de teléfono fijo:");
-    this.JLTel_fijo.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLTel_fijo.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLTel_fijo.setBounds(25, 260, 300, 20);
+    jlTelefono_fijo = new JLabel("Ingrese el número de teléfono fijo:");
+    jlTelefono_fijo.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlTelefono_fijo.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlTelefono_fijo.setBounds(25, 260, 300, 20);
 
-    this.JLTel_movil = new JLabel("Ingrese el número de celular:");
-    this.JLTel_movil.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLTel_movil.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLTel_movil.setBounds(25, 300, 300, 20);
+    jlTelefono_movil = new JLabel("Ingrese el número de celular:");
+    jlTelefono_movil.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlTelefono_movil.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlTelefono_movil.setBounds(25, 300, 300, 20);
 
-    this.JLTel_alternativo = new JLabel("Ingrese un Telefono alternativo:");
-    this.JLTel_alternativo.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLTel_alternativo.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLTel_alternativo.setBounds(25, 340, 300, 20);
+    jlTelefono_alternativo = new JLabel("Ingrese un Telefono alternativo:");
+    jlTelefono_alternativo.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlTelefono_alternativo.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlTelefono_alternativo.setBounds(25, 340, 300, 20);
 
-    this.JLEmail = new JLabel("Ingrese una direccón de email:");
-    this.JLEmail.setForeground(GlobalConfigSystem.getForegrounAplicationText());
-    this.JLEmail.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.JLEmail.setBounds(25, 380, 300, 20);
+    jlEmail = new JLabel("Ingrese una direccón de email:");
+    jlEmail.setForeground(GlobalConfigSystem.getForegrounAplicationText());
+    jlEmail.setFont(GlobalConfigSystem.getFontAplicationText());
+    jlEmail.setBounds(25, 380, 300, 20);
 
-    this.JTIdentificacion = new JTextField();
-    this.JTIdentificacion.setBounds(300, 15, 300, 25);
-    this.JTIdentificacion.setToolTipText("Número de identificación");
-    this.JTIdentificacion.addFocusListener(new FocusAdapter()
-    {
+    jtIdentificacion = new JTextField();
+    jtIdentificacion.setBounds(300, 15, 300,30);
+    jtIdentificacion.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtIdentificacion.setToolTipText("Número de identificación");
+    jtIdentificacion.addFocusListener(new FocusAdapter(){
       @Override
-      public void focusLost(FocusEvent fe) {
-        Ingreso.this.verificarCliente();
-      }
+      /**
+       * Este evento sucede cuando el campo de texto de la indentificacion pierde el foco en ese momento se
+       * verifica si el numero de identificacion ingresado ya existe dentro de la fuente de datos, en caso de 
+       * ya estar registrado no permitira el ingreso del nuevo usuario con ese numero de indentificacion.
+       */
+        public void focusLost(FocusEvent fe) {
+            validarID();
+        }
     });
-    this.JTNombres = new JTextField();
-    this.JTNombres.setBounds(300, 55, 300, 25);
-    this.JTNombres.setToolTipText("Nombres del cliente");
+    
+    jtNombres = new JTextField();
+    jtNombres.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtNombres.setForeground(Color.darkGray);
+    jtNombres.setBounds(300, 55, 300,30);
+    jtNombres.setToolTipText("Ingrese los nombres del cliente");
 
-    this.JTApellidos = new JTextField();
-    this.JTApellidos.setBounds(300, 95, 300, 25);
-    this.JTApellidos.setToolTipText("Ingrese los apellidos del cliente");
+    jtApellidos = new JTextField();
+    jtApellidos.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtApellidos.setForeground(Color.darkGray);
+    jtApellidos.setBounds(300, 95, 300,30);
+    jtApellidos.setToolTipText("Ingrese los apellidos del cliente");
 
-    this.JCciudades = new JComboBox(BasicDataAplication.getListCity());
-    this.JCciudades.setBounds(300, 135, 300, 25);
-    this.JCciudades.setEditable(true);
+    jcCiudades = new JComboBox(BasicDataAplication.getListCity());
+    jcCiudades.setFont(GlobalConfigSystem.getFontAplicationText());
+    jcCiudades.setBounds(300, 135, 300,30);
+    jcCiudades.setEditable(true);
 
-    this.JTDireccion = new JTextField();
-    this.JTDireccion.setBounds(300, 175, 300, 25);
-    this.JTDireccion.setToolTipText("Ingrese la dirección de residencia del cliente");
+    jtDireccion = new JTextField();
+    jtDireccion.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtDireccion.setForeground(Color.darkGray);
+    jtDireccion.setBounds(300, 175, 300,30);
+    jtDireccion.setToolTipText("Ingrese la dirección de residencia del cliente");
 
-    this.JCDpto = new JComboBox(BasicDataAplication.getListDepartament());
-    this.JCDpto.setBounds(300, 215, 300, 25);
-    this.JCDpto.setEditable(true);
-    this.JCDpto.setToolTipText("Ingrese el departamento o estado");
+    jcDepartamento = new JComboBox(BasicDataAplication.getListDepartament());
+    jcDepartamento.setBounds(300, 215, 300,30);
+    jcDepartamento.setFont(GlobalConfigSystem.getFontAplicationText());
+    jcDepartamento.setEditable(true);
+    jcDepartamento.setToolTipText("Ingrese el departamento o estado");
 
-    this.JTTel_fijo = new JTextField();
-    this.JTTel_fijo.setBounds(300, 255, 300, 25);
-    this.JTTel_fijo.setToolTipText("Ingrese el numero de telefono fijo");
+    jtTelefono_fijo = new JTextField();
+    jtTelefono_fijo.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtTelefono_fijo.setForeground(Color.darkGray);
+    jtTelefono_fijo.setBounds(300, 255, 300,30);
+    jtTelefono_fijo.setToolTipText("Ingrese el numero de telefono fijo");
 
-    this.JTTel_movil = new JTextField();
-    this.JTTel_movil.setBounds(300, 295, 300, 25);
-    this.JTTel_movil.setToolTipText("Ingrese el numero de celular");
+    jtTelefono_movil = new JTextField();
+    jtTelefono_movil.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtTelefono_movil.setForeground(Color.darkGray);
+    jtTelefono_movil.setBounds(300, 295, 300,30);
+    jtTelefono_movil.setToolTipText("Ingrese el numero de celular");
 
-    this.JTTel_alternativo = new JTextField();
-    this.JTTel_alternativo.setBounds(300, 335, 300, 25);
-    this.JTTel_alternativo.setToolTipText("Ingrese un numero de teléfono adicional");
+    jtTelefono_alternativo = new JTextField();
+    jtTelefono_alternativo.setFont(GlobalConfigSystem.getFontAplicationText());
+    jtTelefono_alternativo.setForeground(Color.darkGray);
+    jtTelefono_alternativo.setBounds(300, 335, 300,30);
+    jtTelefono_alternativo.setToolTipText("Ingrese un numero de teléfono adicional");
 
-    this.JTEmail = new JTextField();
-    this.JTEmail.setBounds(300, 375, 300, 25);
-    this.JTEmail.setToolTipText("Ingrese una direcciónd de correo electrónico");
+    JTEmail = new JTextField();
+    JTEmail.setFont(GlobalConfigSystem.getFontAplicationText());
+    JTEmail.setForeground(Color.darkGray);
+    JTEmail.setBounds(300, 375, 300,30);
+    JTEmail.setToolTipText("Ingrese una direcciónd de correo electrónico");
 
-    this.JPInput.add(this.JLIdentificacion);
-    this.JPInput.add(this.JLNombres);
-    this.JPInput.add(this.JLApellidos);
-    this.JPInput.add(this.JTIdentificacion);
-    this.JPInput.add(this.JTNombres);
-    this.JPInput.add(this.JTApellidos);
-    this.JPInput.add(this.JLCiudad);
-    this.JPInput.add(this.JCciudades);
-    this.JPInput.add(this.JLDireccion);
-    this.JPInput.add(this.JTDireccion);
-    this.JPInput.add(this.JLDepartamento);
-    this.JPInput.add(this.JCDpto);
-    this.JPInput.add(this.JLTel_fijo);
-    this.JPInput.add(this.JTTel_fijo);
-    this.JPInput.add(this.JLTel_movil);
-    this.JPInput.add(this.JTTel_movil);
-    this.JPInput.add(this.JLTel_alternativo);
-    this.JPInput.add(this.JTTel_alternativo);
-    this.JPInput.add(this.JLEmail);
-    this.JPInput.add(this.JTEmail);
+    panelContenedor.add(identificacion);
+    panelContenedor.add(jlNombres);
+    panelContenedor.add(jlapellidos);
+    panelContenedor.add(jtIdentificacion);
+    panelContenedor.add(jtNombres);
+    panelContenedor.add(jtApellidos);
+    panelContenedor.add(jlCiudad);
+    panelContenedor.add(jcCiudades);
+    panelContenedor.add(jlDireccion);
+    panelContenedor.add(jtDireccion);
+    panelContenedor.add(jlDepartamento);
+    panelContenedor.add(jcDepartamento);
+    panelContenedor.add(jlTelefono_fijo);
+    panelContenedor.add(jtTelefono_fijo);
+    panelContenedor.add(jlTelefono_movil);
+    panelContenedor.add(jtTelefono_movil);
+    panelContenedor.add(jlTelefono_alternativo);
+    panelContenedor.add(jtTelefono_alternativo);
+    panelContenedor.add(jlEmail);
+    panelContenedor.add(JTEmail);
 
-    this.JBCancelar = new JButton("Cancelar");
-    this.JBCancelar.setBounds(420, 533, 150, 35);
-    this.JBCancelar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconCancelButton.png")));
-    this.JBCancelar.setToolTipText("Cancelar el registro de el cliente");
-    this.JBCancelar.addActionListener(this);
+    JBCancelar = new JButton("Cancelar");
+    JBCancelar.setBounds(420, 533, 150, 35);
+    JBCancelar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconCancelButton.png")));
+    JBCancelar.setToolTipText("Cancelar el registro de el cliente");
+    JBCancelar.addActionListener(this);
 
-    this.JBgrabar = new JButton("Crear Cliente");
-    this.JBgrabar.setBounds(570, 533, 150, 35);
-    this.JBgrabar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconOK.png")));
-    this.JBgrabar.setToolTipText("Ingresar la información de cliente al sistema");
-    this.JBgrabar.addActionListener(this);
+    JBgrabar = new JButton("Crear Cliente");
+    JBgrabar.setBounds(570, 533, 150, 35);
+    JBgrabar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconOK.png")));
+    JBgrabar.setToolTipText("Ingresar la información de cliente al sistema");
+    JBgrabar.addActionListener(this);
 
-    this.JPGui.add(this.JLTitulo);
-    this.JPGui.add(this.JBCancelar);
-    this.JPGui.add(this.JBgrabar);
-    this.JPGui.add(this.JPInput);
-    getContentPane().add(this.JPGui);
+    panelPrincipal.add(titulo);
+    panelPrincipal.add(JBCancelar);
+    panelPrincipal.add(JBgrabar);
+    panelPrincipal.add(panelContenedor);
+    getContentPane().add(panelPrincipal);
   }
 
-  private void verificarCliente() {
+  /**
+   * Este metodo se encarga de verificar los registros de un cliente que esta intentando registrar, por lo general
+   * solo se verifica si el numero ID ya existe en la base de datos en cuyo caso no permitirá registrar un nuevo
+   * cliente con ese ID.
+   */
+  private void validarID() {
       try {
-          this.id = this.JTIdentificacion.getText();
-          this.cliente = this.clienteDAO.buscarPorIdentificacion(this.id);
-          if (this.cliente != null) {
-            JOptionPane.showMessageDialog(this.rootPane, "El cliente ya esta regisrado en el sistema, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
-            dispose();
-          }
+          id = jtIdentificacion.getText();
+          cliente = clienteDAO.buscarPorIdentificacion(id);          
+                if (cliente != null) {
+                    JOptionPane.showMessageDialog(rootPane, "El número de identificación Ingresado ya existe en el sistema, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
+                    jtIdentificacion.setText("");
+                }
       } catch (SQLException ex) {
           Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
       }
   }
 
-  private boolean getAndVerifiyDataClient()
-  {
-    boolean state = true;
-    try {
-      this.id = this.JTIdentificacion.getText();
-      this.nombres = this.JTNombres.getText();
-      this.apellidos = this.JTApellidos.getText();
-      this.ciudad = ((String)this.JCciudades.getSelectedItem());
-      this.direccion = this.JTDireccion.getText();
-      this.departamento = ((String)this.JCDpto.getSelectedItem());
-      this.tel_fijo = this.JTTel_fijo.getText();
-      this.tel_movil = this.JTTel_movil.getText();
-      this.tel_aternativo = this.JTTel_alternativo.getText();
-      this.email = this.JTEmail.getText();
+  /**
+   * Este metodo permite obtener todos los dats ingresados por el usuario y almacenarlos en variables que 
+   * serán usadas al momento de crear el objeto <b>Cliente</b> que será registrado en el sistema.
+   * @return 
+   */
+  private boolean obtenerDatosIngresados(){
+    estadoValidacion = true;
+    
+      id = jtIdentificacion.getText();
+      nombres= jtNombres.getText();
+      apellidos = jtApellidos.getText();
+      ciudad = (String) jcCiudades.getSelectedItem();
+      direccion = jtDireccion.getText();
+      departamento = ((String)jcDepartamento.getSelectedItem());
+      tel_fijo = jtTelefono_fijo.getText();
+      tel_movil = jtTelefono_movil.getText();
+      tel_aternativo = jtTelefono_alternativo.getText();
+      email = JTEmail.getText();
 
-      if ((this.nombres.equals("")) || (this.apellidos.equals("")) || (this.ciudad.equals("")) || (this.direccion.equals("")) || (this.departamento.equals("")) || (this.tel_movil.equals(""))) {
-        state = false;
-        JOptionPane.showMessageDialog(this.rootPane, "Hay datos sin ingresar por favor verifique e intente de nuevo", "NiconEnterprise", 0);
+      if ((nombres.equals("")) || (apellidos.equals("")) || (ciudad.equals("")) || (direccion.equals("")) || (departamento.equals("")) || (tel_movil.equals(""))) {
+        estadoValidacion = false;
+        JOptionPane.showMessageDialog(rootPane, "Hay datos sin ingresar por favor verifique e intente de nuevo", "NiconEnterprise",JOptionPane.ERROR_MESSAGE,new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
       }
-    } catch (Exception e) {
-      JOptionPane.showMessageDialog(this.rootPane, "Ocurrio este error\n" + e, "NiconEnterprise", 0);
-      state = false;
-    }
-    return state;
+    
+    return estadoValidacion;
   }
 
-  private void guardarDatos()
-  {
+  /**
+   * este metodo permite tomar los datos ya ingresados y previamente validados crear un objeto del tipo Cliente
+   * que será registrado dentro de la fuente de datos, este metodo crea el objeto cliente por razones de seguridad
+   * no se pemritirá la creación de un cliente con diferente numero de cedula pero con datos similares dado que 
+   * esto puede permitir la duplicidad de informacion, por lo tanto se hace la verificacion de identidades completa
+   * para garantizar informacion verdadera.
+   */
+  private void guardarDatos(){
       try {
-          this.cliente = new Cliente(this.id, this.nombres, this.apellidos, this.ciudad, this.direccion, this.departamento, this.tel_fijo, this.tel_movil, this.tel_aternativo, this.email, 1);
-          this.clienteDAO = new ClienteDAO();
-          this.validacion = this.clienteDAO.validarCliente(this.cliente.getNombres(), this.cliente.getApellidos());
-          if (this.validacion != null) {
-            this.id = this.validacion.getIdentificacion();
-            this.nombres = this.validacion.getNombres();
-            this.apellidos = this.validacion.getApellidos();
-            JOptionPane.showMessageDialog(this.rootPane, "Actualmente hay registrado un cliente en la base de datos con informacion similar:\n\nIdentificación: " + this.validacion.getIdentificacion().toUpperCase() + "\n Nombres: " + this.validacion.getNombres().toUpperCase() + "\n Apellidos:" + this.validacion.getApellidos().toUpperCase() + "\n\nNo puede registrar el nuevo Cliente.", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconWarning.png")));
-
-            dispose();
-            this.cliente = null;
-            this.validacion = null;
-            this.clienteDAO = null;
-          } else {
-            try {
-              this.clienteDAO = new ClienteDAO(this.cliente);
-              if (this.clienteDAO.crearCliente()) {
-                ModuloClientes.recargarDatos();
-                JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido registrado exitosamente en el sistema", GlobalConfigSystem.getAplicationTitle(), 1, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
-                this.cliente = null;
-                this.clienteDAO = null;
-                dispose();
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
-            }
-          }
+          cliente = new Cliente(id, nombres,apellidos,ciudad,direccion,departamento,tel_fijo,tel_movil,tel_aternativo,email, 1);
+          clienteDAO = new ClienteDAO();
+          validacion = clienteDAO.validarCliente(cliente.getNombres(),cliente.getApellidos(),cliente.getCiudad());
+                if (validacion != null) {
+                    id = validacion.getIdentificacion();
+                    nombres = validacion.getNombres();
+                    apellidos = validacion.getApellidos();
+                    JOptionPane.showMessageDialog(rootPane, "Actualmente hay registrado un cliente en la base de datos con informacion similar:\n\nIdentificación: " + validacion.getIdentificacion().toUpperCase() + "\n Nombres: " + validacion.getNombres().toUpperCase() + "\n Apellidos:" + validacion.getApellidos().toUpperCase() + "\n\nNo puede registrar el nuevo Cliente.", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconWarning.png")));
+                    dispose();
+                    cliente = null;
+                    validacion = null;
+                    clienteDAO = null;
+                } else {
+                    clienteDAO = new ClienteDAO(this.cliente);
+                        if (clienteDAO.crearCliente()) {
+                                ModuloClientes.recargarDatos();
+                                JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido registrado exitosamente en el sistema", GlobalConfigSystem.getAplicationTitle(), 1, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
+                                cliente = null;
+                                clienteDAO = null;
+                                dispose();
+                        }            
+                }
       } catch (SQLException ex) {
           Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+          JOptionPane.showMessageDialog(rootPane, "Una exepcion ocurrio en el sistema:\n"+ex, GlobalConfigSystem.getAplicationTitle(), JOptionPane.ERROR_MESSAGE);
       }
   }
 
   @Override
-  public void actionPerformed(ActionEvent ae)
-  {
-    if (ae.getSource() == this.JBCancelar) {
+  public void actionPerformed(ActionEvent ae){
+      
+    if (ae.getSource() ==JBCancelar) {
       dispose();
     }
-    if (ae.getSource() == this.JBgrabar) {
-      boolean state = getAndVerifiyDataClient();
-      if (state == true)
-        guardarDatos();
+    
+    if (ae.getSource() == JBgrabar) {
+      
+            if (obtenerDatosIngresados()){
+                guardarDatos();
+            }        
     }
   }
 }

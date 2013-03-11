@@ -12,9 +12,12 @@ package nicon.enterprise.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ConfigConectorDAO;
+import nicon.enterprise.libCore.api.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
 /**
@@ -147,7 +150,11 @@ public class ModuleConector extends JDialog {
         jbAceptar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                guardarConfiguracion();
+                try {
+                    guardarConfiguracion();
+                } catch (IOException ex) {
+                    Logger.getLogger(ModuleConector.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         
@@ -190,7 +197,7 @@ public class ModuleConector extends JDialog {
         repaint();
     }
 
-    private void guardarConfiguracion() {
+    private void guardarConfiguracion() throws IOException {
         String nombre = jtNombre.getText();
         String ip = jtIPServer.getText();
         String Port = jtPort.getText();
@@ -199,14 +206,9 @@ public class ModuleConector extends JDialog {
 
         if ((nombre.equals("")) || (ip.equals("")) || (Port.equals("")) || (user.equals("")) || (pass.equals(""))) {
             JOptionPane.showMessageDialog(null, "Hay campos sin ingresar por favor verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
-        } else {
-            jlInformacion.setText("Obteniendo nuevos parametros ...");
-            panelConfig.repaint();
+        } else {            
             config = new ConfigConector(nombre, ip, Port, "NiconEnterprise", user, pass);
             configDAO = new ConfigConectorDAO(config);
-            jlInformacion.setText("Eliminando configuración actual ...");
-            panelConfig.repaint();
-            configDAO.deleteConfigFile();
             state = configDAO.createConfigFile();
             if (state) {
                 jlInformacion.setText("Nueva configuracion terminada ...");

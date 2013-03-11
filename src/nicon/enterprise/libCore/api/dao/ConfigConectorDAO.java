@@ -2,15 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.dao;
+package nicon.enterprise.libCore.api.dao;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconLibTools;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
@@ -33,11 +31,11 @@ public class ConfigConectorDAO {
     public ConfigConectorDAO() {
     }
 
-    public boolean createConfigFile() {
+    public boolean createConfigFile() throws IOException {
         if (this.config != null) {
             if (NiconLibTools.verifyExistDir(this.path)) {
-                String filePath = NiconLibTools.writeObjectToFile(this.config, this.path, this.nameFile);
-                this.state = true;
+                NiconLibTools.writeObjectToFile(this.config, this.path, this.nameFile);
+                state = true;
            } else {
                 NiconLibTools.createDirectory(this.path);
                 createConfigFile();
@@ -102,7 +100,7 @@ public class ConfigConectorDAO {
         return this.listConections;
     }
 
-    public void createConfigDefault() {
+    public void createConfigDefault() throws IOException {
         System.out.println("Creando configuracion por defecto para: Conector.conf ...");
         this.config = new ConfigConector("Conección Local", "127.0.0.1", "3306", "NiconEnterprise", "root", "1143825620");
         this.API = new ConfigConectorDAO(this.config);

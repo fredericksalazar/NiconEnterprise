@@ -619,7 +619,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private int obtenerIndiceSeleccionado() {
         index = tablaClientes.getSelectedRow();
             if (index < 0) {
-                JOptionPane.showMessageDialog(null, "NO ha seleccionada ninguna fila en la tabla de clientes", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(Icons+"NiconError.png")));
+                JOptionPane.showMessageDialog(null, "NO ha seleccionado ninguna fila en la tabla de clientes", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new javax.swing.ImageIcon(getClass().getResource(Icons+"NiconError.png")));
             }
         return index;
     }
@@ -667,8 +667,6 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
                 seleccionarCliente(cliente.getIdentificacion());
             } else {
                 JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
-        
-            
             }
         } catch (SQLException ex) {
             Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
