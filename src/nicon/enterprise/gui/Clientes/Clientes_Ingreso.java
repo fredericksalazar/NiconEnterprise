@@ -91,7 +91,7 @@ public class Clientes_Ingreso extends JDialog implements ActionListener {
   private Cliente cliente;
   private ClienteDAO clienteDAO;
   private Cliente validacion;
-    private boolean estadoValidacion;
+  private boolean estadoValidacion;
 
   public Clientes_Ingreso(){
     setTitle(GlobalConfigSystem.getAplicationTitle());
@@ -120,7 +120,7 @@ public class Clientes_Ingreso extends JDialog implements ActionListener {
     titulo = new JLabel("Ingrese los datos del Cliente:");
     titulo.setForeground(GlobalConfigSystem.getForegroundAplicationText());
     titulo.setFont(GlobalConfigSystem.getFontAplicationTitle());
-    titulo.setBounds(50, 15, 600,45);
+    titulo.setBounds(50,40, 600,45);
 
     identificacion = new JLabel("Número de Identificación:");
     identificacion.setForeground(GlobalConfigSystem.getForegrounAplicationText());
