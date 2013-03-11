@@ -805,7 +805,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     @Override
     public void actionPerformed(ActionEvent ae) {
         if ((ae.getSource() == this.JBCrear) || (ae.getSource() == this.crearCliente)) {
-            Ingreso Regist = new Ingreso();
+            Clientes_Ingreso Regist = new Clientes_Ingreso();
             Regist.setVisible(true);
         }
 

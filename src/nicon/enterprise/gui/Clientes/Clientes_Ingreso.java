@@ -41,7 +41,7 @@ import nicon.enterprise.memData.BasicDataAplication;
  * 
  * @author Frederick Adolfo Salazar Sanchez
  */
-public class Ingreso extends JDialog implements ActionListener {
+public class Clientes_Ingreso extends JDialog implements ActionListener {
     
   private static final long serialVersionUID = 4L;
   
@@ -93,7 +93,7 @@ public class Ingreso extends JDialog implements ActionListener {
   private Cliente validacion;
     private boolean estadoValidacion;
 
-  public Ingreso(){
+  public Clientes_Ingreso(){
     setTitle(GlobalConfigSystem.getAplicationTitle());
     setSize(800, 600);
     setLocationRelativeTo(null);
@@ -295,7 +295,7 @@ public class Ingreso extends JDialog implements ActionListener {
                     jtIdentificacion.setText("");
                 }
       } catch (SQLException ex) {
-          Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(Clientes_Ingreso.class.getName()).log(Level.SEVERE, null, ex);
       }
   }
 
@@ -358,7 +358,7 @@ public class Ingreso extends JDialog implements ActionListener {
                         }            
                 }
       } catch (SQLException ex) {
-          Logger.getLogger(Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(Clientes_Ingreso.class.getName()).log(Level.SEVERE, null, ex);
           JOptionPane.showMessageDialog(rootPane, "Una exepcion ocurrio en el sistema:\n"+ex, GlobalConfigSystem.getAplicationTitle(), JOptionPane.ERROR_MESSAGE);
       }
   }
