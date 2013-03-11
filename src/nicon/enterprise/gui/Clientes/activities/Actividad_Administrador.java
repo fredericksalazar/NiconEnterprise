@@ -322,7 +322,7 @@ public class Actividad_Administrador extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == crearActividad) {
-            AsignarActividad nueva = new AsignarActividad();
+            Actividad_Crear nueva = new Actividad_Crear();
             nueva.setVisible(true);
         }
 

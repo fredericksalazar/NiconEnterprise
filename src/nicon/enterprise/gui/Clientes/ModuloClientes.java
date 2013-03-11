@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JRException;
 
 import nicon.enterprise.gui.Clientes.activities.Actividad_Administrador;
-import nicon.enterprise.gui.Clientes.activities.AsignarActividad;
+import nicon.enterprise.gui.Clientes.activities.Actividad_Crear;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
@@ -121,7 +121,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private int index;
     private boolean stateOP;
     
-    private AsignarActividad asignacion;
+    private Actividad_Crear asignacion;
     private JSeparator separator1;
     private JSeparator separator2;
 
@@ -793,10 +793,10 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private void crearActividad() {
         cliente = obtenerSeleccionado();
         if (cliente != null) {
-            asignacion = new AsignarActividad(cliente.getIdentificacion());
+            asignacion = new Actividad_Crear(cliente.getIdentificacion());
             asignacion.setVisible(true);
         } else {
-            asignacion = new AsignarActividad();
+            asignacion = new Actividad_Crear();
             asignacion.setVisible(true);
         }
         cliente = null;
