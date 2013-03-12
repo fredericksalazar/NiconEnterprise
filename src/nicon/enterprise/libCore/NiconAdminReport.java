@@ -5,9 +5,12 @@
 package nicon.enterprise.libCore;
 
 import com.mysql.jdbc.Connection;
+
 import java.io.File;
 import java.io.InputStream;
+
 import java.util.Map;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -21,18 +24,19 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class NiconAdminReport {
 
-    private JasperPrint jasperPrint;
-    private JasperReport reporte;
-    private JasperViewer jasperViewer;
-    private JRExporter exportManager;
-    private InputStream inputObject;
-    private Conection coneccion;
-    private Connection conect;
-    private boolean state;
+    private JasperPrint     jasperPrint;
+    private JasperReport    reporte;
+    private JasperViewer    jasperViewer;
+    private JRExporter      exportManager;
+    private InputStream     inputObject;
+    
+    private Conection       coneccion;
+    private Connection      conect;
+    private boolean         state;
 
     public NiconAdminReport() {
-        this.coneccion = Conection.obtenerInstancia();
-        this.conect = ((Connection) this.coneccion.obtenerConeccion());
+        coneccion = Conection.obtenerInstancia();
+        conect =  coneccion.obtenerConeccion();
     }
 
     public String SetDir() {
@@ -42,12 +46,12 @@ public class NiconAdminReport {
         return directorioPadre;
     }
 
-    public JasperPrint compilarReporte(String URL)
-            throws JRException {
-        this.inputObject = getClass().getResourceAsStream(URL);
-        this.reporte = ((JasperReport) JRLoader.loadObject(this.inputObject));
-        this.jasperPrint = JasperFillManager.fillReport(this.reporte, null, this.conect);
-        return this.jasperPrint;
+    public JasperPrint compilarReporte(String URL)throws JRException {
+        inputObject = getClass().getResourceAsStream(URL);
+        reporte =  (JasperReport) JRLoader.loadObject(inputObject);
+        jasperPrint = JasperFillManager.fillReport(reporte, null,conect);
+        
+        return jasperPrint;
     }
 
     public JasperPrint compilarReporteConParametros(String URL, Map parametros)

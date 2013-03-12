@@ -36,15 +36,14 @@ public class Conection {
         Conection.conector = conector;
     }
 
-    public boolean conectar()
-            throws SQLException {
+    public boolean conectar() throws SQLException {
         try {
-            if (this.coneccion == 0) {
+            if (coneccion == 0) {
                 Class.forName("com.mysql.jdbc.Driver");
                 SGBD = (Connection) DriverManager.getConnection(conector.getURL(), conector.getUSUARIO(), conector.getCONTRASEÑA());
-                this.Execution = (Statement) SGBD.createStatement();
-                this.estadoConeccion = true;
-                this.coneccion += 1;
+                Execution = (Statement) SGBD.createStatement();
+                estadoConeccion = true;
+                coneccion ++;
             } else {
                 JOptionPane.showMessageDialog(null, "Ya existe una conección activa con el sistema. no se puede conectar", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
             }
@@ -58,7 +57,7 @@ public class Conection {
             System.out.println("Ocurrio un error en la conexion a  Detail error:\n" + Cex);
             System.exit(0);
         }
-        return this.estadoConeccion;
+        return estadoConeccion;
     }
 
     public boolean desconectar() {

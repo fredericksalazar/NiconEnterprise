@@ -31,7 +31,7 @@ import nicon.enterprise.libCore.api.obj.Cliente;
  * @author Frederick Adolfo Salazar Sanchez
  */
 
-public class CajaBusqueda extends JDialog{
+public class Clientes_EasySearch extends JDialog{
 
     private JPanel panelBusqueda;
     private JTextField jtBusqueda;
@@ -42,7 +42,7 @@ public class CajaBusqueda extends JDialog{
     private Cliente cliente;
     private ClienteDAO clienteDAO;
 
-    public CajaBusqueda() {
+    public Clientes_EasySearch() {
         clienteDAO = new ClienteDAO();
         setUndecorated(true);
         setSize(450,110);
@@ -104,14 +104,14 @@ public class CajaBusqueda extends JDialog{
             try {
                 cliente = clienteDAO.buscarPorIdentificacion(ID);
                     if (cliente != null) {
-                        ModuloClientes.mostrarDatos(cliente);
-                        ModuloClientes.seleccionarCliente(ID);
+                        Clientes_Module.mostrarDatos(cliente);
+                        Clientes_Module.seleccionarCliente(ID);
                         dispose();
                     } else {
                         JOptionPane.showMessageDialog(this.rootPane, "No se encontraron registros.", GlobalConfigSystem.getAplicationTitle(), 0);
                     }
             } catch (SQLException ex) {
-                Logger.getLogger(CajaBusqueda.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Clientes_EasySearch.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

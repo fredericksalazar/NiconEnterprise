@@ -15,7 +15,7 @@ import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.obj.Cliente;
 
-public class Actualizar extends JDialog implements ActionListener {
+public class Clientes_Actualizar extends JDialog implements ActionListener {
 
     private JPanel JPUpdate;
     private JLabel JLTitulo;
@@ -33,7 +33,7 @@ public class Actualizar extends JDialog implements ActionListener {
     private Cliente cliente;
     private ClienteDAO clienteDAO;
 
-    public Actualizar(Cliente cliente) {
+    public Clientes_Actualizar(Cliente cliente) {
         setSize(700, 500);
         setTitle(GlobalConfigSystem.getAplicationTitle());
         setModal(true);
@@ -130,7 +130,7 @@ public class Actualizar extends JDialog implements ActionListener {
                 this.clienteDAO.actualizarIdentificacion(cedula, cedulaActual);
                 dispose();
             } catch (SQLException ex) {
-                Logger.getLogger(Actualizar.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Clientes_Actualizar.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             try {
@@ -141,7 +141,7 @@ public class Actualizar extends JDialog implements ActionListener {
                     dispose();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(Actualizar.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Clientes_Actualizar.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

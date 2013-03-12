@@ -36,7 +36,7 @@ public class AdministradorTipoActividad extends JDialog {
 
   public AdministradorTipoActividad(){
     setTitle(GlobalConfigSystem.getAplicationTitle());
-    setSize(590, 360);
+    setSize(590,380);
     setModal(true);
     setLocationRelativeTo(null);
     setResizable(false);

@@ -34,7 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import nicon.enterprise.gui.Clientes.CrearTipoActividad;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconLibTools;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;

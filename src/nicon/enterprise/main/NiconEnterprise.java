@@ -39,6 +39,7 @@ public class NiconEnterprise {
     private static Empresa empresa;
     private static EmpresaDAO ApiEmpresa;
     private static ModuloPrincipal FrontEnd;
+    private static RegistroEmpresa activation;
 
     public static void main(String[] args) {
         try {
@@ -52,7 +53,7 @@ public class NiconEnterprise {
                         FrontEnd.setVisible(true);
                         ApiEmpresa = null;
                 } else {
-                        RegistroEmpresa activation = new RegistroEmpresa();
+                        activation = new RegistroEmpresa();
                         activation.setVisible(true);
                 }
         } catch (UnsupportedLookAndFeelException ex) {

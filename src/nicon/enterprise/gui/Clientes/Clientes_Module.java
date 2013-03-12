@@ -8,6 +8,7 @@
 
 package nicon.enterprise.gui.Clientes;
 
+import nicon.enterprise.gui.Clientes.activities.CrearTipoActividad;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +42,7 @@ import nicon.enterprise.memData.BasicDataAplication;
  *
  * @author frederick
  */
-public class ModuloClientes extends JPanel implements ActionListener, MouseListener {
+public class Clientes_Module extends JPanel implements ActionListener, MouseListener {
 
     private static final long serialVersionUID = 3L;
     
@@ -56,6 +57,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JMenu jmExportar;
     private JMenu jmVer;
     private JMenu jmActividades;
+    
     private JMenuItem jmCerrar;
     private JMenuItem crearCliente;
     private JMenuItem eliminarCliente;
@@ -108,8 +110,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JRadioButton JRBNombres;
     private JRadioButton JRBIdentificacion;
     private JSeparator SeparatorTools;
-    private JComboBox JCListCity;
-    
+    private JComboBox JCListCity;    
     
     private static ArrayList listaClientes;
     private static Cliente cliente;
@@ -125,7 +126,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
     private JSeparator separator1;
     private JSeparator separator2;
 
-    public ModuloClientes() {
+    public Clientes_Module() {
         cliente = new Cliente();
         this.selectedSearch = 0;
         Icons = GlobalConfigSystem.getIconsPath();
@@ -239,28 +240,29 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         jmCrearTipoActividad.setToolTipText("Permite crear un nuevo tipo de actividad en el sistema");
         jmCrearTipoActividad.addActionListener(this);
 
-        jmActividades.add(this.jmAbrirActividades);
-        jmActividades.add(this.jmCrearTipoActividad);
+        jmActividades.add(jmAbrirActividades);
+        jmActividades.add(jmCrearTipoActividad);
 
-        jmClientes.add(this.crearCliente);
-        jmClientes.add(this.editarCliente);
-        jmClientes.add(this.eliminarCliente);
+        jmClientes.add(crearCliente);
+        jmClientes.add(editarCliente);
+        jmClientes.add(eliminarCliente);
         jmClientes.addSeparator();
-        jmClientes.add(this.busquedaID);
+        jmClientes.add(busquedaID);
 
-        jmExportar.add(this.jmListarTodo);
-        jmArchivo.add(this.jmCerrar);
+        jmExportar.add(jmListarTodo);
+        jmArchivo.add(jmCerrar);
 
-        jmVer.add(this.jmOrdenarAsc);
-        jmVer.add(this.jmOrdenarDesc);
+        jmVer.add(jmOrdenarAsc);
+        jmVer.add(jmOrdenarDesc);
         jmVer.addSeparator();
-        jmVer.add(this.jmVerPrimero);
-        jmVer.add(this.jmVerUltimo);
+        jmVer.add(jmVerPrimero);
+        jmVer.add(jmVerUltimo);
 
-        menuClientes.add(this.jmArchivo);
-        menuClientes.add(this.jmClientes);
-        menuClientes.add(this.jmVer);
-        menuClientes.add(this.jmActividades);
+        menuClientes.add(jmArchivo);
+        menuClientes.add(jmClientes);
+        menuClientes.add(jmVer);
+        menuClientes.add(jmActividades);
+        menuClientes.add(jmExportar);
 
         modelo = new DefaultTableModel();
         modelo.addColumn("Identificación");
@@ -387,22 +389,22 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
 
         panelInformacion.add(nombres);
         panelInformacion.add(identificacion);
-        panelInformacion.add(this.jlContacto);
-        panelInformacion.add(this.separator1);
-        panelInformacion.add(this.JLTel_fijo);
+        panelInformacion.add(jlContacto);
+        panelInformacion.add(separator1);
+        panelInformacion.add(JLTel_fijo);
         panelInformacion.add(telFijo);
-        panelInformacion.add(this.JLTel_movil);
+        panelInformacion.add(JLTel_movil);
         panelInformacion.add(telMovil);
-        panelInformacion.add(this.JLTel_alternativo);
+        panelInformacion.add(JLTel_alternativo);
         panelInformacion.add(telAlternativo);
-        panelInformacion.add(this.JLEmail);
+        panelInformacion.add(JLEmail);
         panelInformacion.add(email);
 
-        panelInformacion.add(this.jlUbicacion);
-        panelInformacion.add(this.separator2);
-        panelInformacion.add(this.JLDireccion);
+        panelInformacion.add(jlUbicacion);
+        panelInformacion.add(separator2);
+        panelInformacion.add(JLDireccion);
         panelInformacion.add(direccion);
-        panelInformacion.add(this.JLCiudad);
+        panelInformacion.add(JLCiudad);
         panelInformacion.add(ciudad);
         panelInformacion.add(JLfecha_registro);
         panelInformacion.add(fechaRegistro);
@@ -435,7 +437,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         JBDelete.addActionListener(this);
 
         jbCrearActividad = new JButton("Actividad");
-        jbCrearActividad.setToolTipText("Permite asiganar una Nueva actividad al cliente seleccionado...");
+        jbCrearActividad.setToolTipText("Permite asignar una Nueva actividad al cliente seleccionado...");
         jbCrearActividad.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
         jbCrearActividad.addActionListener(this);
         jbCrearActividad.setBounds(128, 50, 115, 30);
@@ -669,7 +671,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
                 JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -683,7 +685,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
                 JOptionPane.showMessageDialog(null, "No se encontraron registros con los parametros Ingresados", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
               }
         } catch (SQLException ex) {
-            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -715,7 +717,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
             listaClientes = clienteDAO.listarClientesPorCiudad(ciudad);
             cargarDatos(listaClientes);
         } catch (SQLException ex) {
-            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -744,7 +746,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
             listaClientes = clienteDAO.listarClientesOrdenadosPorNombre("asc");
             cargarDatos(listaClientes);
         } catch (SQLException ex) {
-            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -758,7 +760,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
             listaClientes = clienteDAO.listarClientesOrdenadosPorNombre("desc");
             cargarDatos(listaClientes);
         } catch (SQLException ex) {
-            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -778,7 +780,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "El cliente no se puede eliminar del sistema, Ocurrio un error:\n\n" + ex, GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
-            Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -810,7 +812,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         }
 
         if ((ae.getSource() == this.JBEditar) || (ae.getSource() == this.editarCliente)) {
-            Actualizar update = new Actualizar(obtenerSeleccionado());
+            Clientes_Actualizar update = new Clientes_Actualizar(obtenerSeleccionado());
             update.setVisible(true);
         }
 
@@ -819,7 +821,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
         }
 
         if (ae.getSource() == this.busquedaID) {
-            CajaBusqueda buscar = new CajaBusqueda();
+            Clientes_EasySearch buscar = new Clientes_EasySearch();
             buscar.setVisible(true);
         }
 
@@ -878,7 +880,7 @@ public class ModuloClientes extends JPanel implements ActionListener, MouseListe
             try {
                 clienteDAO.exportarTodosPDF();
             } catch (JRException ex) {
-                Logger.getLogger(ModuloClientes.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

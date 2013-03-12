@@ -350,7 +350,7 @@ public class Clientes_Ingreso extends JDialog implements ActionListener {
                 } else {
                     clienteDAO = new ClienteDAO(this.cliente);
                         if (clienteDAO.crearCliente()) {
-                                ModuloClientes.recargarDatos();
+                                Clientes_Module.recargarDatos();
                                 JOptionPane.showMessageDialog(this.rootPane, "El cliente ha sido registrado exitosamente en el sistema", GlobalConfigSystem.getAplicationTitle(), 1, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconPositive.png")));
                                 cliente = null;
                                 clienteDAO = null;
