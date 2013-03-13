@@ -803,6 +803,7 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
         }
         cliente = null;
     }
+    
 
     @Override
     public void actionPerformed(ActionEvent ae) {
@@ -876,7 +877,7 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
             }
         }
 
-        if (ae.getSource() == this.jmListarTodo) {
+        if (ae.getSource() == jmListarTodo) {
             try {
                 clienteDAO.exportarTodosPDF();
             } catch (JRException ex) {

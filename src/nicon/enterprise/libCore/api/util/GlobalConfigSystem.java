@@ -1,7 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.libCore.api.util;
 
 import java.awt.Color;
@@ -46,7 +52,7 @@ public class GlobalConfigSystem {
         FontAplicationSubTitle = new Font("Ubuntu", 0, 18);
         FontAplicationName = new Font("Ubuntu", 0, 37);
 
-        AplicationTitle = "NiconEnterprise V 0.1.51";
+        AplicationTitle = "NiconEnterprise V 0.1.55";
         iconsPath = "/nicon/enterprise/gui/Images/";
         exportationPath = "./Archivos";
         expPathPDF = "./Pdf";

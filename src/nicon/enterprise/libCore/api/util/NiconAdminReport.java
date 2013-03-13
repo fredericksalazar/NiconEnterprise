@@ -10,7 +10,6 @@
 
 package nicon.enterprise.libCore.api.util;
 
-import nicon.enterprise.libCore.api.util.AdminConector;
 import com.mysql.jdbc.Connection;
 
 import java.io.File;
@@ -44,7 +43,7 @@ public class NiconAdminReport {
     private JRExporter      exportManager;
     private InputStream     inputObject;
     
-    private AdminConector       coneccion;
+    private AdminConector   coneccion;
     private Connection      conect;
     private boolean         state;
 

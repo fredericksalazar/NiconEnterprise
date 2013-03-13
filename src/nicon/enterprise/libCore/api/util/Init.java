@@ -10,8 +10,6 @@
 
 package nicon.enterprise.libCore.api.util;
 
-import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
-import nicon.enterprise.libCore.api.util.AdminConector;
 import java.sql.SQLException;
 import nicon.enterprise.memData.BasicDataAplication;
 import nicon.enterprise.memData.StoreData;

@@ -92,29 +92,46 @@ public class Actividad_Crear extends JDialog implements ActionListener {
     private JButton jbGrabar;
     private JButton jbCancelar;
     private Cliente cliente;
-    private ClienteDAO clienteDAO;
-    private java.util.Date date;
-    private boolean crearActividad;
+    private ClienteDAO customerAPI;
     
+    /**
+     * metodo constructor que prepara la interfaz grafica para crear una nuevai
+     * actividad, en esta interfaz no se recibe el ID del cliente por lo que
+     * se permitirá buscar al cliente de forma manual.
+     */
     public Actividad_Crear() {
         crearInterfaz();
         cargarListaTipoActividad();
     }
 
+    
+    /**
+     * metodo constructor que prepara la interfaz grafica para crear una nueva
+     * actividad, en esta interfaz se recibe el ID del cliente al que se le 
+     * asignará la nueva actividad.
+     * 
+     * @param String  idCliente 
+     */
     public Actividad_Crear(String idCliente) {
         this.idCliente = idCliente;
         crearInterfaz();
         cargarListaTipoActividad();
     }
 
+    /**
+     * el metodo crear interfaz se encarga de inicializar y posisionar todos
+     * los componentes graficos que permitirán la configuracion de dicha
+     * actividad.
+     */
     private void crearInterfaz() {
         setTitle(GlobalConfigSystem.getAplicationTitle());
         setSize(600, 520);
         setModal(true);
         setLocationRelativeTo(null);
         setResizable(false);
+        
         actividadDAO = new ActividadDAO();
-        clienteDAO = new ClienteDAO();
+        customerAPI = new ClienteDAO();
 
         panel = new JPanel();
         panel.setBackground(GlobalConfigSystem.getBackgroundAplication());
@@ -125,7 +142,7 @@ public class Actividad_Crear extends JDialog implements ActionListener {
         jlTitulo.setFont(GlobalConfigSystem.getFontAplicationTitle());
         jlTitulo.setBounds(20, 20, 600, 45);
 
-        jlCodigo = new JLabel("- Codigo actividad:");
+        jlCodigo = new JLabel("- Código actividad:");
         jlCodigo.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         jlCodigo.setFont(GlobalConfigSystem.getFontAplicationText());
         jlCodigo.setBounds(40, 100, 220, 20);
@@ -172,9 +189,13 @@ public class Actividad_Crear extends JDialog implements ActionListener {
             @Override
             public void focusLost(FocusEvent fe) {
                 try {
-                    cliente=clienteDAO.buscarPorIdentificacion(jtIdCliente.getText());
-                    if (cliente == null) {
-                        JOptionPane.showMessageDialog(rootPane, "La identificacion Ingresada no existe, no se puede cargar el Cliente", GlobalConfigSystem.getAplicationTitle(), 0);
+                    cliente=customerAPI.buscarPorIdentificacion(jtIdCliente.getText());
+                        if (cliente == null) {
+                            JOptionPane.showMessageDialog(rootPane, "La identificación "
+                                + "Ingresada no existe, no se puede cargar el Cliente"
+                                , GlobalConfigSystem.getAplicationTitle(), 
+                                JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource(
+                                    GlobalConfigSystem.getIconsPath()+"NiconError.png")));
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(Actividad_Crear.class.getName()).log(Level.SEVERE, null, ex);
@@ -182,7 +203,7 @@ public class Actividad_Crear extends JDialog implements ActionListener {
             }
         });
         
-        jlDescripcion = new JLabel("- Desriba la actividad:");
+        jlDescripcion = new JLabel("- Describa la actividad:");
         jlDescripcion.setForeground(GlobalConfigSystem.getForegroundAplicationText());
         jlDescripcion.setFont(GlobalConfigSystem.getFontAplicationText());
         jlDescripcion.setBounds(40, 260, 200, 20);
@@ -210,18 +231,21 @@ public class Actividad_Crear extends JDialog implements ActionListener {
         String[] estado = {"En proceso", "Terminada"};
         
         jcEstado = new JComboBox(estado);
-        jcEstado.setBounds(250, 405, 300, 30);
+        jcEstado.setFont(GlobalConfigSystem.getFontAplicationText());
+        jcEstado.setBounds(250, 405, 300,30);
 
         jbGrabar = new JButton("Crear Actividad");
         jbGrabar.addActionListener(this);
+        jbGrabar.setFont(GlobalConfigSystem.getFontAplicationText());
         jbGrabar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconOK.png")));
-        jbGrabar.setBounds(400, 450, 150, 30);
+        jbGrabar.setBounds(390, 450, 160, 35);
 
         jbCancelar = new JButton("Cancelar");
         jbCancelar.addActionListener(this);
+        jbCancelar.setFont(GlobalConfigSystem.getFontAplicationText());
         jbCancelar.setIcon(new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath() + "NiconCancelButton.png")));
         jbCancelar.addActionListener(this);
-        jbCancelar.setBounds(240, 450, 150, 30);
+        jbCancelar.setBounds(220, 450,160, 35);
 
         panel.add(jlTitulo);
         panel.add(jlTitulo);

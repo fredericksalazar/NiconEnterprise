@@ -30,7 +30,11 @@ import nicon.enterprise.libCore.api.obj.Cliente;
  */
 public class ClienteDAO {
     
-    private final String URL_REPORT="/Nicon/Enterprise/LibCore/rsc/ListaClientes.jasper";
+    /**
+     * UR__REPORT es la direccion Url donde se encuentra el archivo .jasper a compilar para generar el
+     * reporte de clientes.
+     */
+    private final String URL_REPORT="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
 
     private Cliente cliente;
     private boolean state = false;
@@ -39,7 +43,6 @@ public class ClienteDAO {
     private int totalRegistros;
     private ArrayList listaClientes;
     private ResultSet datosConsulta;
-    private String impresion;
     private AdminConector coneccion;
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
