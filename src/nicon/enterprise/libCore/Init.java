@@ -25,7 +25,7 @@ public class Init {
 
     private static BasicDataAplication basicData;
     private static GlobalConfigSystem ConfigGlobal;
-    private static Conection coneccion;
+    private static AdminConector coneccion;
     private static int acces=0;
 
     /**
@@ -40,8 +40,8 @@ public class Init {
             if(acces==0){
                 basicData = new BasicDataAplication();
                 ConfigGlobal = new GlobalConfigSystem();
-                coneccion = Conection.obtenerInstancia();
-                coneccion.conectar();
+                coneccion = AdminConector.getInstance();
+                coneccion.conect();
                 StoreData.storeInit();
                 acces++;
             }       

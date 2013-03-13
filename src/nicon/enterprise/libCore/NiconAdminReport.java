@@ -1,7 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.libCore;
 
 import com.mysql.jdbc.Connection;
@@ -22,6 +28,13 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
+/**
+ * Esta clase NiconAdminReport es el gestor central para la generacion de reportes de la informacion del
+ * sistema, hace uso de las librerias JasperReport para poder gestionar la generacion y compilacion de los
+ * reportes del sistema.
+ * 
+ * @author Frederick Adolfo Salazar Sanchez
+ */
 public class NiconAdminReport {
 
     private JasperPrint     jasperPrint;
@@ -30,13 +43,16 @@ public class NiconAdminReport {
     private JRExporter      exportManager;
     private InputStream     inputObject;
     
-    private Conection       coneccion;
+    private AdminConector       coneccion;
     private Connection      conect;
     private boolean         state;
 
+    /**
+     * 
+     */
     public NiconAdminReport() {
-        coneccion = Conection.obtenerInstancia();
-        conect =  coneccion.obtenerConeccion();
+        coneccion = AdminConector.getInstance();
+        conect =  coneccion.getConnectionSGBD();
     }
 
     public String SetDir() {
@@ -46,6 +62,12 @@ public class NiconAdminReport {
         return directorioPadre;
     }
 
+    /**
+     * Este metodo permite compilar una plantilla de los reportes
+     * @param URL
+     * @return
+     * @throws JRException 
+     */
     public JasperPrint compilarReporte(String URL)throws JRException {
         inputObject = getClass().getResourceAsStream(URL);
         reporte =  (JasperReport) JRLoader.loadObject(inputObject);

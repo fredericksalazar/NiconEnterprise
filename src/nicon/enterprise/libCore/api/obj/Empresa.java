@@ -6,7 +6,7 @@ package nicon.enterprise.libCore.api.obj;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 
 public class Empresa
 {
@@ -26,7 +26,7 @@ public class Empresa
   private static String sentence;
   private static ArrayList List;
   private static ResultSet Data;
-  private Conection conection;
+  private AdminConector conection;
 
   public Empresa(String Nit, String Razon_Social, String Slogan, String Representante_legal, String direccion, String ciudad, String departamento, String telefono_fijo, String telefono_movil, String PBX, String email, String web_page, String Face_Page)
   {

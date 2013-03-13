@@ -8,7 +8,7 @@ import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconLibTools;
 import nicon.enterprise.libCore.obj.ContratoEmpleado;
@@ -26,18 +26,18 @@ public class ContratoEmpleadoDAO
   private int ExecuteSentence;
   private int idContrato;
   private String cargo;
-  private Conection coneccion;
+  private AdminConector coneccion;
 
   public ContratoEmpleadoDAO()
   {
     this.contrato = null;
-    this.coneccion = Conection.obtenerInstancia();
+    this.coneccion = AdminConector.getInstance();
   }
 
   public ContratoEmpleadoDAO(ContratoEmpleado contrato)
   {
     this.contrato = contrato;
-    this.coneccion = Conection.obtenerInstancia();
+    this.coneccion = AdminConector.getInstance();
   }
 
   public boolean registrarContrato()
@@ -46,7 +46,7 @@ public class ContratoEmpleadoDAO
     if (this.contrato != null) {
       this.sentence = ("insert into ContratosEmpleados (fecha_contratacion,cargo,Salario,tiempo_contratado,Tipo_contrato,Inicio_Funciones,EstadoContrato,Observaciones,IDempleado) values ('" + this.contrato.getFechaContratacion() + "','" + this.contrato.getCargo() + "'," + this.contrato.getSalario() + "," + this.contrato.getTiempoContratado() + ",'" + this.contrato.getTipoContrato() + "','" + this.contrato.getInicioFunciones() + "',true,'" + this.contrato.getObservacion() + "','" + this.contrato.getIdEmpleado() + "');");
       System.out.println(this.sentence);
-      this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+      this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
       if (this.ExecuteSentence == 0) {
         System.out.println("El contrato ha sido registrado exitosamente ...");
         this.stateOP = true;
@@ -66,7 +66,7 @@ public class ContratoEmpleadoDAO
     {
       System.out.println("Buscando contrato Activo para ID:  " + IDempleado);
       this.sentence = ("SELECT * FROM  ContratosEmpleados WHERE IDempleado='" + IDempleado + "' AND EstadoContrato=true;");
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       if (this.dataSentence.next()) {
         this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IDempleado, this.dataSentence.getString(9));
         System.out.println("Contrato Activo Encontrado Nº : " + this.contrato.getIdContrato());
@@ -85,7 +85,7 @@ public class ContratoEmpleadoDAO
     try
     {
       this.sentence = ("select idContrato from ContratosEmpleados where IDempleado=" + Identificacion + " and EstadoContrato=true;");
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       if (this.dataSentence.next())
         this.idContrato = this.dataSentence.getInt(1);
       else
@@ -100,7 +100,7 @@ public class ContratoEmpleadoDAO
   public String obtenerCargoContratoActivo(String id) {
     try {
       this.sentence = ("select cargo from ContratosEmpleados where IDempleado=" + id + " and EstadoContrato=true");
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       if (this.dataSentence.next())
         this.cargo = this.dataSentence.getString(1);
       else
@@ -120,7 +120,7 @@ public class ContratoEmpleadoDAO
       this.contratos = new ArrayList();
       this.counter = 0;
       this.sentence = ("select * from ContratosEmpleados where IDempleado=" + IdEmpleado + ";");
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       if (this.dataSentence.next()) {
         this.dataSentence.beforeFirst();
         while (this.dataSentence.next()) {
@@ -143,7 +143,7 @@ public class ContratoEmpleadoDAO
     try
     {
       this.sentence = "select * from ContratosEmpleados;";
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       while (this.dataSentence.next()) {
         this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), this.dataSentence.getString(9), this.dataSentence.getString(10));
         this.contratos.add(this.counter, this.contrato);
@@ -160,7 +160,7 @@ public class ContratoEmpleadoDAO
     try
     {
       this.sentence = ("select EstadoContrato from ContratosEmpleados where idContrato=" + codigo + ";");
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       this.dataSentence.next();
       this.stateOP = this.dataSentence.getBoolean(1);
     } catch (Exception e) {
@@ -176,7 +176,7 @@ public class ContratoEmpleadoDAO
       if (IDempleado != null) {
         this.codigoContrato = obtenerContratoActivo(IDempleado);
         this.sentence = ("UPDATE ContratosEmpleados set EstadoContrato=false where idContrato=" + this.codigoContrato + ";");
-        this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+        this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
         this.empleadoDAO = new EmpleadoDAO();
         this.stateOP = this.empleadoDAO.cambiarEstadoEmpleado(IDempleado, false);
         if ((this.ExecuteSentence == 0) && (this.stateOP))
@@ -196,7 +196,7 @@ public class ContratoEmpleadoDAO
     try
     {
       this.sentence = "select count(idContrato) from ContratosEmpleados;";
-      this.dataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.dataSentence = this.coneccion.queryData(this.sentence);
       this.dataSentence.next();
       this.codigoContrato = this.dataSentence.getInt(1);
       this.codigoContrato += 1;

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.NiconAdminReport;
 import nicon.enterprise.libCore.obj.Proveedor;
@@ -26,18 +26,18 @@ public class ProveedorDAO {
     private ResultSet datosConsulta;
     private boolean stateOP;
     private int response;
-    private Conection coneccion;
+    private AdminConector coneccion;
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
 
     public ProveedorDAO(Proveedor proveedor) {
         this.proveedor = proveedor;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     public ProveedorDAO() {
         this.proveedor = null;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     public boolean crearProveedor() {
@@ -45,7 +45,7 @@ public class ProveedorDAO {
         try {
             if (this.proveedor != null) {
                 this.sentencia = ("Insert Into Proveedores values('" + this.proveedor.getNit() + "','" + this.proveedor.getRazonSocial() + "','" + this.proveedor.getDireccion() + "','" + this.proveedor.getCiudad() + "','" + this.proveedor.getTelefonoFijo() + "','" + this.proveedor.getTelefonoMovil() + "','" + this.proveedor.getFax() + "','" + this.proveedor.getEmail() + "','" + this.proveedor.getWebPage() + "','" + this.proveedor.getBanco() + "','" + this.proveedor.getNumeroCuenta() + "','" + this.proveedor.getDescripcion() + "',1);");
-                this.response = this.coneccion.ejecutarSentencia(this.sentencia);
+                this.response = this.coneccion.runSentence(this.sentencia);
                 if (this.response == 0) {
                     System.out.println("El objeto proveedor ha sido creado exitosamente ...");
                     this.stateOP = true;
@@ -68,7 +68,7 @@ public class ProveedorDAO {
         if (this.proveedor != null) {
             try {
                 this.sentencia = ("DELETE FROM Proveedores WHERE Nit='" + this.proveedor.getNit() + "';");
-                this.response = this.coneccion.ejecutarSentencia(this.sentencia);
+                this.response = this.coneccion.runSentence(this.sentencia);
                 if (this.response == 0) {
                     System.out.println("El proveedor  fue eliminado correctamente ...");
                     this.stateOP = true;
@@ -88,7 +88,7 @@ public class ProveedorDAO {
         try {
             System.out.println("Iniciando actualización de Proveedor");
             this.sentencia = ("UPDATE Proveedores SET " + Campo + " ='" + dato + "' where Nit='" + Nit + "';");
-            this.response = this.coneccion.ejecutarSentencia(this.sentencia);
+            this.response = this.coneccion.runSentence(this.sentencia);
             if (this.response == 0) {
                 this.stateOP = true;
             } else {
@@ -104,7 +104,7 @@ public class ProveedorDAO {
         try {
             this.listaProveedores = new ArrayList();
             this.sentencia = "select * from Proveedores;";
-            this.datosConsulta = ((ResultSet) this.coneccion.consultarDatos(this.sentencia));
+            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
             while (this.datosConsulta.next()) {
                 this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
                 this.listaProveedores.add(this.proveedor);
@@ -124,7 +124,7 @@ public class ProveedorDAO {
             if (opcion.equals("desc")) {
                 this.sentencia = "select * from Proveedores order by Razon_social desc;";
             }
-            this.datosConsulta = ((ResultSet) this.coneccion.consultarDatos(this.sentencia));
+            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
             while (this.datosConsulta.next()) {
                 this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
                 this.listaProveedores.add(this.proveedor);
@@ -139,7 +139,7 @@ public class ProveedorDAO {
     public ArrayList listarProveedoresPorCiudad(String ciudad) {
         try {
             this.sentencia = ("select * from Proveedores where ciudad='" + ciudad + "';");
-            this.datosConsulta = ((ResultSet) this.coneccion.consultarDatos(this.sentencia));
+            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
             while (this.datosConsulta.next()) {
                 this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
                 this.listaProveedores.add(this.proveedor);
@@ -154,7 +154,7 @@ public class ProveedorDAO {
         try {
             this.listaCiudades = new ArrayList();
             this.sentencia = "select ciudad from Proveedores;";
-            this.datosConsulta = ((ResultSet) this.coneccion.consultarDatos(this.sentencia));
+            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
             while (this.datosConsulta.next()) {
                 this.listaCiudades.add(this.datosConsulta.getString(1));
             }
@@ -166,7 +166,7 @@ public class ProveedorDAO {
     public Proveedor buscarProveedorPorNit(String Nit) {
         try {
             this.sentencia = ("SELECT * FROM Proveedores where Nit='" + Nit + "';");
-            this.datosConsulta = ((ResultSet) this.coneccion.consultarDatos(this.sentencia));
+            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
             if (this.datosConsulta.next()) {
                 this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
             } else {
@@ -181,7 +181,7 @@ public class ProveedorDAO {
     public Proveedor buscarProveedorPorRazonSocial(String razonSocial) {
         try {
             this.sentencia = ("SELECT * FROM Proveedores where Razon_social='" + razonSocial + "';");
-            this.datosConsulta = ((ResultSet) this.coneccion.consultarDatos(this.sentencia));
+            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
             if (this.datosConsulta.next()) {
                 this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
             } else {

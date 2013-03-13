@@ -7,7 +7,7 @@ package nicon.enterprise.libCore.api.dao;
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.api.obj.FamiliaProducto;
 
 
@@ -19,16 +19,16 @@ public class FamiliaProductoDAO
   private int ExecuteSentence;
   private ArrayList ListData;
   private ResultSet DataSentence;
-  private Conection coneccion;
+  private AdminConector coneccion;
 
   public FamiliaProductoDAO()
   {
-    this.coneccion = Conection.obtenerInstancia();
+    this.coneccion = AdminConector.getInstance();
   }
 
   public FamiliaProductoDAO(FamiliaProducto familia) {
     this.ProductFamily = familia;
-    this.coneccion = Conection.obtenerInstancia();
+    this.coneccion = AdminConector.getInstance();
   }
 
   public boolean crearFamilia()
@@ -37,7 +37,7 @@ public class FamiliaProductoDAO
     {
       System.out.println("Iniciando la creacion de la nueva familia de productos: " + this.ProductFamily.getName() + " ...");
       this.sentence = ("Insert Into Familias_Productos values('" + this.ProductFamily.getCode() + "','" + this.ProductFamily.getName() + "','" + this.ProductFamily.getDescription() + "',current_timestamp,'" + this.ProductFamily.getCodeStore() + "');");
-      this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+      this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
       if (this.ExecuteSentence == 0) {
         System.out.println("La nueva familia de productos se ha creado exitosamente ...");
         this.ProductFamily.toString();
@@ -59,7 +59,7 @@ public class FamiliaProductoDAO
     System.out.println("Iniciando eliminacion de datos : Familias de Productos ... ");
     try {
       this.sentence = ("delete from Familias_Productos where codigo_famila='" + this.ProductFamily.getCode() + "' and nombre_familia='" + this.ProductFamily.getName() + "');");
-      this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+      this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
       if (this.ExecuteSentence == 0) {
         System.out.println("La sentencia de eliminacion se ha ejecutado exitosamente ...");
         this.stateOP = true;
@@ -80,7 +80,7 @@ public class FamiliaProductoDAO
     {
       System.out.println("Iniciando actualizacion de datos ...");
       this.sentence = ("UPDATE FROM Familias_Productos SET " + campo + " ='" + dato + "' where Codigo_Familia='" + codigo + "';");
-      this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+      this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
       if (this.ExecuteSentence == 0)
         this.stateOP = true;
       else
@@ -99,7 +99,7 @@ public class FamiliaProductoDAO
     {
       System.out.println("Inciando carga de datos de : Familias de productos ...");
       this.sentence = "select * from Familias_Productos;";
-      this.DataSentence = this.coneccion.consultarDatos(this.sentence);
+      this.DataSentence = this.coneccion.queryData(this.sentence);
       while (this.DataSentence.next()) {
         this.ProductFamily = new FamiliaProducto(this.DataSentence.getString(1), this.DataSentence.getString(2), this.DataSentence.getString(3), this.DataSentence.getString(5));
         this.ListData.add(this.ProductFamily);

@@ -10,7 +10,7 @@ package nicon.enterprise.libCore.api.dao;
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.api.obj.Empresa;
 
 /**
@@ -25,7 +25,7 @@ public class EmpresaDAO {
 
     private Empresa empresa;
     private ResultSet datosEmpresa;    
-    private Conection coneccion;
+    private AdminConector coneccion;
     
     private int ejecucion;
     private boolean stateOP;
@@ -40,7 +40,7 @@ public class EmpresaDAO {
      * del tipo empresa u otro tipo primitivo de java.
      */
     public EmpresaDAO() {
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     /**
@@ -52,7 +52,7 @@ public class EmpresaDAO {
      */
     public EmpresaDAO(Empresa empresa) {
         this.empresa = empresa;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     /**
@@ -67,7 +67,7 @@ public class EmpresaDAO {
     public boolean registrarEmpresa() throws SQLException {
         if (empresa != null) {
             sentencia = "INSERT INTO Empresa (Nit,Razon_social,Slogan,Representante_legal,Direccion,Ciudad,Departamento,Telefono_fijo,Telefono_movil,PBX,email,Web_page,Face_page,fecha_registro) Values('" + this.empresa.getNit() + "','" + this.empresa.getRazon_Social() + "','" + this.empresa.getSlogan() + "','" + this.empresa.getRepresentante_legal() + "','" + this.empresa.getDireccion() + "','" + this.empresa.getCiudad() + "','" + this.empresa.getDepartamento() + "','" + this.empresa.getTelefono_fijo() + "','" + this.empresa.getTelefono_movil() + "','" + this.empresa.getPBX() + "','" + this.empresa.getEmail() + "','" + this.empresa.getWeb_page() + "','" + this.empresa.getFace_Page() + "',current_date);";
-            ejecucion = coneccion.ejecutarSentencia(sentencia);            
+            ejecucion = coneccion.runSentence(sentencia);            
                 if (ejecucion == 0) {
                     stateOP = true;
                 } else {
@@ -86,7 +86,7 @@ public class EmpresaDAO {
      */
     public Empresa detallesEmpresa() throws SQLException {
         sentencia = "SELECT * FROM Empresa";
-        datosEmpresa = coneccion.consultarDatos(sentencia);
+        datosEmpresa = coneccion.queryData(sentencia);
         
             if (datosEmpresa.next()) {
                 empresa = new Empresa(datosEmpresa.getString(1),datosEmpresa.getString(2),datosEmpresa.getString(3),datosEmpresa.getString(4),datosEmpresa.getString(5),datosEmpresa.getString(6), datosEmpresa.getString(7),datosEmpresa.getString(8),datosEmpresa.getString(9),datosEmpresa.getString(10),datosEmpresa.getString(11),datosEmpresa.getString(12),datosEmpresa.getString(13));
@@ -101,7 +101,7 @@ public class EmpresaDAO {
      */
     public String obtenerNit() throws SQLException {        
             sentencia = "SELECT nit FROM Empresa;";
-            datosEmpresa = coneccion.consultarDatos(sentencia);
+            datosEmpresa = coneccion.queryData(sentencia);
             
                 if (datosEmpresa.next()) {
                     nitEmpresa =datosEmpresa.getString("Nit");
@@ -139,7 +139,7 @@ public class EmpresaDAO {
      */
     public boolean actualizarInformacion(String campo, String dato) throws SQLException {
         sentencia = "UPDATE Empresa SET " + campo + " ='" + dato + "' WHERE Codigo_empresa=1;";
-        ejecucion = coneccion.ejecutarSentencia(sentencia);
+        ejecucion = coneccion.runSentence(sentencia);
             if (ejecucion == 0) {
                 stateOP = true;
             } else {

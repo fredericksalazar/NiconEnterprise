@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.NiconAdminReport;
 import nicon.enterprise.libCore.api.obj.Cliente;
 
@@ -40,7 +40,7 @@ public class ClienteDAO {
     private ArrayList listaClientes;
     private ResultSet datosConsulta;
     private String impresion;
-    private Conection coneccion;
+    private AdminConector coneccion;
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
 
@@ -53,7 +53,7 @@ public class ClienteDAO {
      */
     public ClienteDAO(Cliente cliente) {
         this.cliente = cliente;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     /**
@@ -62,7 +62,7 @@ public class ClienteDAO {
      */
     public ClienteDAO() {
         listaClientes = new ArrayList();
-        coneccion = Conection.obtenerInstancia();
+        coneccion = AdminConector.getInstance();
         adminReport = new NiconAdminReport();
     }
 
@@ -79,7 +79,7 @@ public class ClienteDAO {
     public boolean crearCliente() throws SQLException {
         if (cliente != null) {
             sentencia = "INSERT INTO Clientes VALUES(" + this.cliente.getIdentificacion() + ",'" + this.cliente.getNombres() + "','" + this.cliente.getApellidos() + "','" + this.cliente.getCiudad() + "','" + this.cliente.getDireccion() + "','" + this.cliente.getProvincia() + "','" + this.cliente.getTelefono_fijo() + "','" + this.cliente.getTelefono_movil() + "','" + this.cliente.getTelefono_alternativo() + "','" + this.cliente.getEmail() + "',current_timestamp," + this.cliente.getCodigoAlmacen() + ");";
-            ExecuteSentence = coneccion.ejecutarSentencia(sentencia);
+            ExecuteSentence = coneccion.runSentence(sentencia);
             if (ExecuteSentence == 0) {
                 state = true;
             } else {
@@ -103,7 +103,7 @@ public class ClienteDAO {
      */
     public boolean eliminarCliente() throws SQLException {
         sentencia = "DELETE FROM Clientes WHERE Clientes.identificacion=" + cliente.getIdentificacion() + ";";
-        ExecuteSentence = coneccion.ejecutarSentencia(sentencia);
+        ExecuteSentence = coneccion.runSentence(sentencia);
         if (ExecuteSentence == 0) {
             state = true;
         } else {
@@ -122,7 +122,7 @@ public class ClienteDAO {
      */
     public boolean actualizarIdentificacion(String oldID, String NewID) throws SQLException {
         sentencia = "UPDATE Clientes SET identificacion = " + NewID + " where identificacion=" + oldID + ";";
-        ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentencia);
+        ExecuteSentence = this.coneccion.runSentence(this.sentencia);
         if (this.ExecuteSentence == 0) {
             state = true;
         } else {
@@ -142,7 +142,7 @@ public class ClienteDAO {
      */
     public boolean actualizarDatoCliente(String cedula, String campo, String dato) throws SQLException {
         sentencia = "UPDATE Clientes SET " + campo + " = '" + dato + "' WHERE identificacion=" + cedula + ";";
-        ExecuteSentence = coneccion.ejecutarSentencia(sentencia);
+        ExecuteSentence = coneccion.runSentence(sentencia);
         if (ExecuteSentence == 0) {
             state = true;
         } else {
@@ -161,7 +161,7 @@ public class ClienteDAO {
      */
     public ArrayList listarClientes() throws SQLException {
         sentencia = "SELECT  * FROM Clientes ORDER BY nombres ASC;";
-        datosConsulta = coneccion.consultarDatos(sentencia);
+        datosConsulta = coneccion.queryData(sentencia);
         while (datosConsulta.next()) {
             cliente = new Cliente(datosConsulta.getString("identificacion"), datosConsulta.getString("nombres"), datosConsulta.getString("apellidos"), datosConsulta.getString("ciudad"), datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"), datosConsulta.getString("telefono_fijo"), datosConsulta.getString("telefono_movil"), datosConsulta.getString("telefono_alternativo"), datosConsulta.getString("email"), String.valueOf(datosConsulta.getDate("fecha_registro")), datosConsulta.getInt("Almacenes_idAlmacenes"));
             listaClientes.add(cliente);
@@ -184,7 +184,7 @@ public class ClienteDAO {
         if (opcion.equals("desc")) {
             sentencia = "SELECT * FROM Clientes ORDER BY nombres DESC;";
         }
-        datosConsulta = coneccion.consultarDatos(sentencia);        
+        datosConsulta = coneccion.queryData(sentencia);        
             while (datosConsulta.next()) {
                 cliente = new Cliente(datosConsulta.getString("identificacion"), datosConsulta.getString("nombres"), datosConsulta.getString("apellidos"), datosConsulta.getString("ciudad"), datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"), datosConsulta.getString("telefono_fijo"), datosConsulta.getString("telefono_movil"), datosConsulta.getString("telefono_alternativo"), datosConsulta.getString("email"), String.valueOf(datosConsulta.getDate("fecha_registro")), datosConsulta.getInt("Almacenes_idAlmacenes"));
                 listaClientes.add(cliente);
@@ -202,7 +202,7 @@ public class ClienteDAO {
      */
     public ArrayList listarClientesPorCiudad(String ciudad) throws SQLException {        
             sentencia = "SELECT  * FROM Clientes WHERE  ciudad='" + ciudad + "' ORDER BY nombres ASC;";
-            datosConsulta = coneccion.consultarDatos(sentencia);
+            datosConsulta = coneccion.queryData(sentencia);
                 while (datosConsulta.next()) {
                     cliente = new Cliente(datosConsulta.getString("identificacion"),datosConsulta.getString("nombres"),datosConsulta.getString("apellidos"),datosConsulta.getString("ciudad"),datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"),datosConsulta.getString("telefono_fijo"),datosConsulta.getString("telefono_movil"),datosConsulta.getString("telefono_alternativo"),datosConsulta.getString("email"), String.valueOf(datosConsulta.getDate("fecha_registro")),datosConsulta.getInt("Almacenes_idAlmacenes"));
                     listaClientes.add(cliente);
@@ -221,7 +221,7 @@ public class ClienteDAO {
      */
     public Cliente buscarPorIdentificacion(String identificacion) throws SQLException {        
             sentencia = "SELECT  `nombres`, `apellidos`, `ciudad`, `direccion`, `Departamento`, `telefono_fijo`, `telefono_movil`, `Telefono_alternativo`, `email`, `fecha_registro`, `Almacenes_idAlmacenes` FROM `Clientes` WHERE identificacion=" + identificacion + ";";
-            datosConsulta = coneccion.consultarDatos(sentencia);            
+            datosConsulta = coneccion.queryData(sentencia);            
                 if (datosConsulta.next()) {
                     cliente = new Cliente(identificacion,datosConsulta.getString("nombres"), datosConsulta.getString("apellidos"),datosConsulta.getString("ciudad"),datosConsulta.getString("direccion"), datosConsulta.getString("Departamento"), datosConsulta.getString("telefono_fijo"), datosConsulta.getString("telefono_movil"), datosConsulta.getString("Telefono_alternativo"),datosConsulta.getString("email"),datosConsulta.getString("fecha_registro"),datosConsulta.getInt("Almacenes_idAlmacenes"));
                 } else {
@@ -238,7 +238,7 @@ public class ClienteDAO {
      */
     public Cliente buscarPorNombres(String Nombres) throws SQLException {
             sentencia = "SELECT distinct * FROM Clientes WHERE nombres='" + Nombres + "';";
-            datosConsulta = coneccion.consultarDatos(sentencia);
+            datosConsulta = coneccion.queryData(sentencia);
                 if (datosConsulta.next()) {
                     cliente = new Cliente(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));
                 } else {
@@ -259,7 +259,7 @@ public class ClienteDAO {
      */
     public Cliente validarCliente(String nombres, String apellidos,String ciudad) throws SQLException {
             sentencia = "SELECT DISTINCT * FROM Clientes WHERE nombres='" + nombres + "' AND apellidos='" + apellidos + "' AND ciudad='"+ciudad+"';";
-            datosConsulta = coneccion.consultarDatos(sentencia);
+            datosConsulta = coneccion.queryData(sentencia);
                 if (datosConsulta.next()) {
                         cliente = new Cliente(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6), this.datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getInt(11));
                 } else {
@@ -278,7 +278,7 @@ public class ClienteDAO {
      */
     public int obtenerTotalRegistros() throws SQLException {
             sentencia = "SELETC COUNT(identificacion) FROM Clientes;";
-            datosConsulta = coneccion.consultarDatos(sentencia);
+            datosConsulta = coneccion.queryData(sentencia);
                 if (datosConsulta.next()) {
                         totalRegistros = datosConsulta.getInt(1);
                 } else {

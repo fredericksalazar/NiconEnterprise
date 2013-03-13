@@ -6,7 +6,7 @@ package nicon.enterprise.libCore.dao;
 
 import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.obj.LineaProducto;
 
 public class LineaProductoDAO {
@@ -18,18 +18,18 @@ public class LineaProductoDAO {
     private int counter;
     private ResultSet Data;
     private ArrayList ListLines;
-    private Conection coneccion;
+    private AdminConector coneccion;
 
     public LineaProductoDAO(LineaProducto line) {
         this.line = line;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     public boolean createLine() {
         try {
             System.out.println("Starting creation of Product Line ...");
             this.sentence = ("Insert into Lineas_productos values('" + this.line.getCodeLine() + "','" + this.line.getNameLine() + "','" + this.line.getDescriptionLine() + "','" + this.line.getCodeFamily() + "');");
-            this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
 
             if (this.ExecuteSentence == 0) {
                 this.state = true;
@@ -48,7 +48,7 @@ public class LineaProductoDAO {
     public boolean deleteLine() {
         try {
             this.sentence = ("delete from Lineas_productos where Codigo_Linea='" + this.line.getCodeLine() + "');");
-            this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
 
             if (this.ExecuteSentence == 0) {
                 this.state = true;
@@ -67,7 +67,7 @@ public class LineaProductoDAO {
     public boolean editLine(String id, String campo, String dato) {
         try {
             this.sentence = ("UPDATE Lineas_Productos SET " + campo + " ='" + dato + "' WHERE Codigo_Linea=" + id + ";");
-            this.ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
         } catch (Exception e) {
         }
         return this.state;
@@ -78,7 +78,7 @@ public class LineaProductoDAO {
             this.counter = 0;
             this.ListLines = new ArrayList();
             this.sentence = "Select * from Lineas_Productos;";
-            this.Data = this.coneccion.consultarDatos(this.sentence);
+            this.Data = this.coneccion.queryData(this.sentence);
 
             while (this.Data.next()) {
                 this.line = new LineaProducto(this.Data.getString(1), this.Data.getString(2), this.Data.getString(3), this.Data.getString(4));

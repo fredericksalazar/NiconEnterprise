@@ -22,7 +22,7 @@ import nicon.enterprise.gui.Clientes.activities.Actividad_ListadoPendientes;
 import nicon.enterprise.gui.Empleados.ModuloEmpleados;
 import nicon.enterprise.gui.Empresa.VisorEmpresa;
 import nicon.enterprise.gui.Proveedores.ModuloProveedores;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.api.obj.Empresa;
@@ -82,7 +82,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
     private TitledBorder borderAcciones;
     
     private Empresa datosEmpresa;
-    private Conection coneccion;
+    private AdminConector coneccion;
     private ConfigConector conector;
     private ConfigConectorDAO conectorDAO;
     private Actividad_ListadoPendientes panelPendientes;
@@ -109,7 +109,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
         setJMenuBar(MenuBar);
         this.datosEmpresa = Informacion;
         Icons = GlobalConfigSystem.getIconsPath();
-        coneccion = Conection.obtenerInstancia();
+        coneccion = AdminConector.getInstance();
         crearModulo();
         createDash();
     }
@@ -395,7 +395,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
      * realizada solo en casos necesarios pues inhabilitaria las transacciones de datos entre le front end y el backend.
      */
     private void desconectar() {
-        operacion = coneccion.desconectar();
+        operacion = coneccion.disconect();
         if (operacion) {
             guiEstadoServidor.setBackground(GlobalConfigSystem.getColorInactiveStatus());
             JOptionPane.showMessageDialog(this.rootPane, "El sistema se ha desconectado del servidor exitosamente.", GlobalConfigSystem.getAplicationTitle(), 2, new ImageIcon(getClass().getResource(Icons + "NiconWarning.png")));
@@ -408,7 +408,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
      */
     private void conectar() {
         try {
-            operacion = coneccion.conectar();
+            operacion = coneccion.conect();
                 if (operacion) {
                     guiEstadoServidor.setBackground(GlobalConfigSystem.getColorActiveStatus());
                     JOptionPane.showMessageDialog(rootPane, "El sistema se ha conectado exitosamente al servidor.", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons+"NiconPositive.png")));

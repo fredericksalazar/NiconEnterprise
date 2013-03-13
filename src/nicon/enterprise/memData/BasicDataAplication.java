@@ -8,7 +8,7 @@ import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 
 public class BasicDataAplication {
 
@@ -19,20 +19,20 @@ public class BasicDataAplication {
     private static String[] VectorCiudades;
     private static String[] VectorDpto;
     private static int init;
-    private static Conection coneccion;
+    private static AdminConector coneccion;
 
     public BasicDataAplication() {
         ListData = new ArrayList();
         counter = 0;
         init = 0;
-        coneccion = Conection.obtenerInstancia();
+        coneccion = AdminConector.getInstance();
     }
 
     public static String[] getListCity() {
         try {
             if (counter == 0) {
                 sentence = "select Distinct ciudad from Clientes";
-                DataSentence = coneccion.consultarDatos(sentence);
+                DataSentence = coneccion.queryData(sentence);
 
                 while (DataSentence.next()) {
                     ListData.add(DataSentence.getString("ciudad"));
@@ -53,7 +53,7 @@ public class BasicDataAplication {
         try {
             if (init == 0) {
                 sentence = "select distinct Departamento from Clientes";
-                DataSentence = coneccion.consultarDatos(sentence);
+                DataSentence = coneccion.queryData(sentence);
 
                 while (DataSentence.next()) {
                     ListData.add(DataSentence.getString("Departamento"));

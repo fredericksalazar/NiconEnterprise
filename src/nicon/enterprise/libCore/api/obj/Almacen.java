@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 
@@ -27,7 +27,7 @@ public class Almacen {
     private Almacen Almacen;
     private Empresa Code;
     private EmpresaDAO empresaDAO;
-    private Conection coneccion;
+    private AdminConector coneccion;
     private String sentence;
     private ResultSet Data;
     private ArrayList DataStore;
@@ -41,7 +41,7 @@ public class Almacen {
         this.Provincia = Provincia;
         this.Telefono_fijo = Telefono_fijo;
         this.email = email;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     public Almacen(int CodeStore, String Nombre, String Direccion, String Barrio, String Ciudad, String Provincia, String Telefono_fijo, String email) {
@@ -53,13 +53,13 @@ public class Almacen {
         this.Provincia = Provincia;
         this.Telefono_fijo = Telefono_fijo;
         this.email = email;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     public Almacen(int CodeStore, String Name) {
         this.CodeStore = CodeStore;
         this.Nombre = Name;
-        this.coneccion = Conection.obtenerInstancia();
+        this.coneccion = AdminConector.getInstance();
     }
 
     public Almacen(Almacen almacen) {
@@ -137,7 +137,7 @@ public class Almacen {
         try {
             this.empresaDAO = new EmpresaDAO();
             this.sentence = ("Insert Into Almacenes (Nombre,direccion,barrio,ciudad,Departamento,telefono_fijo,email,fecha_registro,Empresa_Nit) Values ('" + getNombre() + "','" + getDireccion() + "','" + getBarrio() + "','" + getCiudad() + "','" + getProvincia() + "','" + getTelefono_fijo() + "','" + getEmail() + "',current_timestamp,'" + this.empresaDAO.obtenerNit() + "');");
-            int ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+            int ExecuteSentence = this.coneccion.runSentence(this.sentence);
 
             if (ExecuteSentence == 0) {
                 JOptionPane.showMessageDialog(null, "El almacen ha sido creado detalles:\n\n" + toString());
@@ -152,7 +152,7 @@ public class Almacen {
     public void updateStore(String campo, String Data, int Code) {
         try {
             this.sentence = ("Update Almacenes set " + campo + " ='" + Data + "' where idAlmacenes=" + Code + ";");
-            int ExecuteSentence = this.coneccion.ejecutarSentencia(this.sentence);
+            int ExecuteSentence = this.coneccion.runSentence(this.sentence);
             if (ExecuteSentence == 0) {
                 JOptionPane.showMessageDialog(null, "La actualizacion de datos ha sido exitosa");
             } else {
@@ -167,7 +167,7 @@ public class Almacen {
         this.sentence = ("select * from Almacenes where Codigo_almacen=" + code + ";");
         Almacen store = new Almacen();
         try {
-            this.Data = this.coneccion.consultarDatos(this.sentence);
+            this.Data = this.coneccion.queryData(this.sentence);
             this.Data.next();
             store.setNombre(this.Data.getString(1));
             store.setDireccion(this.Data.getString(2));
@@ -177,7 +177,7 @@ public class Almacen {
             store.setTelefono_fijo(this.Data.getString(6));
             store.setEmail(this.Data.getString(7));
             this.Data.close();
-            this.coneccion.desconectar();
+            this.coneccion.disconect();
         } catch (Exception e) {
             System.err.println("A Error ocurred when trying Store.getDataStore() detail Error" + e);
         }
@@ -189,7 +189,7 @@ public class Almacen {
         this.counter = 0;
         try {
             this.sentence = "select idAlmacenes, Nombre from Almacenes;";
-            this.Data = this.coneccion.consultarDatos(this.sentence);
+            this.Data = this.coneccion.queryData(this.sentence);
 
             while (this.Data.next()) {
                 Almacen = new Almacen(Data.getInt("idAlmacen"), Data.getString("Nombre"));
@@ -205,7 +205,7 @@ public class Almacen {
     public int obtenerTotalRegistros() {
         try {
             this.sentence = "select count(idAlmacenes) from Almacenes";
-            this.Data = this.coneccion.consultarDatos(this.sentence);
+            this.Data = this.coneccion.queryData(this.sentence);
             if (this.Data.next()) {
                 this.counter = this.Data.getInt(1);
             } else {

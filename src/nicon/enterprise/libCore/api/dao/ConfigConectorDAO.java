@@ -111,7 +111,6 @@ public class ConfigConectorDAO {
 
     public boolean verifyConfigFile() {
         System.out.println("Verificando existencia de Conector.conf en: " + this.path + "/" + this.nameFile + "...");
-        this.state = NiconLibTools.verifiExistFile(this.path + "/" + this.nameFile);
-        return this.state;
+        return NiconLibTools.verifiExistFile(this.path + "/" + this.nameFile);
     }
 }

@@ -48,10 +48,8 @@ public class NiconEnterprise {
             Init.init_Process();
             ApiEmpresa = new EmpresaDAO();
                 if (ApiEmpresa.verificarEstadoSistema()) {
-                        empresa = ApiEmpresa.detallesEmpresa();
-                        FrontEnd = new ModuloPrincipal(empresa);
+                        FrontEnd = new ModuloPrincipal(ApiEmpresa.detallesEmpresa());
                         FrontEnd.setVisible(true);
-                        ApiEmpresa = null;
                 } else {
                         activation = new RegistroEmpresa();
                         activation.setVisible(true);

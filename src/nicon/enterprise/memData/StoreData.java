@@ -6,7 +6,7 @@ package nicon.enterprise.memData;
 
 import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.Conection;
+import nicon.enterprise.libCore.AdminConector;
 import nicon.enterprise.libCore.api.obj.Almacen;
 
 public class StoreData {
@@ -15,14 +15,14 @@ public class StoreData {
     private static String sentence;
     private static ResultSet DataSentence;
     private static Almacen Store;
-    private static Conection coneccion;
+    private static AdminConector coneccion;
 
     public static void storeInit() {
         try {
-            coneccion = Conection.obtenerInstancia();
+            coneccion = AdminConector.getInstance();
             ListStore = new ArrayList();
             sentence = "select * from Almacenes;";
-            DataSentence = coneccion.consultarDatos(sentence);
+            DataSentence = coneccion.queryData(sentence);
 
             while (DataSentence.next()) {
                 Store = new Almacen(DataSentence.getInt("idAlmacenes"), DataSentence.getString("Nombre"), DataSentence.getString("direccion"), DataSentence.getString("barrio"), DataSentence.getString("ciudad"), DataSentence.getString("Departamento"), DataSentence.getString("telefono_fijo"), DataSentence.getString("email"));
