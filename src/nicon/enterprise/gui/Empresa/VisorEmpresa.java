@@ -16,7 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 import nicon.enterprise.libCore.api.obj.Almacen;

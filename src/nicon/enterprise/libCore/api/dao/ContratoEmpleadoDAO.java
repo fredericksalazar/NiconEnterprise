@@ -8,9 +8,9 @@ import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import nicon.enterprise.libCore.AdminConector;
-import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.NiconLibTools;
+import nicon.enterprise.libCore.api.util.AdminConector;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.obj.ContratoEmpleado;
 
 public class ContratoEmpleadoDAO

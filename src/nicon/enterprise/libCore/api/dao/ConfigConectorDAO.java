@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.NiconLibTools;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
 public class ConfigConectorDAO {

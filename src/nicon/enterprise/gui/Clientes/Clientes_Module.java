@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.JRException;
 import nicon.enterprise.gui.Clientes.activities.Actividad_Administrador;
 import nicon.enterprise.gui.Clientes.activities.Actividad_Crear;
 import nicon.enterprise.gui.ModuloPrincipal;
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.memData.BasicDataAplication;

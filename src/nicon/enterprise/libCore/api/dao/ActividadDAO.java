@@ -14,10 +14,10 @@ import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 
-import nicon.enterprise.libCore.AdminConector;
-import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.NiconAdminReport;
-import nicon.enterprise.libCore.NiconLibTools;
+import nicon.enterprise.libCore.api.util.AdminConector;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.NiconAdminReport;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.obj.Actividad;
 
 public class ActividadDAO {

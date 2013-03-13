@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 
-import nicon.enterprise.libCore.AdminConector;
-import nicon.enterprise.libCore.NiconAdminReport;
+import nicon.enterprise.libCore.api.util.AdminConector;
+import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.api.obj.Cliente;
 
 /**

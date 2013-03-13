@@ -18,8 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-import nicon.enterprise.libCore.GlobalConfigSystem;
-import nicon.enterprise.libCore.NiconLibTools;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.obj.Cliente;
 

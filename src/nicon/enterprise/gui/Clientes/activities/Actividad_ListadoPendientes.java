@@ -28,7 +28,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import net.sf.jasperreports.engine.JRException;
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.dao.ActividadDAO;
 import nicon.enterprise.libCore.obj.Actividad;
 

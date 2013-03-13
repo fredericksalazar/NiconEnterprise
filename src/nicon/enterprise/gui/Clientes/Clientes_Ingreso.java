@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
 import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.memData.BasicDataAplication;

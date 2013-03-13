@@ -8,7 +8,7 @@ import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import nicon.enterprise.libCore.AdminConector;
+import nicon.enterprise.libCore.api.util.AdminConector;
 
 public class BasicDataAplication {
 

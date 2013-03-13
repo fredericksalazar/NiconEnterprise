@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.dao.ActividadDAO;
 import nicon.enterprise.libCore.obj.Actividad;
 

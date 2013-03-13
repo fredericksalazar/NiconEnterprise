@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import nicon.enterprise.gui.ModuloPrincipal;
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
 import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
 import nicon.enterprise.libCore.api.obj.Empleado;

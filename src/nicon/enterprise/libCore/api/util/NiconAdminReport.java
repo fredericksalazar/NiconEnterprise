@@ -8,8 +8,9 @@
  * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
 
-package nicon.enterprise.libCore;
+package nicon.enterprise.libCore.api.util;
 
+import nicon.enterprise.libCore.api.util.AdminConector;
 import com.mysql.jdbc.Connection;
 
 import java.io.File;

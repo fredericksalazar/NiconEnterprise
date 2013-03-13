@@ -7,7 +7,7 @@ package nicon.enterprise.gui.Clientes.activities;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import nicon.enterprise.libCore.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.dao.TipoActividadDAO;
 import nicon.enterprise.libCore.obj.TipoActividad;
 

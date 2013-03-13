@@ -6,7 +6,7 @@ package nicon.enterprise.libCore.api.obj;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.AdminConector;
+import nicon.enterprise.libCore.api.util.AdminConector;
 
 public class Empresa
 {

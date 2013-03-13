@@ -8,7 +8,7 @@
  * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
 
-package nicon.enterprise.libCore;
+package nicon.enterprise.libCore.api.util;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

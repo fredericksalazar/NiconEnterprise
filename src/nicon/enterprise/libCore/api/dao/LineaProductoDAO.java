@@ -6,7 +6,7 @@ package nicon.enterprise.libCore.dao;
 
 import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
-import nicon.enterprise.libCore.AdminConector;
+import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.obj.LineaProducto;
 
 public class LineaProductoDAO {

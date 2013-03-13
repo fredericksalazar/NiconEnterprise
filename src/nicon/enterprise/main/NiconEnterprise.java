@@ -20,7 +20,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import nicon.enterprise.gui.Empresa.RegistroEmpresa;
 import nicon.enterprise.gui.ModuloPrincipal;
-import nicon.enterprise.libCore.Init;
+import nicon.enterprise.libCore.api.util.Init;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 import nicon.enterprise.libCore.api.obj.Empresa;
 

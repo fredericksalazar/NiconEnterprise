@@ -10,7 +10,7 @@ package nicon.enterprise.libCore.api.dao;
 import com.mysql.jdbc.ResultSet;
 import java.sql.SQLException;
 
-import nicon.enterprise.libCore.AdminConector;
+import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.obj.Empresa;
 
 /**
