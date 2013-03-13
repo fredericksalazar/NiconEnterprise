@@ -15,8 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import nicon.enterprise.libCore.api.dao.ProveedorDAO;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ProveedorDAO;
 import nicon.enterprise.libCore.obj.Proveedor;
 
 public class EditorProveedor extends JDialog

@@ -4,10 +4,6 @@
  */
 package nicon.enterprise.libCore.api.obj;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import nicon.enterprise.libCore.api.util.AdminConector;
-
 public class Empresa
 {
   private String Nit;
@@ -23,10 +19,6 @@ public class Empresa
   private String departamento;
   private String ciudad;
   private String direccion;
-  private static String sentence;
-  private static ArrayList List;
-  private static ResultSet Data;
-  private AdminConector conection;
 
   public Empresa(String Nit, String Razon_Social, String Slogan, String Representante_legal, String direccion, String ciudad, String departamento, String telefono_fijo, String telefono_movil, String PBX, String email, String web_page, String Face_Page)
   {

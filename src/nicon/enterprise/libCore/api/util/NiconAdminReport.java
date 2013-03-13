@@ -55,7 +55,7 @@ public class NiconAdminReport {
         conect =  coneccion.getConnectionSGBD();
     }
 
-    public String SetDir() {
+    public String setDir() {
         String directorio = System.getProperty("java.class.path");
         File dir = new File(directorio);
         String directorioPadre = dir.getParent();

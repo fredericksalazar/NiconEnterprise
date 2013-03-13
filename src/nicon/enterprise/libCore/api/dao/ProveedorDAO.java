@@ -1,17 +1,27 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
-package nicon.enterprise.libCore.dao;
+
+package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
+
 import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
@@ -20,12 +30,14 @@ import nicon.enterprise.libCore.obj.Proveedor;
 public class ProveedorDAO {
 
     private Proveedor proveedor;
-    private String sentencia;
     private ArrayList listaProveedores;
     private ArrayList listaCiudades;
     private ResultSet datosConsulta;
+    
+    private String sentencia;
     private boolean stateOP;
     private int response;
+    
     private AdminConector coneccion;
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
@@ -43,7 +55,6 @@ public class ProveedorDAO {
     public boolean crearProveedor() {
         System.out.println("Iniciando creación de nuevo Proveedor, verificando Objeto ...");
         try {
-            if (this.proveedor != null) {
                 this.sentencia = ("Insert Into Proveedores values('" + this.proveedor.getNit() + "','" + this.proveedor.getRazonSocial() + "','" + this.proveedor.getDireccion() + "','" + this.proveedor.getCiudad() + "','" + this.proveedor.getTelefonoFijo() + "','" + this.proveedor.getTelefonoMovil() + "','" + this.proveedor.getFax() + "','" + this.proveedor.getEmail() + "','" + this.proveedor.getWebPage() + "','" + this.proveedor.getBanco() + "','" + this.proveedor.getNumeroCuenta() + "','" + this.proveedor.getDescripcion() + "',1);");
                 this.response = this.coneccion.runSentence(this.sentencia);
                 if (this.response == 0) {
@@ -53,9 +64,7 @@ public class ProveedorDAO {
                     System.out.println("El objeto proveedor no pudo ser creado, un error ocurrio al ejecutar la sentencia ...");
                     this.stateOP = false;
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "El Objeto Proveedor es null, por favor verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
-            }
+            
         } catch (Exception e) {
             System.err.println("Ocurrió el siguiente error en ProveedorDAO.crearProveedor():\n" + e);
             this.stateOP = false;
@@ -65,7 +74,7 @@ public class ProveedorDAO {
 
     public boolean eliminarProveedor() {
         System.out.println("Iniciando la eliminación del proveedor : " + this.proveedor.getRazonSocial());
-        if (this.proveedor != null) {
+        
             try {
                 this.sentencia = ("DELETE FROM Proveedores WHERE Nit='" + this.proveedor.getNit() + "';");
                 this.response = this.coneccion.runSentence(this.sentencia);
@@ -78,9 +87,7 @@ public class ProveedorDAO {
             } catch (SQLException ex) {
                 Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "El Objeto Proveedor es null, por favor verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
-        }
+        
         return this.stateOP;
     }
 

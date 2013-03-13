@@ -34,7 +34,7 @@ public class ClienteDAO {
      * UR__REPORT es la direccion Url donde se encuentra el archivo .jasper a compilar para generar el
      * reporte de clientes.
      */
-    private final String URL_REPORT="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
+    private static final String URL_REPORT="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
 
     private Cliente cliente;
     private boolean state = false;

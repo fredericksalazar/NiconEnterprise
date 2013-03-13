@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.dao;
+package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class LineaProductoDAO {
             }
             this.line = null;
         } catch (Exception e) {
-            System.out.println("A Error Had Ocurred when trying execute operation:\n".getClass().getName() + "\n" + e.getStackTrace());
+            System.out.println("A Error Had Ocurred when trying execute operation:\n".getClass().getName() + "\n");
         }
         return this.state;
     }
@@ -59,7 +59,7 @@ public class LineaProductoDAO {
             }
             this.line = null;
         } catch (Exception e) {
-            System.out.println("A Error Had Ocurred when trying execute operation:\n".getClass().getName() + "\n" + e.getStackTrace());
+            System.out.println("A Error Had Ocurred when trying execute operation:\n".getClass().getName() + "\n");
         }
         return this.state;
     }
@@ -69,6 +69,7 @@ public class LineaProductoDAO {
             this.sentence = ("UPDATE Lineas_Productos SET " + campo + " ='" + dato + "' WHERE Codigo_Linea=" + id + ";");
             this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
         } catch (Exception e) {
+            System.out.println(e);
         }
         return this.state;
     }
@@ -88,7 +89,7 @@ public class LineaProductoDAO {
             this.Data.close();
             this.line = null;
         } catch (Exception e) {
-            System.out.println("A Error Had Ocurred when trying execute operation:\n".getClass().getName() + "\n" + e.getStackTrace());
+            System.out.println("A Error Had Ocurred when trying execute operation:\n".getClass().getName() + "\n");
         }
         return this.ListLines;
     }

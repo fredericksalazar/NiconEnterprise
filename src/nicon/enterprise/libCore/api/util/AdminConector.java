@@ -47,7 +47,7 @@ public class AdminConector {
     
     private ResultSet result;
     private Statement sentence;
-    private static Connection SGBD;
+    private Connection SGBD;
     
     private int stateOP;
     private int countConection;
@@ -91,7 +91,7 @@ public class AdminConector {
             execute = false;
         } catch (CommunicationsException Cex) {
             JOptionPane.showMessageDialog(null, "No se puede conectar con el servidor central de datos:\n\nHost Central Server: \n\nVerifique su conexion a la red Local\nVerifique que el que el servidor este activo y funcionando.\n\nEn caso de no poder conectarse por favor informe a Ingeniería\ny Reporte su problema.\nNo se encuentra el servidor:\n",GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
-            System.exit(0);
+            NiconLibTools.closeNiconEnterprise();
         } catch (InstantiationException ex) {
             Logger.getLogger(AdminConector.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {

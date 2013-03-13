@@ -126,19 +126,20 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
     private JSeparator separator1;
     private JSeparator separator2;
 
-    public Clientes_Module() {
-        cliente = new Cliente();
-        this.selectedSearch = 0;
-        Icons = GlobalConfigSystem.getIconsPath();
-        clienteDAO = new ClienteDAO();
-        listaClientes = new ArrayList();
-        vectorDatos = new String[3];
+    public Clientes_Module() {      
         crearInterfaz();
         listarClientes();
         seleccionarPrimerRegistro();
     }
 
     private void crearInterfaz() {
+        cliente = new Cliente();
+        selectedSearch = 0;
+        Icons = GlobalConfigSystem.getIconsPath();
+        clienteDAO = new ClienteDAO();
+        listaClientes = new ArrayList();
+        vectorDatos = new String[3];
+        
         BorderInf = BorderFactory.createTitledBorder("");
         BorderInf.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
 

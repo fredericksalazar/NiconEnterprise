@@ -30,8 +30,7 @@ public class EmpresaDAO {
     private int ejecucion;
     private boolean stateOP;
     private String sentencia;
-    private String nitEmpresa;   
-    private String nit;
+    private String nitEmpresa; 
     
 
     /**

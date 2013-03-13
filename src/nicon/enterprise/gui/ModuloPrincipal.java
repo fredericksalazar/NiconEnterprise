@@ -26,6 +26,7 @@ import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ConfigConectorDAO;
 import nicon.enterprise.libCore.api.obj.Empresa;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
 /**
@@ -386,7 +387,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
                     JOptionPane.showMessageDialog(this.rootPane, "No ha Ingresado un parametro correcto, verifique e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0, new ImageIcon(getClass().getResource(Icons + "NiconError.png")));
             }
             if ((opcionSalida.equals("S")) || (opcionSalida.equals("s"))) {
-                System.exit(0);
+                NiconLibTools.closeNiconEnterprise();
             }
     }
 

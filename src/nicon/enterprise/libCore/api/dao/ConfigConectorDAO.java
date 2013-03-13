@@ -4,11 +4,9 @@
  */
 package nicon.enterprise.libCore.api.dao;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.obj.ConfigConector;
 
@@ -19,10 +17,8 @@ public class ConfigConectorDAO {
     private boolean state;
     private String path = "./Config";
     private String nameFile = "Conector.conf";
-    private ArrayList listConections;
     private ObjectInputStream inputObject;
     private ObjectOutputStream outputObject;
-    private File file;
 
     public ConfigConectorDAO(ConfigConector config) {
         this.config = config;
@@ -83,30 +79,11 @@ public class ConfigConectorDAO {
         return this.config;
     }
 
-    public ArrayList loadConfigList() {
-        try {
-            System.out.println("cargando lista de conecciones ...");
-            this.listConections = new ArrayList();
-            this.inputObject = NiconLibTools.readFileObject(this.path + "/" + this.nameFile);
-            while (this.inputObject.available() > 0) {
-                this.listConections.add(this.config);
-                this.config = ((ConfigConector) this.inputObject.readObject());
-            }
-            this.inputObject.close();
-            System.out.println("Lista de conecciones cargada exitosamente total: " + this.listConections.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.listConections;
-    }
-
     public void createConfigDefault() throws IOException {
         System.out.println("Creando configuracion por defecto para: Conector.conf ...");
         this.config = new ConfigConector("Conección Local", "127.0.0.1", "3306", "NiconEnterprise", "root", "1143825620");
         this.API = new ConfigConectorDAO(this.config);
-        this.state = this.API.createConfigFile();
-        if (state) {
-        }
+        this.state = this.API.createConfigFile();        
     }
 
     public boolean verifyConfigFile() {

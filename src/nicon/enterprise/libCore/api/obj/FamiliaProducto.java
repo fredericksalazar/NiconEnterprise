@@ -9,19 +9,10 @@ public class FamiliaProducto
   private String Code;
   private String Name;
   private String Description;
-  private Almacen store;
   private String codeStore;
 
   public FamiliaProducto()
   {
-  }
-
-  public FamiliaProducto(String Code, String Name, String Description, Almacen store)
-  {
-    this.Code = Code;
-    this.Name = Name;
-    this.Description = Description;
-    this.store = store;
   }
 
   public FamiliaProducto(String Code, String Name, String Description, String codeStore) {
@@ -63,6 +54,7 @@ public class FamiliaProducto
     this.codeStore = codeStore;
   }
 
+  @Override
   public String toString()
   {
     return "Product_Family{Code=" + this.Code + ", Name=" + this.Name + ", Description=" + this.Description + ", codeStore=" + this.codeStore + '}';
