@@ -10,8 +10,6 @@
 
 package nicon.enterprise.libCore.api.obj;
 
-import java.util.logging.Logger;
-
 /**
  * La classe actividad esta definida como un objeto de ejecucion de tarea, una
  * actividad con un cliente es definida como una acción a ejecutar con un

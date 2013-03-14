@@ -30,8 +30,8 @@ public class StoreData {
             }
             DataSentence.close();
         } catch (Exception e) {
-            System.out.println("Ocurrio un Error al ejecutar el proceso: storeInit() detalles del error:\n" + e.getStackTrace());
-            e.printStackTrace();
+            System.out.println("Ocurrio un Error al ejecutar el proceso: storeInit() detalles del error:\n" + e);
+            
         }
     }
 
