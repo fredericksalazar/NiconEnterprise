@@ -203,8 +203,8 @@ public class ProveedorDAO {
     public void exportarTodosPDF()
             throws JRException {
         this.adminReport = new NiconAdminReport();
-        this.reporte = this.adminReport.compilarReporte("/Nicon/Enterprise/LibCore/rsc/ListaProveedores.jasper");
-        this.adminReport.verReporte(this.reporte);
+        this.reporte = this.adminReport.buildReport("/Nicon/Enterprise/LibCore/rsc/ListaProveedores.jasper");
+        this.adminReport.viewerReport(this.reporte);
     }
 
     private void limpiarInterfaz() {

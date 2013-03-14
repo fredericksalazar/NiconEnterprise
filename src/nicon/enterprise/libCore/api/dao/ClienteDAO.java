@@ -34,15 +34,18 @@ public class ClienteDAO {
      * UR__REPORT es la direccion Url donde se encuentra el archivo .jasper a compilar para generar el
      * reporte de clientes.
      */
-    private static final String URL_REPORT="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
+    private static final String URL_REPORT_LISTA_CLIENTES="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
 
     private Cliente cliente;
+    
     private boolean state = false;
     private String sentencia;
     private int ExecuteSentence;
     private int totalRegistros;
+    
     private ArrayList listaClientes;
     private ResultSet datosConsulta;
+    
     private AdminConector coneccion;
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
@@ -79,18 +82,20 @@ public class ClienteDAO {
      * @return boolean stateOP
      * @throws SQLException
      */
-    public boolean crearCliente() throws SQLException {
-        if (cliente != null) {
-            sentencia = "INSERT INTO Clientes VALUES(" + this.cliente.getIdentificacion() + ",'" + this.cliente.getNombres() + "','" + this.cliente.getApellidos() + "','" + this.cliente.getCiudad() + "','" + this.cliente.getDireccion() + "','" + this.cliente.getProvincia() + "','" + this.cliente.getTelefono_fijo() + "','" + this.cliente.getTelefono_movil() + "','" + this.cliente.getTelefono_alternativo() + "','" + this.cliente.getEmail() + "',current_timestamp," + this.cliente.getCodigoAlmacen() + ");";
+    public boolean crearCliente() throws SQLException {        
+            sentencia = "INSERT INTO Clientes VALUES(" + cliente.getIdentificacion() 
+                        + ",'" +cliente.getNombres() + "','" +cliente.getApellidos() +
+                        "','" + cliente.getCiudad() + "','" + cliente.getDireccion() + 
+                        "','" + cliente.getProvincia() + "','" + cliente.getTelefono_fijo() 
+                        + "','" + cliente.getTelefono_movil() + "','" + 
+                        cliente.getTelefono_alternativo() + "','" +cliente.getEmail() + 
+                        "',current_timestamp," + cliente.getCodigoAlmacen() + ");";
             ExecuteSentence = coneccion.runSentence(sentencia);
             if (ExecuteSentence == 0) {
                 state = true;
             } else {
                 state = false;
-            }
-        } else {
-            state = false;
-        }
+            }        
         cliente = null;
         return state;
     }
@@ -126,7 +131,7 @@ public class ClienteDAO {
     public boolean actualizarIdentificacion(String oldID, String NewID) throws SQLException {
         sentencia = "UPDATE Clientes SET identificacion = " + NewID + " where identificacion=" + oldID + ";";
         ExecuteSentence = this.coneccion.runSentence(this.sentencia);
-        if (this.ExecuteSentence == 0) {
+        if (ExecuteSentence == 0) {
             state = true;
         } else {
             state = false;
@@ -299,8 +304,8 @@ public class ClienteDAO {
      */
     public void exportarTodosPDF() throws JRException {
             if(adminReport!=null){            
-                    reporte = adminReport.compilarReporte(URL_REPORT);
-                    adminReport.verReporte(reporte);
+                    reporte = adminReport.buildReport(URL_REPORT_LISTA_CLIENTES);
+                    adminReport.viewerReport(reporte);
             }
             reporte=null;
             adminReport=null;

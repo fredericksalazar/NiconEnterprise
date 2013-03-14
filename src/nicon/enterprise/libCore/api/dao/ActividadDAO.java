@@ -15,13 +15,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.JOptionPane;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import nicon.enterprise.libCore.api.util.AdminConector;
-import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.api.obj.Actividad;
@@ -41,12 +39,15 @@ public class ActividadDAO {
      * reporte de una actividad almacenada en el sistema.
      */
     private static final String JASPER_TEMPLATE_URL = "/nicon/enterprise/libCore/rsc/ImpActividad.jasper";
+    
     private int ejecucion;
     private int codigo;
     private boolean state;
+    
     private Actividad actividad;
     private AdminConector coneccion;
     private NiconAdminReport apiReporter;
+    
     private JasperPrint reporte;
     private ArrayList listaActividades;
     private String sentencia;
@@ -337,7 +338,7 @@ public class ActividadDAO {
      */
     public void imprimirActividadPorID(int idActividad) throws JRException {        
             parametro.put("idActividad",idActividad);
-            reporte = apiReporter.compilarReporteConParametros(JASPER_TEMPLATE_URL,parametro);
+            reporte = apiReporter.buildReportParameter(JASPER_TEMPLATE_URL,parametro);
             apiReporter.servicioImpresion(reporte);
             parametro.clear();        
     }
@@ -352,7 +353,7 @@ public class ActividadDAO {
         for (int i = 0; i < lista.size(); i++) {
                 actividad = ((Actividad) lista.get(i));
                 parametro.put("idActividad",actividad.getIdActividad());
-                reporte = apiReporter.compilarReporteConParametros(JASPER_TEMPLATE_URL,parametro);
+                reporte = apiReporter.buildReportParameter(JASPER_TEMPLATE_URL,parametro);
                 apiReporter.servicioImpresion(reporte);
                 parametro.clear();
         }
@@ -367,8 +368,8 @@ public class ActividadDAO {
      */
     public boolean verActividadPDF(int idActividad) throws JRException {
             parametro.put("idActividad", Integer.valueOf(idActividad));
-            reporte = apiReporter.compilarReporteConParametros(JASPER_TEMPLATE_URL,parametro);
-            apiReporter.verReporte(reporte);
+            reporte = apiReporter.buildReportParameter(JASPER_TEMPLATE_URL,parametro);
+            apiReporter.viewerReport(reporte);
             parametro.clear();        
         return state;
     }

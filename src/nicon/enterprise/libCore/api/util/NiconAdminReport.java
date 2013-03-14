@@ -36,25 +36,31 @@ import net.sf.jasperreports.view.JasperViewer;
  * @author Frederick Adolfo Salazar Sanchez
  */
 public class NiconAdminReport {
-
+    
+    private static final String URL_EXPORT_FILES_REPORT="./Archivos/Reportes";
+    
     private JasperPrint     jasperPrint;
-    private JasperReport    reporte;
+    private JasperReport    jasperReport;
     private JasperViewer    jasperViewer;
     private JRExporter      exportManager;
     private InputStream     inputObject;
     
-    private AdminConector   coneccion;
+    private AdminConector   conection;
     private Connection      conect;
     private boolean         state;
 
     /**
-     * 
+     * Esta clase es la administradora central para la gestion e immpresion
+     * de reportes con informacion obtenida de la fuente de datos, AdminReport
+     * define los metodos necesarios para exportar toda la informacion contenida
+     * en la fuente de datos a distinto tipo de documentos entre los que se
+     * encuentran archivos, pdf, doc, xls, cvs etc.
      */
     public NiconAdminReport() {
-        coneccion = AdminConector.getInstance();
-        conect =  coneccion.getConnectionSGBD();
+        conection = AdminConector.getInstance();
+        conect =  conection.getConnectionSGBD();
     }
-
+    
     public String setDir() {
         String directorio = System.getProperty("java.class.path");
         File dir = new File(directorio);
@@ -63,50 +69,79 @@ public class NiconAdminReport {
     }
 
     /**
-     * Este metodo permite compilar una plantilla de los reportes
+     * Este metodo permite cargar y compilar un archivo .Jasper y convertirlo
+     * en un objeto JasperReport, este archivo JasperReportes retornado a la
+     * clase que solicita la compilacion y carga del archivo.
+     * 
      * @param URL
-     * @return
+     * @return JasperPrint jasperPrint
      * @throws JRException 
      */
-    public JasperPrint compilarReporte(String URL)throws JRException {
+    public JasperPrint buildReport(String URL)throws JRException {
         inputObject = getClass().getResourceAsStream(URL);
-        reporte =  (JasperReport) JRLoader.loadObject(inputObject);
-        jasperPrint = JasperFillManager.fillReport(reporte, null,conect);
-        
+        jasperReport =  (JasperReport) JRLoader.loadObject(inputObject);
+        jasperPrint = JasperFillManager.fillReport(jasperReport, null,conect);        
         return jasperPrint;
     }
 
-    public JasperPrint compilarReporteConParametros(String URL, Map parametros)
-            throws JRException {
-        this.inputObject = getClass().getResourceAsStream(URL);
-        this.reporte = ((JasperReport) JRLoader.loadObject(this.inputObject));
-        this.jasperPrint = JasperFillManager.fillReport(this.reporte, parametros, this.conect);
-
-        return this.jasperPrint;
+    /**
+     * Este metodo permite cargar y compilar un archivo .jasper y convertirlo
+     * en un objeto JasperReport, a diferencia del anterior metodo este 
+     * cargar reportes que recibe parametros como claves, idpersonales, o las 
+     * denominadas Primary Key que permite obtener informacion de un registro de
+     * ntro de una fuente de datos Mysql, al obtener y cargar el archivo hace
+     * un llenado con los datos y el Map que es pasado como parametro lo cual
+     * retorna un objeto JasperPrint listo para ser usado por el usuario.
+     * 
+     * @param URL
+     * @param parametros
+     * @return JasperPrint jasperPrint
+     * @throws JRException 
+     */
+    public JasperPrint buildReportParameter(String URL, Map parametros) throws JRException {
+        inputObject = getClass().getResourceAsStream(URL);
+        jasperReport = (JasperReport) JRLoader.loadObject(inputObject);
+        jasperPrint = JasperFillManager.fillReport(jasperReport, parametros,conect);
+        return jasperPrint;
     }
 
-    public void exportarReportePDF(JasperPrint print) {
-        try {
-            this.exportManager = new JRPdfExporter();
-            this.exportManager.setParameter(JRExporterParameter.JASPER_PRINT, print);
-            this.exportManager.setParameter(JRExporterParameter.OUTPUT_FILE, new File("./reportes/Lista Clientes.pdf"));
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error en <b> NiconAdminReport.exportarReportePDF():" + e);
-        }
+    /**
+     * Este metodo permite guardar un archivo JasperPrint con datos y generar
+     * un archivo .pdf que será almacenado dentro del disco duro y dentro de 
+     * el sistema de archivos de NiconEnterprise, recibe como parametros el
+     * archivo JasperPrint que contiene todos los datos y que ha sido compilado
+     * previamente.
+     * 
+     * @param print 
+     */
+    public void saveReportToPDF(JasperPrint print,String directory,String nameFile) {        
+            exportManager = new JRPdfExporter();
+            exportManager.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exportManager.setParameter(JRExporterParameter.OUTPUT_FILE, new File("./reportes/Lista Clientes.pdf"));
     }
 
-    public void verReporte(JasperPrint jasper) {
-        this.jasperViewer = new JasperViewer(jasper, false);
-        this.jasperViewer.setTitle(GlobalConfigSystem.getAplicationTitle());
-        this.jasperViewer.setAlwaysOnTop(true);
-        this.jasperViewer.setVisible(true);
+    /**
+     * este metodo permite visualizar el contenido de un archivo JasperPrint 
+     * que ha sido compilado y llenado con datos en un visor empotrado 
+     * @param jasper 
+     */
+    public void viewerReport(JasperPrint jasper) {
+        jasperViewer = new JasperViewer(jasper,false);
+        jasperViewer.setTitle(GlobalConfigSystem.getAplicationTitle());
+        jasperViewer.setAlwaysOnTop(true);
+        jasperViewer.setVisible(true);
     }
 
-    public boolean servicioImpresion(JasperPrint jasper)
-            throws JRException {
+    /**
+     * 
+     * @param jasper
+     * @return
+     * @throws JRException 
+     */
+    public boolean servicioImpresion(JasperPrint jasper)throws JRException {
         if (jasper != null) {
-            this.state = JasperPrintManager.printReport(this.jasperPrint, false);
+            state = JasperPrintManager.printReport(jasperPrint, false);
         }
-        return this.state;
+        return state;
     }
 }
