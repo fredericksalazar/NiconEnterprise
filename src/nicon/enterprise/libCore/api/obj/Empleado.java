@@ -21,7 +21,7 @@ public class Empleado
   private String TelefonoMovil;
   private String Email;
   private boolean Estado;
-  private Date FechaRegistro;
+  private Date fechaRegistro;
   private Almacen codigo;
 
   public Empleado(String Identificacion, String Nombres, String Apellidos, String FechaNacimiento, String LugarNacimiento, String EstadoCivil, String Direccion, String Barrio, String Ciudad, String TelefonoFijo, String TelefonoMovil, String Email, boolean Estado)
@@ -56,7 +56,7 @@ public class Empleado
     this.TelefonoMovil = TelefonoMovil;
     this.Email = Email;
     this.Estado = Estado;
-    this.FechaRegistro = FechaRegistro;
+    this.fechaRegistro = FechaRegistro;
   }
 
   public String getApellidos() {
@@ -124,11 +124,11 @@ public class Empleado
   }
 
   public Date getFechaRegistro() {
-    return this.FechaRegistro;
+    return fechaRegistro;
   }
 
   public void setFechaRegistro(Date FechaRegistro) {
-    this.FechaRegistro = FechaRegistro;
+    this.fechaRegistro = FechaRegistro;
   }
 
   public String getIdentificacion() {
@@ -182,6 +182,6 @@ public class Empleado
   @Override
   public String toString()
   {
-    return "Empleado{Identificacion=" + this.Identificacion + ", Nombres=" + this.Nombres + ", Apellidos=" + this.Apellidos + ", FechaNacimiento=" + this.FechaNacimiento + ", LugarNacimiento=" + this.LugarNacimiento + ", EstadoCivil=" + this.EstadoCivil + ", Direccion=" + this.Direccion + ", Barrio=" + this.Barrio + ", Ciudad=" + this.Ciudad + ", TelefonoFijo=" + this.TelefonoFijo + ", TelefonoMovil=" + this.TelefonoMovil + ", Email=" + this.Email + ", Estado=" + this.Estado + ", FechaRegistro=" + this.FechaRegistro + ", codigo=" + this.codigo + '}';
+    return "Empleado{Identificacion=" + this.Identificacion + ", Nombres=" + this.Nombres + ", Apellidos=" + this.Apellidos + ", FechaNacimiento=" + this.FechaNacimiento + ", LugarNacimiento=" + this.LugarNacimiento + ", EstadoCivil=" + this.EstadoCivil + ", Direccion=" + this.Direccion + ", Barrio=" + this.Barrio + ", Ciudad=" + this.Ciudad + ", TelefonoFijo=" + this.TelefonoFijo + ", TelefonoMovil=" + this.TelefonoMovil + ", Email=" + this.Email + ", Estado=" + this.Estado + ", FechaRegistro=" + this.fechaRegistro + ", codigo=" + this.codigo + '}';
   }
 }

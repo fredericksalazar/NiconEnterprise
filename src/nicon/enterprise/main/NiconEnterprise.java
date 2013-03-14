@@ -22,7 +22,6 @@ import nicon.enterprise.gui.Empresa.RegistroEmpresa;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.api.util.Init;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
-import nicon.enterprise.libCore.api.obj.Empresa;
 
 /**
  * NiconEnterprise es la puerta de entrada para todo el sistema grafico, hace las inicializaciones especiales
@@ -36,7 +35,6 @@ public class NiconEnterprise {
     /**
      * Se define el objeto empresa que representa toda la informacion de la empresa que hace uso del sistema.
      */
-    private static Empresa empresa;
     private static EmpresaDAO ApiEmpresa;
     private static ModuloPrincipal FrontEnd;
     private static RegistroEmpresa activation;

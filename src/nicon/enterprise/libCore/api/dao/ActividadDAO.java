@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package nicon.enterprise.libCore.dao;
+package nicon.enterprise.libCore.api.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.api.util.NiconLibTools;
-import nicon.enterprise.libCore.obj.Actividad;
+import nicon.enterprise.libCore.api.obj.Actividad;
 
 public class ActividadDAO {
 
@@ -93,7 +93,7 @@ public class ActividadDAO {
             }
             this.datosConsulta.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
         return this.listaActividades;
     }

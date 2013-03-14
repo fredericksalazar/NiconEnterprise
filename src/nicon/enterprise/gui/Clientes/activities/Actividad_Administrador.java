@@ -25,9 +25,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import net.sf.jasperreports.engine.JRException;
+import nicon.enterprise.libCore.api.dao.ActividadDAO;
+import nicon.enterprise.libCore.api.obj.Actividad;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
-import nicon.enterprise.libCore.dao.ActividadDAO;
-import nicon.enterprise.libCore.obj.Actividad;
+
 
 /**
  * Esta clase construye una vista que es destinada a ser el administrador de el sistema de actividades de clientes

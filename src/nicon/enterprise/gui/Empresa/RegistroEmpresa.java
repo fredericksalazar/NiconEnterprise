@@ -23,6 +23,7 @@ import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.EmpresaDAO;
 import nicon.enterprise.libCore.api.obj.Empresa;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 
 public class RegistroEmpresa extends JDialog
   implements WindowListener
@@ -260,7 +261,7 @@ public class RegistroEmpresa extends JDialog
   {
     int response = JOptionPane.showConfirmDialog(null, "¿ La activación se cancelará, esta seguro que desea salir?", "Activación NiconEnterprse", 0);
     if (response == 0)
-      System.exit(0);
+      NiconLibTools.closeNiconEnterprise();
   }
 
   private void getAndSaveDataInput()

@@ -33,13 +33,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import nicon.enterprise.libCore.api.dao.ActividadDAO;
 
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconLibTools;
 import nicon.enterprise.libCore.api.dao.ClienteDAO;
-import nicon.enterprise.libCore.dao.ActividadDAO;
+import nicon.enterprise.libCore.api.obj.Actividad;
 import nicon.enterprise.libCore.dao.TipoActividadDAO;
-import nicon.enterprise.libCore.obj.Actividad;
 import nicon.enterprise.libCore.api.obj.Cliente;
 import nicon.enterprise.libCore.obj.TipoActividad;
 
