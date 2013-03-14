@@ -10,6 +10,9 @@ package nicon.enterprise.gui.Clientes.activities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -170,9 +173,13 @@ public class Actividad_VisorActividad extends JDialog {
     terminarActividad.addActionListener(new ActionListener()    {
       @Override
       public void actionPerformed(ActionEvent ae) {
-        actividadDAO=new ActividadDAO();        
-            if (actividadDAO.cambiarEstado(actividad.getIdActividad(), true))
-                    JOptionPane.showMessageDialog(rootPane, "La actividad se ha cambiado a terminada.", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE,new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconPositive.png")));
+          try {
+              actividadDAO=new ActividadDAO();        
+                  if (actividadDAO.cambiarEstado(actividad.getIdActividad(), true))
+                          JOptionPane.showMessageDialog(rootPane, "La actividad se ha cambiado a terminada.", GlobalConfigSystem.getAplicationTitle(),JOptionPane.INFORMATION_MESSAGE,new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconPositive.png")));
+          } catch (SQLException ex) {
+              Logger.getLogger(Actividad_VisorActividad.class.getName()).log(Level.SEVERE, null, ex);
+          }
             }
     });
     

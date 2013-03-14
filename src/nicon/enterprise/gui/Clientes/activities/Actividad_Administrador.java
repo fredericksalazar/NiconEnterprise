@@ -15,6 +15,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -251,9 +252,13 @@ public class Actividad_Administrador extends JDialog implements ActionListener {
      * tabla de actividades.
      */
     private void listarTodasActividades() {
-        limpiarTablaActividades();
-        listaActividades = actividadDAO.listarTodas();
-        cargarActividades(listaActividades);
+        try {
+            limpiarTablaActividades();
+            listaActividades = actividadDAO.listarTodas();
+            cargarActividades(listaActividades);
+        } catch (SQLException ex) {
+            Logger.getLogger(Actividad_Administrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -261,18 +266,26 @@ public class Actividad_Administrador extends JDialog implements ActionListener {
      * tabla de actividades, y son mostradas al usuario.
      */
     private void listarActividadesPendientes() {
-        limpiarTablaActividades();
-        listaActividades = actividadDAO.listarPendientes();
-        cargarActividades(listaActividades);
+        try {
+            limpiarTablaActividades();
+            listaActividades = actividadDAO.listarPendientes();
+            cargarActividades(listaActividades);
+        } catch (SQLException ex) {
+            Logger.getLogger(Actividad_Administrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
      * 
      */
     private void listarActividadesTerminadas() {
-        limpiarTablaActividades();
-        this.listaActividades = this.actividadDAO.listarRealizadas();
-        cargarActividades(this.listaActividades);
+        try {
+            limpiarTablaActividades();
+            listaActividades = actividadDAO.listarRealizadas();
+            cargarActividades(listaActividades);
+        } catch (SQLException ex) {
+            Logger.getLogger(Actividad_Administrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private int obtenerFilaSeleccionada() {
@@ -307,17 +320,25 @@ public class Actividad_Administrador extends JDialog implements ActionListener {
     private void generarPDF() {
         index = obtenerFilaSeleccionada();
         if (index < 0) {
-            JOptionPane.showMessageDialog(this.rootPane, "No ha seleccionado una actividad para generar Reporte", GlobalConfigSystem.getAplicationTitle(), 0);
+            JOptionPane.showMessageDialog(rootPane, "No ha seleccionado una actividad para generar Reporte", GlobalConfigSystem.getAplicationTitle(), 0);
         } else {
-            actividad = ((Actividad)listaActividades.get(this.index));
-            actividadDAO.verReportePDF(actividad.getIdActividad());
+            try {
+                actividad = ((Actividad)listaActividades.get(index));
+                actividadDAO.verActividadPDF(actividad.getIdActividad());
+            } catch (JRException ex) {
+                Logger.getLogger(Actividad_Administrador.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     private void buscarActividad(String criterio) {
-        limpiarTablaActividades();
-        listaActividades = actividadDAO.buscarActividadesProIDCliente(criterio);
-        cargarActividades(listaActividades);
+        try {
+            limpiarTablaActividades();
+            listaActividades = actividadDAO.listarActividadesPorCliente(criterio);
+            cargarActividades(listaActividades);
+        } catch (SQLException ex) {
+            Logger.getLogger(Actividad_Administrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

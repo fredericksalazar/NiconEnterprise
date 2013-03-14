@@ -1,9 +1,23 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.libCore.api.obj;
 
+/**
+ * el objeto <b> Cliente </b> representa la existencia de un cliente fisico
+ * de la empresa y almacena la informacion basica personal y de contacto de
+ * un cliente de la empresa, este cliente podrá inciar operaciones con el 
+ * resto del sistema como ventas, actividades etc.
+ * 
+ * @author Frederick Adolfo Salazar Sanchez
+ */
 public class Cliente {
 
     private String identificacion;
@@ -19,6 +33,20 @@ public class Cliente {
     private String fechaRegistro;
     private int codigoAlmacen;
 
+    /**
+     * 
+     * @param identificacion
+     * @param nombres
+     * @param apellidos
+     * @param ciudad
+     * @param direccion
+     * @param provincia
+     * @param Telefono_fijo
+     * @param Telefono_movil
+     * @param Telefono_alternativo
+     * @param Email
+     * @param Code_Store 
+     */
     public Cliente(String identificacion, String nombres, String apellidos, String ciudad, String direccion, String provincia, String Telefono_fijo, String Telefono_movil, String Telefono_alternativo, String Email, int Code_Store) {
         this.identificacion = identificacion;
         this.nombres = nombres;
@@ -33,6 +61,21 @@ public class Cliente {
         this.codigoAlmacen = Code_Store;
     }
 
+    /**
+     * 
+     * @param identificacion
+     * @param nombres
+     * @param apellidos
+     * @param ciudad
+     * @param direccion
+     * @param provincia
+     * @param telefono_fijo
+     * @param telefono_movil
+     * @param telefono_alternativo
+     * @param email
+     * @param fecha_registro
+     * @param Codigo_almacen 
+     */
     public Cliente(String identificacion, String nombres, String apellidos, String ciudad, String direccion, String provincia, String telefono_fijo, String telefono_movil, String telefono_alternativo, String email, String fecha_registro, int Codigo_almacen) {
         this.identificacion = identificacion;
         this.nombres = nombres;
@@ -48,6 +91,9 @@ public class Cliente {
         this.codigoAlmacen = Codigo_almacen;
     }
 
+    /**
+     * 
+     */
     public Cliente() {
     }
 
@@ -101,6 +147,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return this.identificacion + "  " + this.nombres + "  " + this.apellidos + "  " + this.ciudad + "   " + this.direccion + "  " + this.telefonoMovil + "  " + this.telefonoAlternativo;
+        return identificacion + "  " + nombres + "  " + apellidos + "  " + ciudad + "   " +direccion + "  " + telefonoMovil + "  " + telefonoAlternativo;
     }
 }

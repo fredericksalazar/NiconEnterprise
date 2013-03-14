@@ -10,6 +10,7 @@ package nicon.enterprise.gui.Clientes.activities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -135,22 +136,26 @@ public class Actividad_ListadoPendientes implements ActionListener {
      * en la tabla de actividades.
      */
     private void cargarTablaActividades() {
-        String[] add = new String[1];
-        actividadDAO = new ActividadDAO();
-        listadoActividades = actividadDAO.listarActividadesPendientesHoy();
+        try {
+            String[] add = new String[1];
+            actividadDAO = new ActividadDAO();
+            listadoActividades = actividadDAO.listarPendientesHoy();
 
-        if (listadoActividades.isEmpty()) {
-            panelActividades.remove(scrollTabla);
-            panelActividades.add(jlInfActividad);
-            panelActividades.repaint();
-        } else {
-            for (int i = 0; i < listadoActividades.size(); i++) {
-                actividad = ((Actividad)listadoActividades.get(i));
-                add[0] = (actividad.getTituloActividad() + ":  " +actividad.getNombreCliente());
-                modelo.addRow(add);
+            if (listadoActividades.isEmpty()) {
+                panelActividades.remove(scrollTabla);
+                panelActividades.add(jlInfActividad);
+                panelActividades.repaint();
+            } else {
+                for (int i = 0; i < listadoActividades.size(); i++) {
+                    actividad = ((Actividad)listadoActividades.get(i));
+                    add[0] = (actividad.getTituloActividad() + ":  " +actividad.getNombreCliente());
+                    modelo.addRow(add);
+                }
             }
+            jlCantidad.setText("Total Actividades: " +modelo.getRowCount());
+        } catch (SQLException ex) {
+            Logger.getLogger(Actividad_ListadoPendientes.class.getName()).log(Level.SEVERE, null, ex);
         }
-        jlCantidad.setText("Total Actividades: " +modelo.getRowCount());
     }
 
     @Override
@@ -169,8 +174,10 @@ public class Actividad_ListadoPendientes implements ActionListener {
         if (ae.getSource() == imprimir) {
             try {
                 actividadDAO = new ActividadDAO();
-                actividadDAO.imprimirActividadesParaHoy();
+                actividadDAO.imprimirListaActividades(actividadDAO.listarPendientesHoy());
             } catch (JRException ex) {
+                Logger.getLogger(Actividad_ListadoPendientes.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
                 Logger.getLogger(Actividad_ListadoPendientes.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
