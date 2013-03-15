@@ -350,7 +350,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
      * @param panel
      * @param name
      */
-    private void addTabbedPane(JPanel panel, String name) {
+    public static  void addTabbedPane(JPanel panel, String name) {
         TotalOpenTabs = JTabsNiconEnterprise.getTabCount();
         JTabsNiconEnterprise.addTab(name, panel);
         JTabsNiconEnterprise.setSelectedIndex(TotalOpenTabs);

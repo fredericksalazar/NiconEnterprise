@@ -94,14 +94,14 @@ public class NiconAdminReport {
      * retorna un objeto JasperPrint listo para ser usado por el usuario.
      * 
      * @param URL
-     * @param parametros
+     * @param parameters
      * @return JasperPrint jasperPrint
      * @throws JRException 
      */
-    public JasperPrint buildReportParameter(String URL, Map parametros) throws JRException {
+    public JasperPrint buildReportParameter(String URL, Map parameters) throws JRException {
         inputObject = getClass().getResourceAsStream(URL);
         jasperReport = (JasperReport) JRLoader.loadObject(inputObject);
-        jasperPrint = JasperFillManager.fillReport(jasperReport, parametros,conect);
+        jasperPrint = JasperFillManager.fillReport(jasperReport, parameters,conect);
         return jasperPrint;
     }
 
@@ -138,10 +138,8 @@ public class NiconAdminReport {
      * @return
      * @throws JRException 
      */
-    public boolean servicioImpresion(JasperPrint jasper)throws JRException {
-        if (jasper != null) {
-            state = JasperPrintManager.printReport(jasperPrint, false);
-        }
+    public boolean printerReport(JasperPrint jasper)throws JRException {        
+            state = JasperPrintManager.printReport(jasperPrint, false);        
         return state;
     }
 }

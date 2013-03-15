@@ -339,7 +339,7 @@ public class ActividadDAO {
     public void imprimirActividadPorID(int idActividad) throws JRException {        
             parametro.put("idActividad",idActividad);
             reporte = apiReporter.buildReportParameter(JASPER_TEMPLATE_URL,parametro);
-            apiReporter.servicioImpresion(reporte);
+            apiReporter.printerReport(reporte);
             parametro.clear();        
     }
 
@@ -354,7 +354,7 @@ public class ActividadDAO {
                 actividad = ((Actividad) lista.get(i));
                 parametro.put("idActividad",actividad.getIdActividad());
                 reporte = apiReporter.buildReportParameter(JASPER_TEMPLATE_URL,parametro);
-                apiReporter.servicioImpresion(reporte);
+                apiReporter.printerReport(reporte);
                 parametro.clear();
         }
     }
