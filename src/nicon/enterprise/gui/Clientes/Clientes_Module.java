@@ -63,7 +63,9 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
     private JMenuItem eliminarCliente;
     private JMenuItem editarCliente;
     private JMenuItem busquedaID;
-    private JMenuItem jmListarTodo;
+    private JMenuItem exportarPDF;
+    private JMenuItem exportarDOCX;
+    private JMenuItem exportarXLS;
     private JMenuItem jmListarPorID;
     private JMenuItem jmOrdenarAsc;
     private JMenuItem jmOrdenarDesc;
@@ -71,6 +73,7 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
     private JMenuItem jmVerUltimo;
     private JMenuItem jmAbrirActividades;
     private JMenuItem jmCrearTipoActividad;
+    private JMenuItem jmImprimirListado;
     
     private static DefaultTableModel modelo;
     private static JTable tablaClientes;
@@ -125,6 +128,7 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
     private Actividad_Crear asignacion;
     private JSeparator separator1;
     private JSeparator separator2;
+    private JFileChooser fileDialog;
 
     public Clientes_Module() {      
         crearInterfaz();
@@ -133,6 +137,7 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
     }
 
     private void crearInterfaz() {
+        
         cliente = new Cliente();
         selectedSearch = 0;
         Icons = GlobalConfigSystem.getIconsPath();
@@ -158,7 +163,8 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
         jmClientes.setMnemonic('C');
         jmClientes.setFont(GlobalConfigSystem.getFontAplicationText());
 
-        jmExportar = new JMenu("Reportes");
+        jmExportar = new JMenu("Exportar Listado a ");
+        jmExportar.setIcon(new ImageIcon(getClass().getResource(Icons+"NiconRight.png")));
         jmExportar.setMnemonic('R');
         jmExportar.setFont(GlobalConfigSystem.getFontAplicationText());
 
@@ -199,11 +205,29 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
         busquedaID.setToolTipText("Permite buscar la información de un cliente desde el desktop");
         busquedaID.addActionListener(this);
 
-        jmListarTodo = new JMenuItem("- Listar Todos los clientes");
-        jmListarTodo.setFont(GlobalConfigSystem.getFontAplicationText());
-        jmListarTodo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconPdf.png")));
-        jmListarTodo.setToolTipText("Genera un reporte con todos los clientes registrados y los exporta a PDF");
-        jmListarTodo.addActionListener(this);
+        jmImprimirListado=new JMenuItem("Imprimir Lista Clientes");
+        jmImprimirListado.setFont(GlobalConfigSystem.getFontAplicationText());
+        jmImprimirListado.setIcon(new ImageIcon(getClass().getResource(Icons+"NiconPrinter.png")));
+        jmImprimirListado.setToolTipText("Imprimir todo el listado de clientes");
+        jmImprimirListado.addActionListener(this);
+        
+        exportarPDF = new JMenuItem("- Archivo PDF");
+        exportarPDF.setFont(GlobalConfigSystem.getFontAplicationText());
+        exportarPDF.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconPdf.png")));
+        exportarPDF.setToolTipText("Genera un reporte con todos los clientes registrados y los exporta a PDF");
+        exportarPDF.addActionListener(this);
+        
+        exportarDOCX=new JMenuItem("- Archivo DOCX");
+        exportarDOCX.setFont(GlobalConfigSystem.getFontAplicationText());
+        exportarDOCX.setIcon(new ImageIcon(getClass().getResource(Icons+"NiconMSWord.png")));
+        exportarDOCX.setToolTipText("Imprime todo el listado de los clientes a un archivo en formato DOCX");
+        exportarDOCX.addActionListener(this);
+        
+        exportarXLS=new JMenuItem("- Archivo XLS");
+        exportarXLS.setFont(GlobalConfigSystem.getFontAplicationText());
+        exportarXLS.setIcon(new ImageIcon(getClass().getResource(Icons+"NiconExcel.png")));
+        exportarXLS.setToolTipText("imprime todo el listado de los clientes a un archivo en formato XLS");
+        exportarXLS.addActionListener(this);
 
         jmListarPorID = new JMenuItem("Listar Por Identificación");
         jmListarPorID.setToolTipText("Genera un reporte en pdf ingresando el numero de cedula de un cliente");
@@ -250,7 +274,12 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
         jmClientes.addSeparator();
         jmClientes.add(busquedaID);
 
-        jmExportar.add(jmListarTodo);
+        jmExportar.add(exportarPDF);
+        jmExportar.add(exportarDOCX);
+        jmExportar.add(exportarXLS);
+        
+        jmArchivo.add(jmImprimirListado);
+        jmArchivo.add(jmExportar);
         jmArchivo.add(jmCerrar);
 
         jmVer.add(jmOrdenarAsc);
@@ -263,7 +292,6 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
         menuClientes.add(jmClientes);
         menuClientes.add(jmVer);
         menuClientes.add(jmActividades);
-        menuClientes.add(jmExportar);
 
         modelo = new DefaultTableModel();
         modelo.addColumn("Identificación");
@@ -805,7 +833,6 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
         cliente = null;
     }
     
-
     @Override
     public void actionPerformed(ActionEvent ae) {
         if ((ae.getSource() == this.JBCrear) || (ae.getSource() == this.crearCliente)) {
@@ -878,9 +905,36 @@ public class Clientes_Module extends JPanel implements ActionListener, MouseList
             }
         }
 
-        if (ae.getSource() == jmListarTodo) {
+        if (ae.getSource() == exportarPDF) {
             try {
                 clienteDAO.exportarTodosPDF();
+            } catch (JRException ex) {
+                Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(ae.getSource()==exportarDOCX){
+            try {
+                clienteDAO.saverReportToFile(1);
+                JOptionPane.showMessageDialog(null, "El reporte ha sido generado exitosamente en formato DOCX", GlobalConfigSystem.getAplicationTitle(), JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons+"NiconPositive.png")));
+            } catch (JRException ex) {
+                JOptionPane.showMessageDialog(null, "El Archivo no se pudo generar ocurrio un error:\n"+ex, GlobalConfigSystem.getAplicationTitle(), JOptionPane.ERROR_MESSAGE,new ImageIcon(getClass().getResource(Icons+"NiconError.png")));
+                Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(ae.getSource()==exportarXLS){
+            try {
+                clienteDAO.saverReportToFile(3);
+                JOptionPane.showMessageDialog(null, "El reporte ha sido generado exitosamente en formato XLS", GlobalConfigSystem.getAplicationTitle(), JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource(Icons+"NiconPositive.png")));
+            } catch (JRException ex) {
+                Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if(ae.getSource()==jmImprimirListado){
+            try {
+                clienteDAO.imprimirListado();
             } catch (JRException ex) {
                 Logger.getLogger(Clientes_Module.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -25,6 +25,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -35,9 +37,7 @@ import net.sf.jasperreports.view.JasperViewer;
  * 
  * @author Frederick Adolfo Salazar Sanchez
  */
-public class NiconAdminReport {
-    
-    private static final String URL_EXPORT_FILES_REPORT="./Archivos/Reportes";
+public class NiconAdminReport {    
     
     private JasperPrint     jasperPrint;
     private JasperReport    jasperReport;
@@ -114,10 +114,47 @@ public class NiconAdminReport {
      * 
      * @param print 
      */
-    public void saveReportToPDF(JasperPrint print,String directory,String nameFile) {        
+    public void saveReportToPDF(JasperPrint print,String nameFile) {        
             exportManager = new JRPdfExporter();
             exportManager.setParameter(JRExporterParameter.JASPER_PRINT, print);
-            exportManager.setParameter(JRExporterParameter.OUTPUT_FILE, new File("./reportes/Lista Clientes.pdf"));
+            exportManager.setParameter(JRExporterParameter.OUTPUT_FILE, new File(GlobalConfigSystem.URL_FILES+"/"+nameFile));
+    }
+    
+    /**
+     * Este metodo permite guardar un Objeto JasperPrint como reporte en un formato
+     * DOCX compatible con la suite de ofimatica Office 2007/2010, la exportacion
+     * de el archivo se debe hacer en el directorio de Archivos/Reportes/DOCS y
+     * debe recibir el nombre del archivo que se creará de acuerdo al contendio del
+     * mismo.
+     * 
+     * @param print
+     * @param nameFile
+     * @throws JRException 
+     */
+    public void saveReportToDOC(JasperPrint print,String nameFile) throws JRException{
+            exportManager=new JRDocxExporter();
+            exportManager.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exportManager.setParameter(JRExporterParameter.OUTPUT_FILE,new File(GlobalConfigSystem.URL_FILES+"/"+nameFile));
+            exportManager.exportReport();
+    }
+    
+    /**
+     * Este metodo permite guardar un objeto JasperPrint como un reporte en un 
+     * formato XLS compatible con la suite de ofimatica Office 2007/2010, la 
+     * exportacion del archivo se hace en el sistema de archivos Reportes/XLS 
+     * debe recibir el nombre del arhivo con el que se creará y recibe el 
+     * objeto JasperPrint con el reporte y los datos.
+     * 
+     * @param print
+     * @param nameFile
+     * @throws JRException 
+     */
+    public void saveReportToXLS(JasperPrint print, String nameFile) throws JRException{
+            exportManager=new JRXlsxExporter();
+            exportManager.setParameter(JRExporterParameter.JASPER_PRINT, print);
+            exportManager.setParameter(JRExporterParameter.OUTPUT_FILE, 
+                                       new File(GlobalConfigSystem.URL_FILES+"/"+nameFile));
+            exportManager.exportReport();
     }
 
     /**
@@ -139,7 +176,7 @@ public class NiconAdminReport {
      * @throws JRException 
      */
     public boolean printerReport(JasperPrint jasper)throws JRException {        
-            state = JasperPrintManager.printReport(jasperPrint, false);        
+            state = JasperPrintManager.printReport(jasper, false);        
         return state;
     }
 }

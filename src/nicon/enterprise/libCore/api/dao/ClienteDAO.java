@@ -18,6 +18,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.api.obj.Cliente;
+import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
+import nicon.enterprise.libCore.api.util.NiconLibTools;
 
 /**
  * ClienteDAO es la interfaz de metodos de todo el modulo de clientes, define
@@ -34,7 +36,7 @@ public class ClienteDAO {
      * UR__REPORT es la direccion Url donde se encuentra el archivo .jasper a compilar para generar el
      * reporte de clientes.
      */
-    private static final String URL_REPORT_LISTA_CLIENTES="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
+    public static final String URL_REPORT_LISTA_CLIENTES="/nicon/enterprise/libCore/rsc/ListaClientes.jasper";
 
     private Cliente cliente;
     
@@ -309,5 +311,49 @@ public class ClienteDAO {
             }
             reporte=null;
             adminReport=null;
+    }
+    
+    /**
+     * este metodo permite obtener todo el listado de clientes y guardarlo en el
+     * formato DOCX que ofrece compatibilidad con suites de oficina Microsoft
+     * y LINUX, este metodo hace uso del API NiconAdminReport y 
+     * @throws JRException 
+     */
+    public void saverReportToFile(int optionSave) throws JRException{
+        if(NiconLibTools.verifyAndCreateDir(GlobalConfigSystem.URL_FILES)){
+            
+            reporte=adminReport.buildReport(URL_REPORT_LISTA_CLIENTES);
+            /**
+             * optionSave=1 corresponde a guadar el archivo en formato DOCX 
+             * o tipo documento de texto enriquecido.
+             */
+            if(optionSave==1){
+                adminReport.saveReportToDOC(reporte, "Lista Clientes.docx");
+            }
+            
+            /**
+             * optionSave=2 corresponde a guardar el archivo en formato PDF.
+             * 
+             */
+            if(optionSave==2){
+                adminReport.saveReportToPDF(reporte, "Lista Clientes.pdf");
+            }
+            
+            /**
+             * optionSave=3 corresponde a guardar el archivo en formato XLSX.
+             */
+            if(optionSave==3){
+                adminReport.saveReportToXLS(reporte, "ListaClientes.xlsx");
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @throws JRException 
+     */
+    public void imprimirListado() throws JRException{
+        reporte=adminReport.buildReport(URL_REPORT_LISTA_CLIENTES);
+        adminReport.printerReport(reporte);              
     }
 }

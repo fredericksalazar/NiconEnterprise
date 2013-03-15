@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class GlobalConfigSystem {
+   
+    public static final String URL_FILES="./Archivos";
 
     private static Color backgroundAplicationFrame;
     private static Color backgroundAplicationPanel;
