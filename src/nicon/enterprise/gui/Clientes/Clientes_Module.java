@@ -42,7 +42,7 @@ import nicon.enterprise.memData.BasicDataAplication;
  *
  * @author frederick
  */
-public class Clientes_Module extends JPanel implements ActionListener, MouseListener {
+public class Clientes_Module implements ActionListener, MouseListener {
 
     private static final long serialVersionUID = 3L;
     

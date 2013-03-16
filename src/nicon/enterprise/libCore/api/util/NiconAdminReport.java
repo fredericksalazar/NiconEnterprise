@@ -165,14 +165,15 @@ public class NiconAdminReport {
     public void viewerReport(JasperPrint jasper) {
         jasperViewer = new JasperViewer(jasper,false);
         jasperViewer.setTitle(GlobalConfigSystem.getAplicationTitle());
-        jasperViewer.setAlwaysOnTop(true);
         jasperViewer.setVisible(true);
     }
 
     /**
+     * Este metodo permite imprimir un reporte JasperPrint en la impresora local
+     * al hacer la impresion retorna un boolean representando el estado de la operacion.
      * 
      * @param jasper
-     * @return
+     * @return boolean state
      * @throws JRException 
      */
     public boolean printerReport(JasperPrint jasper)throws JRException {        

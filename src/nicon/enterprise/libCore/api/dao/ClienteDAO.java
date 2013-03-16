@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
+import nicon.enterprise.gui.ModuloPrincipal;
+import nicon.enterprise.gui.NiconDataViewer;
 
 import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
@@ -51,6 +53,7 @@ public class ClienteDAO {
     private AdminConector coneccion;
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
+    private NiconDataViewer visor;
 
     /**
      * Metodo constructor que recibe como parametro un objeto de tipo Cliente
