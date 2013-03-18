@@ -1,12 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.gui.Proveedores;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,11 +25,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
 import nicon.enterprise.libCore.api.dao.ProveedorDAO;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.obj.Proveedor;
 
-public class EditorProveedor extends JDialog
+public class Proveedor_Actualizar extends JDialog
 {
   private JPanel panelEditor;
   private JLabel jlTitulo;
@@ -40,7 +51,7 @@ public class EditorProveedor extends JDialog
   private Proveedor proveedor;
   private ProveedorDAO proveedorDAO;
 
-  public EditorProveedor(Proveedor proveedor)
+  public Proveedor_Actualizar(Proveedor proveedor)
   {
     setSize(650, 450);
     setTitle(GlobalConfigSystem.getAplicationTitle());
@@ -126,7 +137,7 @@ public class EditorProveedor extends JDialog
     this.jbAceptar.addActionListener(new ActionListener()
     {
       public void actionPerformed(ActionEvent ae) {
-        EditorProveedor.this.actualizar();
+        Proveedor_Actualizar.this.actualizar();
       }
     });
     this.jbCancelar = new JButton("Cancelar");
@@ -135,7 +146,7 @@ public class EditorProveedor extends JDialog
     this.jbCancelar.addActionListener(new ActionListener()
     {
       public void actionPerformed(ActionEvent ae) {
-        EditorProveedor.this.dispose();
+        Proveedor_Actualizar.this.dispose();
       }
     });
     this.panelEditor.add(this.jlTitulo);
@@ -163,12 +174,16 @@ public class EditorProveedor extends JDialog
     if (dato.equals("")) {
       JOptionPane.showMessageDialog(this.rootPane, "No ha Ingresado un dato a actualizar.", GlobalConfigSystem.getAplicationTitle(), 0);
     } else {
-      this.proveedorDAO = new ProveedorDAO();
-      boolean actualizarDatos = this.proveedorDAO.actualizarProveedor(this.proveedor.getNit(), campo, dato);
-      if (actualizarDatos) {
-        JOptionPane.showMessageDialog(this.rootPane, "Los datos del empleado han sido actualizados exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
-        dispose();
-      }
+        try {
+            this.proveedorDAO = new ProveedorDAO();
+            boolean actualizarDatos = this.proveedorDAO.actualizarProveedor(this.proveedor.getNit(), campo, dato);
+            if (actualizarDatos) {
+              JOptionPane.showMessageDialog(this.rootPane, "Los datos del empleado han sido actualizados exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+              dispose();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Proveedor_Actualizar.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
   }
 }

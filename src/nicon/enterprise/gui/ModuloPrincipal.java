@@ -21,7 +21,7 @@ import nicon.enterprise.gui.Clientes.Clientes_Module;
 import nicon.enterprise.gui.Clientes.activities.Actividad_ListadoPendientes;
 import nicon.enterprise.gui.Empleados.ModuloEmpleados;
 import nicon.enterprise.gui.Empresa.VisorEmpresa;
-import nicon.enterprise.gui.Proveedores.ModuloProveedores;
+import nicon.enterprise.gui.Proveedores.Proveedores_Module;
 import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ConfigConectorDAO;
@@ -520,7 +520,7 @@ public class ModuloPrincipal extends JFrame implements WindowListener, ActionLis
         if (ae.getSource() == moduloProveedores) {
             index = getIndexOfTab("Proveedores");
             if (index == -1) {
-                ModuloProveedores adminProveedores = new ModuloProveedores();
+                Proveedores_Module adminProveedores = new Proveedores_Module();
                 addTabbedPane(adminProveedores.obtenerModulo(), "Proveedores");
             } else {
                 JTabsNiconEnterprise.setSelectedIndex(index);

@@ -1,12 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
-package nicon.enterprise.gui.Proveedores;
 
+package nicon.enterprise.gui.Proveedores;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -15,11 +24,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
 import nicon.enterprise.libCore.api.dao.ProveedorDAO;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.obj.Proveedor;
 
-public class IngresoProveedor implements ActionListener {
+/**
+ * esta clase permite 
+ * @author frederick
+ */
+public class Proveedores_Ingreso implements ActionListener {
     
   private JPanel panelIngreso;
   private JLabel jlNit;
@@ -66,7 +80,7 @@ public class IngresoProveedor implements ActionListener {
   private ProveedorDAO proveedorDAO;
   private JDialog ventana;
 
-  public IngresoProveedor()
+  public Proveedores_Ingreso()
   {
     this.Icons = GlobalConfigSystem.getIconsPath();
     crearInterfaz();
@@ -264,22 +278,25 @@ public class IngresoProveedor implements ActionListener {
     return this.validacion;
   }
 
-  private void registrarProveedor()
-  {
-    this.proveedor = new Proveedor(this.nit, this.razonSocial, this.direccion, this.ciudad, this.telFijo, this.telMovil, this.fax, this.email, this.webPage, this.banco, this.numeroCuenta, this.descripcion);
-    this.proveedorDAO = new ProveedorDAO(this.proveedor);
-    this.validacion = this.proveedorDAO.crearProveedor();
-    if (this.validacion == true) {
-      JOptionPane.showMessageDialog(null, "El proveedor ha sido registrado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
-      this.ventana.setVisible(false);
-      this.proveedorDAO = null;
-      this.proveedor = null;
-    } else {
-      JOptionPane.showMessageDialog(null, "Ocurrio un error y el proveedor no se pudo registrar\nintente de nuevo si el error continua, por favor\ncomuníquese con el fabricante", GlobalConfigSystem.getAplicationTitle(), 0);
-      this.ventana.setVisible(false);
-      this.proveedorDAO = null;
-      this.proveedor = null;
-    }
+  private void registrarProveedor(){
+      try {
+          this.proveedor = new Proveedor(this.nit, this.razonSocial, this.direccion, this.ciudad, this.telFijo, this.telMovil, this.fax, this.email, this.webPage, this.banco, this.numeroCuenta, this.descripcion);
+          this.proveedorDAO = new ProveedorDAO(this.proveedor);
+          this.validacion = this.proveedorDAO.crearProveedor();
+          if (this.validacion == true) {
+            JOptionPane.showMessageDialog(null, "El proveedor ha sido registrado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+            this.ventana.setVisible(false);
+            this.proveedorDAO = null;
+            this.proveedor = null;
+          } else {
+            JOptionPane.showMessageDialog(null, "Ocurrio un error y el proveedor no se pudo registrar\nintente de nuevo si el error continua, por favor\ncomuníquese con el fabricante", GlobalConfigSystem.getAplicationTitle(), 0);
+            this.ventana.setVisible(false);
+            this.proveedorDAO = null;
+            this.proveedor = null;
+          }
+      } catch (SQLException ex) {
+          Logger.getLogger(Proveedores_Ingreso.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }
 
   @Override
@@ -288,7 +305,7 @@ public class IngresoProveedor implements ActionListener {
     if ((ae.getSource() == this.jbAceptar) && 
       ((this.validacion = validarDatos()))) {
       registrarProveedor();
-      ModuloProveedores.recargarModeloDatos();
+      Proveedores_Module.recargarModeloDatos();
     }
 
     if (ae.getSource() == this.jbCancelar)

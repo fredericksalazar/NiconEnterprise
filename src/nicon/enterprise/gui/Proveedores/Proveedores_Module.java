@@ -1,18 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.gui.Proveedores;
-
-
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -26,27 +33,32 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
 import net.sf.jasperreports.engine.JRException;
+
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.api.dao.ProveedorDAO;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.obj.Proveedor;
 
-public class ModuloProveedores
-  implements ActionListener, MouseListener
-{
+public class Proveedores_Module implements ActionListener, MouseListener{
+    
   private JPanel moduloProveedores;
   private JPanel panelInformacion;
+  
   private TitledBorder bordeInformacion;
+  
   private static DefaultTableModel modelo;
   private JTable tablaProveedores;
   private JScrollPane jsScroll;
+  
   private JMenuBar menuBar;
   private JMenu menuArchivo;
   private JMenu menuProveedor;
   private JMenu reportes;
   private JMenu ver;
+  
   private JMenuItem cerrarModulo;
   private JMenuItem crearProveedor;
   private JMenuItem eliminarProveedor;
@@ -54,11 +66,14 @@ public class ModuloProveedores
   private JMenuItem exportarTodos;
   private JMenuItem verListaAsc;
   private JMenuItem verListaDesc;
+  
   private String Icons;
+  
   private static String[] vectorDatos;
   private static Proveedor proveedor;
   private static ProveedorDAO proveedorDAO;
   private static ArrayList listaProveedores;
+  
   private JLabel jlNit;
   private JLabel jlRazonSocial;
   private JLabel jlDireccion;
@@ -70,6 +85,7 @@ public class ModuloProveedores
   private JLabel jlWebPage;
   private JLabel jlBanco;
   private JLabel jlNumeroCuenta;
+  
   private JTextField jtNit;
   private JTextField jtRazonSocial;
   private JTextField jtDireccion;
@@ -81,62 +97,65 @@ public class ModuloProveedores
   private JTextField jtWebPage;
   private JTextField jtBanco;
   private JTextField jtNumeroCuenta;
+  
   private int indice;
   private String response;
   private boolean estate;
-  private NiconAdminReport adminReport;
 
-  public ModuloProveedores()
-  {
-    this.Icons = GlobalConfigSystem.getIconsPath();
+  public Proveedores_Module() {
+    Icons = GlobalConfigSystem.getIconsPath();
     crearModulo();
     listarProveedores();
   }
 
-  private void crearModulo()
-  {
-    this.moduloProveedores = new JPanel();
-    this.moduloProveedores.setBackground(GlobalConfigSystem.getBackgroundAplication());
-    this.moduloProveedores.setLayout(null);
+  private void crearModulo(){
+      
+    moduloProveedores = new JPanel();
+    moduloProveedores.setBackground(GlobalConfigSystem.getBackgroundAplication());
+    moduloProveedores.setLayout(null);
 
-    this.bordeInformacion = BorderFactory.createTitledBorder("Detalles Proveedor");
-    this.bordeInformacion.setTitleFont(GlobalConfigSystem.getFontAplicationText());
-    this.bordeInformacion.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
+    bordeInformacion = BorderFactory.createTitledBorder("");
+    bordeInformacion.setTitleFont(GlobalConfigSystem.getFontAplicationText());
+    bordeInformacion.setTitleColor(GlobalConfigSystem.getForegroundAplicationTitle());
 
-    this.panelInformacion = new JPanel();
-    this.panelInformacion.setBackground(GlobalConfigSystem.getBackgroundAplication());
-    this.panelInformacion.setLayout(null);
-    this.panelInformacion.setBorder(this.bordeInformacion);
-    this.panelInformacion.setBounds(410, 50, 600, 510);
+    panelInformacion = new JPanel();
+    panelInformacion.setBackground(GlobalConfigSystem.getBackgroundAplication());
+    panelInformacion.setLayout(null);
+    panelInformacion.setBorder(bordeInformacion);
+    panelInformacion.setBounds(410, 50, 600, 510);
 
     modelo = new DefaultTableModel();
     modelo.addColumn("Nit");
     modelo.addColumn("Razon Social");
 
-    this.tablaProveedores = new JTable(modelo);
-    this.tablaProveedores.setRowHeight(29);
-    this.tablaProveedores.getColumnModel().getColumn(0).setPreferredWidth(15);
-    this.tablaProveedores.setFont(GlobalConfigSystem.getFontAplicationText());
-    this.tablaProveedores.setSelectionBackground(GlobalConfigSystem.getrowSelectedTable());
-    this.tablaProveedores.addMouseListener(this);
+    tablaProveedores = new JTable(modelo);
+    tablaProveedores.setRowHeight(29);
+    tablaProveedores.getColumnModel().getColumn(0).setPreferredWidth(15);
+    tablaProveedores.setFont(GlobalConfigSystem.getFontAplicationText());
+    tablaProveedores.setSelectionBackground(GlobalConfigSystem.getrowSelectedTable());
+    tablaProveedores.addMouseListener(this);
 
-    this.jsScroll = new JScrollPane(this.tablaProveedores);
-    this.jsScroll.setBounds(0, 0, 390, 595);
+    jsScroll = new JScrollPane(this.tablaProveedores);
+    jsScroll.setBounds(0, 0, 390, 595);
 
-    this.menuBar = new JMenuBar();
-    this.menuBar.setBounds(390, 0, 890, 20);
+    menuBar = new JMenuBar();
+    menuBar.setBounds(390, 0, 890, 20);
 
-    this.menuArchivo = new JMenu("Archivo");
-    this.menuArchivo.setMnemonic('A');
+    menuArchivo = new JMenu("Archivo");
+    menuArchivo.setFont(GlobalConfigSystem.getFontAplicationText());
+    menuArchivo.setMnemonic('A');
 
-    this.menuProveedor = new JMenu("Proveedor");
-    this.menuProveedor.setMnemonic('P');
+    menuProveedor = new JMenu("Proveedor");
+    menuProveedor.setFont(GlobalConfigSystem.getFontAplicationText());
+    menuProveedor.setMnemonic('P');
 
-    this.reportes = new JMenu("Reportes");
-    this.reportes.setMnemonic('r');
+    reportes = new JMenu("Reportes");
+    reportes.setFont(GlobalConfigSystem.getFontAplicationText());
+    reportes.setMnemonic('r');
 
-    this.ver = new JMenu("Ver");
-    this.ver.setMnemonic('v');
+    ver = new JMenu("Ver");
+    ver.setFont(GlobalConfigSystem.getFontAplicationText());
+    ver.setMnemonic('v');
 
     this.cerrarModulo = new JMenuItem("- Cerrar Módulo");
     this.cerrarModulo.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuExit.png")));
@@ -345,25 +364,36 @@ public class ModuloProveedores
     }
   }
 
-  private static void listarProveedores()
-  {
-    proveedorDAO = new ProveedorDAO();
-    listaProveedores = proveedorDAO.listarProveedores();
-    cargarListaProveedores(listaProveedores);
+  private static void listarProveedores(){
+      try {
+          proveedorDAO = new ProveedorDAO();
+          listaProveedores = proveedorDAO.listarProveedores();
+          cargarListaProveedores(listaProveedores);
+      } catch (SQLException ex) {
+          Logger.getLogger(Proveedores_Module.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }
 
   private void listarProveedoresOrderASC() {
-    listaProveedores.clear();
-    modelo.getDataVector().removeAllElements();
-    listaProveedores = proveedorDAO.listarProveedoresOrdenados("asc");
-    cargarListaProveedores(listaProveedores);
+      try {
+          listaProveedores.clear();
+          modelo.getDataVector().removeAllElements();
+          listaProveedores = proveedorDAO.listarProveedoresOrdenados("asc");
+          cargarListaProveedores(listaProveedores);
+      } catch (SQLException ex) {
+          Logger.getLogger(Proveedores_Module.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }
 
   private void listarProveedoresOrderDESC() {
-    listaProveedores.clear();
-    modelo.getDataVector().removeAllElements();
-    listaProveedores = proveedorDAO.listarProveedoresOrdenados("desc");
-    cargarListaProveedores(listaProveedores);
+      try {
+          listaProveedores.clear();
+          modelo.getDataVector().removeAllElements();
+          listaProveedores = proveedorDAO.listarProveedoresOrdenados("desc");
+          cargarListaProveedores(listaProveedores);
+      } catch (SQLException ex) {
+          Logger.getLogger(Proveedores_Module.class.getName()).log(Level.SEVERE, null, ex);
+      }
   }
 
   public static void recargarModeloDatos()
@@ -410,14 +440,18 @@ public class ModuloProveedores
     proveedor = obtenerProveedorSeleccionado();
     this.response = JOptionPane.showInputDialog(null, "Esta a punto de eliminar el proveedor :" + proveedor.getRazonSocial() + "\n¿esta seguro que desea hacerlo?\n Eliminar = S cancelar = N", GlobalConfigSystem.getAplicationTitle(), 2);
     if ((this.response.equals("S")) || (this.response.equals("s"))) {
-      proveedorDAO = new ProveedorDAO(proveedor);
-      this.estate = proveedorDAO.eliminarProveedor();
-      if (this.estate == true) {
-        JOptionPane.showMessageDialog(this.panelInformacion, "El proveedor ha sido eliminado del sistema exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
-        recargarModeloDatos();
-      } else {
-        JOptionPane.showMessageDialog(this.panelInformacion, "El proveedor no pudo ser eliminado del sistema, sus registros esta enlazados y no se permite eliminacion de PrimaryKey", GlobalConfigSystem.getAplicationTitle(), 0);
-      }
+        try {
+            proveedorDAO = new ProveedorDAO(proveedor);
+            this.estate = proveedorDAO.eliminarProveedor();
+            if (this.estate == true) {
+              JOptionPane.showMessageDialog(this.panelInformacion, "El proveedor ha sido eliminado del sistema exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+              recargarModeloDatos();
+            } else {
+              JOptionPane.showMessageDialog(this.panelInformacion, "El proveedor no pudo ser eliminado del sistema, sus registros esta enlazados y no se permite eliminacion de PrimaryKey", GlobalConfigSystem.getAplicationTitle(), 0);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Proveedores_Module.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
   }
 
@@ -425,7 +459,7 @@ public class ModuloProveedores
     try {
       proveedorDAO.exportarTodosPDF();
     } catch (JRException ex) {
-      Logger.getLogger(ModuloProveedores.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(Proveedores_Module.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 
@@ -437,7 +471,7 @@ public class ModuloProveedores
     }
 
     if (ae.getSource() == this.crearProveedor) {
-      IngresoProveedor ingreso = new IngresoProveedor();
+      Proveedores_Ingreso ingreso = new Proveedores_Ingreso();
       ingreso.abrirVentana();
     }
 
@@ -446,7 +480,7 @@ public class ModuloProveedores
     }
 
     if (ae.getSource() == this.actualizarProveedor) {
-      EditorProveedor editor = new EditorProveedor(obtenerProveedorSeleccionado());
+      Proveedor_Actualizar editor = new Proveedor_Actualizar(obtenerProveedorSeleccionado());
       editor.setVisible(true);
     }
 

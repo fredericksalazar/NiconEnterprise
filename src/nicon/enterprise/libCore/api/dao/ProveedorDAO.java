@@ -14,20 +14,26 @@ import com.mysql.jdbc.ResultSet;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import nicon.enterprise.libCore.api.util.AdminConector;
-import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.obj.Proveedor;
 
+/**
+ * ProveedorDAO define el API de metodos que pueden ser ejecutados desde el 
+ * modulo de proveedores.
+ * 
+ * @author Frederick Adolfo Salazar Sanchez
+ */
 public class ProveedorDAO {
+    
+    /**
+     *
+     */
+    public static final String URL_REPORT_LISTA_PROVEEDORES="/nicon/enterprise/libCore/rsc/ListaProveedores.jasper";
 
     private Proveedor proveedor;
     private ArrayList listaProveedores;
@@ -42,119 +48,151 @@ public class ProveedorDAO {
     private NiconAdminReport adminReport;
     private JasperPrint reporte;
 
+    /**
+     * constructor que recibe un objeto de tipo Proveedor para ser almacenado
+     * en la fuente de datos, este constructor brinda acceso a metodos que el 
+     * API define como de escritura.
+     * @param proveedor 
+     */
     public ProveedorDAO(Proveedor proveedor) {
         this.proveedor = proveedor;
         this.coneccion = AdminConector.getInstance();
     }
 
+    /**
+     * Este metodo permite 
+     */
     public ProveedorDAO() {
         this.proveedor = null;
         this.coneccion = AdminConector.getInstance();
+        listaProveedores = new ArrayList();
     }
 
-    public boolean crearProveedor() {
-        System.out.println("Iniciando creación de nuevo Proveedor, verificando Objeto ...");
-        try {
-                this.sentencia = ("Insert Into Proveedores values('" + this.proveedor.getNit() + "','" + this.proveedor.getRazonSocial() + "','" + this.proveedor.getDireccion() + "','" + this.proveedor.getCiudad() + "','" + this.proveedor.getTelefonoFijo() + "','" + this.proveedor.getTelefonoMovil() + "','" + this.proveedor.getFax() + "','" + this.proveedor.getEmail() + "','" + this.proveedor.getWebPage() + "','" + this.proveedor.getBanco() + "','" + this.proveedor.getNumeroCuenta() + "','" + this.proveedor.getDescripcion() + "',1);");
-                this.response = this.coneccion.runSentence(this.sentencia);
-                if (this.response == 0) {
-                    System.out.println("El objeto proveedor ha sido creado exitosamente ...");
-                    this.stateOP = true;
+    /**
+     * este metodo permite crear un nuevo proveedor dentro de la fuente de datos
+     * los datos del proveedor serán tomados del objeto Proveedor que recibe el
+     * constructor definido para escritura de datos, al ejecutar la sentencia
+     * retorna un boolean con el valor de la operacion, true en caso de haber sido
+     * creado exitosamente y false en caso de no haber creado el proveedor.
+     * 
+     * @return
+     * @throws SQLException 
+     */
+    public boolean crearProveedor() throws SQLException {
+                sentencia = "INSERT INTO Proveedores VALUES('" +proveedor.getNit() + "','" + proveedor.getRazonSocial() + "','" +proveedor.getDireccion() + "','" +proveedor.getCiudad() + "','" +proveedor.getTelefonoFijo() + "','" +proveedor.getTelefonoMovil() + "','" +proveedor.getFax() + "','" +proveedor.getEmail() + "','" + proveedor.getWebPage() + "','" +proveedor.getBanco() + "','" + proveedor.getNumeroCuenta() + "','" + proveedor.getDescripcion() + "',1);";
+                response = coneccion.runSentence(sentencia);
+                    if (response == 0) {
+                        stateOP = true;
+                    } else {
+                        stateOP = false;
+                    }       
+        return stateOP;
+    }
+
+    /**
+     * este metodo permite eliminar un proveedor registrado dentro de la fuente
+     * de datos, los datos para la eliminacion son tomados del objeto Proveedor
+     * recibido en el constructor de escritura.
+     * 
+     * @return boolean stateOP
+     * @throws SQLException 
+     */
+    public boolean eliminarProveedor() throws SQLException {
+              sentencia = "DELETE FROM Proveedores WHERE Nit='" +proveedor.getNit()+ "';";
+              response = coneccion.runSentence(sentencia);
+                if (response == 0) {
+                    stateOP = true;
                 } else {
-                    System.out.println("El objeto proveedor no pudo ser creado, un error ocurrio al ejecutar la sentencia ...");
-                    this.stateOP = false;
-                }
-            
-        } catch (Exception e) {
-            System.err.println("Ocurrió el siguiente error en ProveedorDAO.crearProveedor():\n" + e);
-            this.stateOP = false;
-        }
-        return this.stateOP;
+                    stateOP = false;
+                }       
+        return stateOP;
     }
 
-    public boolean eliminarProveedor() {
-        System.out.println("Iniciando la eliminación del proveedor : " + this.proveedor.getRazonSocial());
-        
-            try {
-                this.sentencia = ("DELETE FROM Proveedores WHERE Nit='" + this.proveedor.getNit() + "';");
-                this.response = this.coneccion.runSentence(this.sentencia);
-                if (this.response == 0) {
-                    System.out.println("El proveedor  fue eliminado correctamente ...");
-                    this.stateOP = true;
+    /**
+     * este metodo permite actualizar un dato de un proveedor, la actualizacion
+     * de datos permite que pueda actualizar cualquier registro del sistema, 
+     * recibe como parametro el Nit del proveedor, el campo a actualizar y el
+     * nuevo dato que será ingresado en la base de datos.
+     * @param Nit
+     * @param Campo
+     * @param dato
+     * @return boolean stateOP
+     * @throws SQLException 
+     */
+    public boolean actualizarProveedor(String Nit, String Campo, String dato) throws SQLException {       
+           sentencia = "UPDATE Proveedores SET " + Campo + " ='" + dato + "' WHERE Nit='" + Nit + "';";
+           response = coneccion.runSentence(sentencia);
+                if (response == 0) {
+                    stateOP = true;
                 } else {
-                    this.stateOP = false;
+                    stateOP = false;
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(ProveedorDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
-        return this.stateOP;
+        return stateOP;
     }
 
-    public boolean actualizarProveedor(String Nit, String Campo, String dato) {
-        try {
-            System.out.println("Iniciando actualización de Proveedor");
-            this.sentencia = ("UPDATE Proveedores SET " + Campo + " ='" + dato + "' where Nit='" + Nit + "';");
-            this.response = this.coneccion.runSentence(this.sentencia);
-            if (this.response == 0) {
-                this.stateOP = true;
-            } else {
-                this.stateOP = false;
-            }
-        } catch (Exception e) {
-            System.err.println("Ocurrio el siguiente error en ProveedorDAO.actualizarProveedor():\n" + e);
-        }
-        return this.stateOP;
+    /**
+     * este metodo permite obtener un listado de todos los proveedores registrados
+     * dentro del sistema, al consultar todos los proveedores estos son almacenados
+     * dentro de un ArrayList que será retornado al solicitante
+     * 
+     * @return ArrayList listaProveedores
+     * @throws SQLException 
+     */
+    public ArrayList listarProveedores() throws SQLException {
+            sentencia = "SELECT * FROM Proveedores;";
+            datosConsulta = (ResultSet) coneccion.queryData(sentencia);
+                while (datosConsulta.next()) {
+                    proveedor = new Proveedor(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getString(11),datosConsulta.getString(12));
+                    listaProveedores.add(proveedor);
+                }
+            datosConsulta.close();        
+        return listaProveedores;
     }
 
-    public ArrayList listarProveedores() {
-        try {
-            this.listaProveedores = new ArrayList();
-            this.sentencia = "select * from Proveedores;";
-            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
-            while (this.datosConsulta.next()) {
-                this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
-                this.listaProveedores.add(this.proveedor);
-            }
-            this.datosConsulta.close();
-        } catch (Exception e) {
-            System.err.println("Un error ocurrió cuando se intentaba obtener la lista de Proveedores:\n" + e);
-        }
-        return this.listaProveedores;
-    }
-
-    public ArrayList listarProveedoresOrdenados(String opcion) {
-        try {
+    /**
+     * este metodo permite obtener un listado de proveedores pero ordenados
+     * segun parametros alfabeticamente definidos, recibe como parametro
+     * el cdigo de ordenamiento asc en caso de ser ascedente o desc en caso de 
+     * ser descendente, estos objetos de tipo proveedor son almacenados en una
+     * lista y retornados 
+     * @param opcion
+     * @return ArrayList listaProveedores
+     * @throws SQLException 
+     */
+    public ArrayList listarProveedoresOrdenados(String opcion) throws SQLException {
             if (opcion.equals("asc")) {
-                this.sentencia = "select * from Proveedores Order By Razon_social asc;";
+                sentencia = "SELECT * FROM Proveedores ORDER BY Razon_social ASC;";
             }
             if (opcion.equals("desc")) {
-                this.sentencia = "select * from Proveedores order by Razon_social desc;";
+                sentencia = "SELECT * FROM Proveedores ORDER BY Razon_social DESC;";
             }
-            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
-            while (this.datosConsulta.next()) {
-                this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
-                this.listaProveedores.add(this.proveedor);
-            }
-            this.datosConsulta.close();
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error en ProveedorDAO.listarProveeddoresOrdenados():\n" + e.getMessage());
-        }
-        return this.listaProveedores;
+            datosConsulta = (ResultSet) coneccion.queryData(sentencia);
+                while (datosConsulta.next()) {
+                    proveedor = new Proveedor(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10), datosConsulta.getString(11),datosConsulta.getString(12));
+                    listaProveedores.add(proveedor);
+                }
+            datosConsulta.close();
+        return listaProveedores;
     }
 
-    public ArrayList listarProveedoresPorCiudad(String ciudad) {
-        try {
-            this.sentencia = ("select * from Proveedores where ciudad='" + ciudad + "';");
-            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
-            while (this.datosConsulta.next()) {
-                this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
-                this.listaProveedores.add(this.proveedor);
-            }
-            this.datosConsulta.close();
-        } catch (Exception e) {
-        }
-        return this.listaProveedores;
+    /**
+     * este metodo permite obtener un listado de todos los proveedores registrados
+     * ubicados dentro de la misma ciudad, recibe como parametro el nobmre de la
+     * ciudad en la cual se buscarán los proveedores-
+     * 
+     * @param ciudad
+     * @return ArrayList listaProveedores
+     * @throws SQLException 
+     */
+    public ArrayList listarProveedoresPorCiudad(String ciudad) throws SQLException {
+            sentencia = "SELECT * FROM  Proveedores WHERE ciudad='" + ciudad + "';";
+            datosConsulta = (ResultSet) coneccion.queryData(sentencia);
+                while (datosConsulta.next()) {
+                    proveedor = new Proveedor(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getString(11),datosConsulta.getString(12));
+                    listaProveedores.add(proveedor);
+                }
+            datosConsulta.close();
+        return listaProveedores;
     }
 
     public ArrayList obtenerListaCiudades() {
@@ -170,48 +208,51 @@ public class ProveedorDAO {
         return this.listaCiudades;
     }
 
-    public Proveedor buscarProveedorPorNit(String Nit) {
-        try {
-            this.sentencia = ("SELECT * FROM Proveedores where Nit='" + Nit + "';");
-            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
-            if (this.datosConsulta.next()) {
-                this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
-            } else {
-                this.proveedor = null;
-            }
-        } catch (Exception e) {
-            System.err.println("Ocurrio un mientras se intentaba buscar Información de un proveedor (ProveedorDAO.buscarProveedorProNit(String NIt):\n" + e);
-        }
-        return this.proveedor;
+    /**
+     * este metodo permite buscar la informacion  de un proveedor dentro de la
+     * fuente de datos, recibe como parametro el nit del proveedor a buscar,
+     * en caso de ser encontrado el objeto proveedor es retornado con sus valores
+     * en caso contrario el objeto proveedor es ajustado a null.
+     * 
+     * @param Nit
+     * @return Proveedor proveedor
+     * @throws SQLException 
+     */
+    public Proveedor buscarProveedorPorNit(String Nit) throws SQLException {
+            sentencia = ("SELECT * FROM Proveedores where Nit='" + Nit + "';");
+            datosConsulta = (ResultSet) coneccion.queryData(sentencia);
+                if (datosConsulta.next()) {
+                    proveedor = new Proveedor(datosConsulta.getString(1), datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getString(11),datosConsulta.getString(12));
+                } else {
+                    proveedor = null;
+                }        
+        return proveedor;
     }
 
-    public Proveedor buscarProveedorPorRazonSocial(String razonSocial) {
-        try {
-            this.sentencia = ("SELECT * FROM Proveedores where Razon_social='" + razonSocial + "';");
-            this.datosConsulta = ((ResultSet) this.coneccion.queryData(this.sentencia));
-            if (this.datosConsulta.next()) {
-                this.proveedor = new Proveedor(this.datosConsulta.getString(1), this.datosConsulta.getString(2), this.datosConsulta.getString(3), this.datosConsulta.getString(4), this.datosConsulta.getString(5), this.datosConsulta.getString(6), this.datosConsulta.getString(7), this.datosConsulta.getString(8), this.datosConsulta.getString(9), this.datosConsulta.getString(10), this.datosConsulta.getString(11), this.datosConsulta.getString(12));
-            } else {
-                this.proveedor = null;
-            }
-        } catch (Exception e) {
-            System.err.println("Ocurrio un mientras se intentaba buscar Información de un proveedor (ProveedorDAO.buscarProveedorPorRazonSocial(String razonSocial):\n" + e);
-        }
-        return this.proveedor;
+    /**
+     * premite buscar datos de un proveedor dentro de la fuente de datos, recibe
+     * como parametros un String con la razon social del proveedor a buscar,
+     * en caso de encontrar registros retorna un objeto proveedor, en caso contrario
+     * el objeto proveedor toma valor de null.
+     * 
+     * @param razonSocial
+     * @return Proveedor proveedor
+     * @throws SQLException 
+     */
+    public Proveedor buscarProveedorPorRazonSocial(String razonSocial) throws SQLException {
+            sentencia = "SELECT * FROM Proveedores WHERE Razon_social='" + razonSocial + "';";
+            datosConsulta = (ResultSet) coneccion.queryData(sentencia);
+                if (datosConsulta.next()) {
+                    proveedor = new Proveedor(datosConsulta.getString(1),datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getString(11),datosConsulta.getString(12));
+                } else {
+                    proveedor = null;
+                }        
+        return proveedor;
     }
 
-    public void exportarTodosPDF()
-            throws JRException {
-        this.adminReport = new NiconAdminReport();
-        this.reporte = this.adminReport.buildReport("/Nicon/Enterprise/LibCore/rsc/ListaProveedores.jasper");
-        this.adminReport.viewerReport(this.reporte);
-    }
-
-    private void limpiarInterfaz() {
-        this.datosConsulta = null;
-        this.listaProveedores = null;
-        this.proveedor = null;
-        this.response = 0;
-        this.sentencia = null;
+    public void exportarTodosPDF()throws JRException {
+        adminReport = new NiconAdminReport();
+        reporte = adminReport.buildReport(URL_REPORT_LISTA_PROVEEDORES);
+        adminReport.viewerReport(reporte);
     }
 }
