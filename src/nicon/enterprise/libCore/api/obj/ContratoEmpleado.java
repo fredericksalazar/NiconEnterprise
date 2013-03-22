@@ -1,122 +1,165 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated.
+ *
+ * NiconSystem Inc. Cll 9a#6a-09 Florida Valle del cauca Colombia 318 437 4382
+ * fredefass01@gmail.com desarrollador-mantenedor: Frederick Adolfo Salazar
+ * Sanchez.
  */
-package nicon.enterprise.libCore.obj;
+package nicon.enterprise.libCore.api.obj;
 
-public class ContratoEmpleado
-{
-  private int idContrato;
-  private String fechaContratacion;
-  private String cargo;
-  private double salario;
-  private int tiempoContratado;
-  private String tipoContrato;
-  private String inicioFunciones;
-  private String idEmpleado;
-  private String observacion;
-  private boolean estadoContrato;
+/**
+ * Esta clase define el objeto o modelo de datos que representará y definirá un
+ * modelo de contrato que servirá para tener un control de empleados de la
+ * empresa, cada Objeto de tipo contrato debe estar asignado a un empleado a
+ * traves de su Id (numero de cedula) a traves del cual se le ingresará al
+ * sistema de nomina, y por medio del cual se puede saber todos los terminos
+ * establecidos en la contratacion del mismo por parte del departamento de
+ * recursos humanos.
+ *
+ * @author Frederick Adolfo Salazar Sanchez
+ */
+public class ContratoEmpleado {
 
-  public ContratoEmpleado(String fechaContratacion, String cargo, double salario, int tiempoContratado, String tipoContrato, String inicioFunciones, String idEmpleado, String Observaciones)
-  {
-    this.cargo = cargo;
-    this.fechaContratacion = fechaContratacion;
-    this.salario = salario;
-    this.tiempoContratado = tiempoContratado;
-    this.tipoContrato = tipoContrato;
-    this.inicioFunciones = inicioFunciones;
-    this.idEmpleado = idEmpleado;
-    this.observacion = Observaciones;
-  }
+    private int codigoContrato;
+    private String fechaContratacion;
+    private int tiempoContratado;
+    private String fechaFinContrato;
+    private String tipoJornadaLaboral;
+    private String fechaInicioFunciones;
+    private String cargo;
+    private double salario;
+    private String funcionesLaborales;
+    private String observaciones;
+    private boolean estadoContrato;
+    private String idEmpleado;
 
-  public ContratoEmpleado(int idContrato, String fechaContratacion, String cargo, double salario, int tiempoContratado, String tipoContrato, String inicioFunciones, boolean estadoContrato, String idEmpleado, String Observaciones)
-  {
-    this.idContrato = idContrato;
-    this.fechaContratacion = fechaContratacion;
-    this.cargo = cargo;
-    this.salario = salario;
-    this.tiempoContratado = tiempoContratado;
-    this.tipoContrato = tipoContrato;
-    this.inicioFunciones = inicioFunciones;
-    this.estadoContrato = estadoContrato;
-    this.idEmpleado = idEmpleado;
-    this.observacion = Observaciones;
-  }
+    public ContratoEmpleado(int codigoContrato, String fechaContratacion, int tiempoContratado, String fechaFinContrato, String tipoJornadaLaboral, String fechaInicioFunciones, String cargo, double salario, String funcionesLaborales, String observaciones, boolean estadoContrato, String idEmpleado) {
+        this.codigoContrato = codigoContrato;
+        this.fechaContratacion = fechaContratacion;
+        this.tiempoContratado = tiempoContratado;
+        this.fechaFinContrato = fechaFinContrato;
+        this.tipoJornadaLaboral = tipoJornadaLaboral;
+        this.fechaInicioFunciones = fechaInicioFunciones;
+        this.cargo = cargo;
+        this.salario = salario;
+        this.funcionesLaborales = funcionesLaborales;
+        this.observaciones = observaciones;
+        this.estadoContrato = estadoContrato;
+        this.idEmpleado = idEmpleado;
+    }
 
-  public String getObservacion()
-  {
-    return this.observacion;
-  }
+    public ContratoEmpleado(String fechaContratacion, int tiempoContratado, String fechaFinContrato, String tipoJornadaLaboral, String fechaInicioFunciones, String cargo, double salario, String funcionesLaborales, String observaciones, boolean estadoContrato, String idEmpleado) {
+        this.fechaContratacion = fechaContratacion;
+        this.tiempoContratado = tiempoContratado;
+        this.fechaFinContrato = fechaFinContrato;
+        this.tipoJornadaLaboral = tipoJornadaLaboral;
+        this.fechaInicioFunciones = fechaInicioFunciones;
+        this.cargo = cargo;
+        this.salario = salario;
+        this.funcionesLaborales = funcionesLaborales;
+        this.observaciones = observaciones;
+        this.estadoContrato = estadoContrato;
+        this.idEmpleado = idEmpleado;
+    }
 
-  public String getFechaContratacion()
-  {
-    return this.fechaContratacion;
-  }
+    public int getCodigoContrato() {
+        return codigoContrato;
+    }
 
-  public String getCargo()
-  {
-    return this.cargo;
-  }
+    public void setCodigoContrato(int codigoContrato) {
+        this.codigoContrato = codigoContrato;
+    }
 
-  public void setCargo(String cargo)
-  {
-    this.cargo = cargo;
-  }
+    public String getFechaContratacion() {
+        return fechaContratacion;
+    }
 
-  public int getIdContrato()
-  {
-    return this.idContrato;
-  }
+    public void setFechaContratacion(String fechaContratacion) {
+        this.fechaContratacion = fechaContratacion;
+    }
 
-  public String getIdEmpleado()
-  {
-    return this.idEmpleado;
-  }
+    public int getTiempoContratado() {
+        return tiempoContratado;
+    }
 
-  public String getInicioFunciones()
-  {
-    return this.inicioFunciones;
-  }
+    public void setTiempoContratado(int tiempoContratado) {
+        this.tiempoContratado = tiempoContratado;
+    }
 
-  public double getSalario()
-  {
-    return this.salario;
-  }
+    public String getFechaFinContrato() {
+        return fechaFinContrato;
+    }
 
-  public void setSalario(double salario) {
-    this.salario = salario;
-  }
+    public void setFechaFinContrato(String fechaFinContrato) {
+        this.fechaFinContrato = fechaFinContrato;
+    }
 
-  public int getTiempoContratado()
-  {
-    return this.tiempoContratado;
-  }
+    public String getTipoJornadaLaboral() {
+        return tipoJornadaLaboral;
+    }
 
-  public void setTiempoContratado(int tiempoContratado) {
-    this.tiempoContratado = tiempoContratado;
-  }
+    public void setTipoJornadaLaboral(String tipoJornadaLaboral) {
+        this.tipoJornadaLaboral = tipoJornadaLaboral;
+    }
 
-  public String getTipoContrato()
-  {
-    return this.tipoContrato;
-  }
+    public String getFechaInicioFunciones() {
+        return fechaInicioFunciones;
+    }
 
-  public void setTipoContrato(String tipoContrato) {
-    this.tipoContrato = tipoContrato;
-  }
+    public void setFechaInicioFunciones(String fechaInicioFunciones) {
+        this.fechaInicioFunciones = fechaInicioFunciones;
+    }
 
-  public boolean getEstadoContrato()
-  {
-    return this.estadoContrato;
-  }
+    public String getCargo() {
+        return cargo;
+    }
 
-  public void setEstadoContrato(boolean estadoContrato)
-  {
-    this.estadoContrato = estadoContrato;
-  }
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
 
-  public String toString()
-  {
-    return "ContratoEmpleado{idContrato=" + this.idContrato + ", cargo=" + this.cargo + ", salario=" + this.salario + ", tiempoContratado=" + this.tiempoContratado + ", tipoContrato=" + this.tipoContrato + ", inicioFunciones=" + this.inicioFunciones + ", idEmpleado=" + this.idEmpleado + '}';
-  }
+    public double getSalario() {
+        return salario;
+    }
+
+    public void setSalario(double salario) {
+        this.salario = salario;
+    }
+
+    public String getFuncionesLaborales() {
+        return funcionesLaborales;
+    }
+
+    public void setFuncionesLaborales(String funcionesLaborales) {
+        this.funcionesLaborales = funcionesLaborales;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public boolean getEstadoContrato() {
+        return estadoContrato;
+    }
+
+    public void setEstadoContrato(boolean estadoContrato) {
+        this.estadoContrato = estadoContrato;
+    }
+
+    public String getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(String idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    @Override
+    public String toString() {
+        return "ContratoEmpleado{" + "codigoContrato=" + codigoContrato + ", fechaContratacion=" + fechaContratacion + ", tiempoContratado=" + tiempoContratado + ", fechaFinContrato=" + fechaFinContrato + ", tipoJornadaLaboral=" + tipoJornadaLaboral + ", fechaInicioFunciones=" + fechaInicioFunciones + ", cargo=" + cargo + ", salario=" + salario + ", funcionesLaborales=" + funcionesLaborales + ", observaciones=" + observaciones + ", estadoContrato=" + estadoContrato + ", idEmpleado=" + idEmpleado + '}';
+    }
 }

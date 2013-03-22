@@ -15,8 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import nicon.enterprise.libCore.api.obj.ContratoEmpleado;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
-import nicon.enterprise.libCore.obj.ContratoEmpleado;
 
 public class VisorContrato extends JDialog{
     
@@ -74,7 +74,7 @@ public class VisorContrato extends JDialog{
     this.jlNumeroContrato.setFont(GlobalConfigSystem.getFontAplicationTextBold());
     this.jlNumeroContrato.setBounds(20, 70, 180, 16);
 
-    this.numeroContrato = new JLabel(String.valueOf(this.contrato.getIdContrato()));
+    this.numeroContrato = new JLabel(String.valueOf(this.contrato.getCodigoContrato()));
     this.numeroContrato.setForeground(GlobalConfigSystem.getForegrounAplicationText());
     this.numeroContrato.setFont(GlobalConfigSystem.getFontAplicationTextBold());
     this.numeroContrato.setBounds(200, 70, 300, 16);
@@ -94,7 +94,7 @@ public class VisorContrato extends JDialog{
     this.jlInicioFunciones.setFont(GlobalConfigSystem.getFontAplicationTextBold());
     this.jlInicioFunciones.setBounds(320, 100, 250, 16);
 
-    this.inicioFunciones = new JLabel(this.contrato.getInicioFunciones());
+    this.inicioFunciones = new JLabel(this.contrato.getFechaInicioFunciones());
     this.inicioFunciones.setForeground(GlobalConfigSystem.getForegrounAplicationText());
     this.inicioFunciones.setFont(GlobalConfigSystem.getFontAplicationTextBold());
     this.inicioFunciones.setBounds(470, 100, 200, 16);
@@ -124,7 +124,7 @@ public class VisorContrato extends JDialog{
     this.jlTipoContrato.setFont(GlobalConfigSystem.getFontAplicationTextBold());
     this.jlTipoContrato.setBounds(20, 160, 180, 16);
 
-    this.tipoContrato = new JLabel(this.contrato.getTipoContrato());
+    this.tipoContrato = new JLabel(this.contrato.getTipoJornadaLaboral());
     this.tipoContrato.setForeground(GlobalConfigSystem.getForegrounAplicationText());
     this.tipoContrato.setFont(GlobalConfigSystem.getFontAplicationTextBold());
     this.tipoContrato.setBounds(200, 160, 180, 16);
@@ -148,7 +148,7 @@ public class VisorContrato extends JDialog{
     this.jtEstado.setEditable(false);
     this.jtEstado.setBounds(500, 190, 77, 25);
 
-    this.jtObservaciones = new JTextArea(this.contrato.getObservacion());
+    this.jtObservaciones = new JTextArea(this.contrato.getObservaciones());
     this.jtObservaciones.setLineWrap(true);
     this.jtObservaciones.setEditable(false);
     this.jtObservaciones.setBounds(20, 220, 560, 170);

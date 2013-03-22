@@ -1,209 +1,250 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
+
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+import nicon.enterprise.libCore.api.obj.ContratoEmpleado;
 import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.util.NiconLibTools;
-import nicon.enterprise.libCore.obj.ContratoEmpleado;
 
-public class ContratoEmpleadoDAO
-{
-  private ContratoEmpleado contrato;
+public class ContratoEmpleadoDAO{
+    
+  private ContratoEmpleado contrato;  
   private EmpleadoDAO empleadoDAO;
-  private String sentence;
-  private boolean stateOP = true;
-  private ArrayList contratos;
-  private int codigoContrato;
-  private ResultSet dataSentence;
-  private int counter;
-  private int ExecuteSentence;
-  private int idContrato;
-  private String cargo;
   private AdminConector coneccion;
-
-  public ContratoEmpleadoDAO()
-  {
+  
+  private String sentence;
+  private String cargo;
+  private boolean stateOP = true;
+  
+  private ArrayList listaContratos;
+  private ResultSet dataSentence;
+  
+  private int ExecuteSentence;
+  private int codigoContrato;
+  
+  /**
+   * 
+   */
+  public ContratoEmpleadoDAO(){
     this.contrato = null;
     this.coneccion = AdminConector.getInstance();
   }
 
-  public ContratoEmpleadoDAO(ContratoEmpleado contrato)
-  {
+  /**
+   * 
+   * @param contrato 
+   */
+  public ContratoEmpleadoDAO(ContratoEmpleado contrato){
     this.contrato = contrato;
     this.coneccion = AdminConector.getInstance();
   }
 
-  public boolean registrarContrato()
-    throws SQLException
-  {
-    if (this.contrato != null) {
-      this.sentence = ("insert into ContratosEmpleados (fecha_contratacion,cargo,Salario,tiempo_contratado,Tipo_contrato,Inicio_Funciones,EstadoContrato,Observaciones,IDempleado) values ('" + this.contrato.getFechaContratacion() + "','" + this.contrato.getCargo() + "'," + this.contrato.getSalario() + "," + this.contrato.getTiempoContratado() + ",'" + this.contrato.getTipoContrato() + "','" + this.contrato.getInicioFunciones() + "',true,'" + this.contrato.getObservacion() + "','" + this.contrato.getIdEmpleado() + "');");
-      System.out.println(this.sentence);
-      this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
-      if (this.ExecuteSentence == 0) {
-        System.out.println("El contrato ha sido registrado exitosamente ...");
-        this.stateOP = true;
-      } else {
-        System.out.println("Ocurrio un Error y el contrato no se registro en el sistema+");
-        this.stateOP = false;
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "El objeto contratoEmpleado tiene valor null, no puede acceder al metodo registroContrato()", GlobalConfigSystem.getAplicationTitle(), 0);
-    }
-    return this.stateOP;
+  /**
+   * este metodo permite registrar un contrato a un empleado y ponerlo en estado de
+   * activo, este contrato es la representacion digital de la informacion de un
+   * contrato fisico que se ha firmado, en caso de que el contrato sea creado se
+   * retorna un boolean con el estado true en caso contrario retorna false.
+   * 
+   * @return boolean stateOP
+   * @throws SQLException 
+   */
+  public boolean crearContrato()throws SQLException {
+      sentence = "INSERT INTO ContratosEmpleados (Fecha_Contratacion,Tiempo_Contratado,Fecha_Fin_Contrato,Tipo_Jornada_Laboral,Fecha_Inicio_Funciones,Cargo,Salario,Funciones_Laborales,Observaciones,EstadoContrato,IDempleado) VALUES ('" +contrato.getFechaContratacion() + "'," + contrato.getTiempoContratado() + ",'" +contrato.getFechaFinContrato() + "','" +contrato.getTipoJornadaLaboral() + "','" + contrato.getFechaInicioFunciones() + "','" +contrato.getCargo()+"',"+contrato.getSalario()+",'"+contrato.getFuncionesLaborales()+"','"+contrato.getObservaciones()+"',true,'"+contrato.getIdEmpleado()+"');";
+      System.out.println(sentence);
+      ExecuteSentence = coneccion.runSentence(sentence);
+        if (ExecuteSentence == 0) {
+                stateOP = true;
+        } else {
+                stateOP = false;
+        }    
+    return stateOP;
+  }
+  
+  /**
+   * este metodo permite al usuario poder cancelar un contrato activo registrado
+   * para un empleado, el hecho de cancelar el contrato refiere que el usuario de igual
+   * forma cambiará su estado de empleado a inactivo, por lo cual el sistema de nomina
+   * ya no podrá tenerlo en cuenta para pagos de salario, prestamos o demas, para
+   * cancelar el contrato de un empleado se requiere el id del empleado y retorna
+   * un boolean con la representacion de la operacion.
+   * @param IDempleado
+   * @return
+   * @throws SQLException 
+   */
+  public boolean cancelarContratoActivo(String IDempleado) throws SQLException{
+        empleadoDAO = new EmpleadoDAO();
+        codigoContrato = obtenerIDContratoActivo(IDempleado);
+            if(codigoContrato==-1){
+                JOptionPane.showMessageDialog(null, "No se encontró un contrato activo para el empleado", GlobalConfigSystem.getAplicationTitle(), JOptionPane.ERROR_MESSAGE, new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
+            }else{
+                sentence = "UPDATE ContratosEmpleados set EstadoContrato=false WHERE idContrato=" +codigoContrato + ";";
+                ExecuteSentence = coneccion.runSentence(sentence);                
+                stateOP = empleadoDAO.cambiarEstadoEmpleado(IDempleado, false);        
+                    if ((ExecuteSentence == 0) && (stateOP)){
+                        stateOP = true;
+                        coneccion.commit();
+                    }else{
+                        coneccion.rollBack();
+                        stateOP = false;
+                    }
+           }
+    return stateOP;
   }
 
-  public ContratoEmpleado buscarContrato(String IDempleado)
-  {
-    try
-    {
-      System.out.println("Buscando contrato Activo para ID:  " + IDempleado);
-      this.sentence = ("SELECT * FROM  ContratosEmpleados WHERE IDempleado='" + IDempleado + "' AND EstadoContrato=true;");
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      if (this.dataSentence.next()) {
-        this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IDempleado, this.dataSentence.getString(9));
-        System.out.println("Contrato Activo Encontrado Nº : " + this.contrato.getIdContrato());
-      } else {
-        System.out.println("No se Encontró ningun contrato para el ID: " + IDempleado);
-        this.contrato = new ContratoEmpleado(-1, "No hay Contrato Activo", "No hay Contrato Activo", 0.0D, -1, "No hay Contrato Activo", "No hay Contrato Activo", false, "No hay Contrato Activo", "No hay Contrato Activo");
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return this.contrato;
-  }
-
-  public int obtenerContratoActivo(String Identificacion)
-  {
-    try
-    {
-      this.sentence = ("select idContrato from ContratosEmpleados where IDempleado=" + Identificacion + " and EstadoContrato=true;");
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      if (this.dataSentence.next())
-        this.idContrato = this.dataSentence.getInt(1);
-      else
-        this.idContrato = -1;
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return this.idContrato;
-  }
-
-  public String obtenerCargoContratoActivo(String id) {
-    try {
-      this.sentence = ("select cargo from ContratosEmpleados where IDempleado=" + id + " and EstadoContrato=true");
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      if (this.dataSentence.next())
-        this.cargo = this.dataSentence.getString(1);
-      else
-        this.cargo = "No hay Cargo activo";
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return this.cargo;
-  }
-
-  public ArrayList listarContratosEmpleado(String IdEmpleado)
-  {
-    try
-    {
-      System.out.println("Iniciando busqueda de contratos para el empleado=" + IdEmpleado);
-      this.contratos = new ArrayList();
-      this.counter = 0;
-      this.sentence = ("select * from ContratosEmpleados where IDempleado=" + IdEmpleado + ";");
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      if (this.dataSentence.next()) {
-        this.dataSentence.beforeFirst();
-        while (this.dataSentence.next()) {
-          this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), IdEmpleado, this.dataSentence.getString(9));
-          this.contratos.add(this.counter, this.contrato);
-          this.counter += 1;
+  /**
+   * este metodo retorna el contrato activo que posee un empleado dentro de la 
+   * fuente de datos, este objeto de contrato empleado es buscado usando como
+   * llave el id del empleado y cuya condicion debe ser que el contrato tenga como
+   * estado de contrato true, en caso tal es creado el objeto y retornado al usuario
+   * para ser mostrado en la vista de datos.
+   * 
+   * @param IDempleado
+   * @return ContratoEmpleado contrato
+   */
+  public ContratoEmpleado buscarContratoActivo(String IDempleado) throws SQLException, ParseException{
+      sentence = "SELECT * FROM  ContratosEmpleados WHERE IDempleado='" + IDempleado + "' AND EstadoContrato=true;";
+      dataSentence = coneccion.queryData(sentence);
+        if (dataSentence.next()) {
+             contrato=new ContratoEmpleado(dataSentence.getInt("Codigo_Contrato"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Contratacion")),dataSentence.getInt("Tiempo_Contratado"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Fin_Contrato")),dataSentence.getString("Tipo_Jornada_Laboral"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Inicio_Funciones")),dataSentence.getString("Cargo"),dataSentence.getDouble("Salario"),dataSentence.getString("Funciones_Laborales"),dataSentence.getString("Observaciones"),dataSentence.getBoolean("EstadoContrato"),dataSentence.getString("IDempleado"));
+        } else {
+            contrato = new ContratoEmpleado(-1,"No hay Contrato Activo",0,"No hay Contrato Activo","No hay Contrato Activo", "No hay Contrato Activo", "No hay Contrato Activo",0.0, "No hay Contrato Activo", "No hay Contrato Activo",false,"No hay Contrato Activo");
         }
-      }
-      this.contratos.clear();
-
-      System.out.println("Lista de contratos cargados exitosamente, total contratos: " + this.contratos.size());
-    } catch (Exception e) {
-      System.err.println("Un error ocurrio cuando se estaba cargando los contratos del empleado: " + IdEmpleado + " \n" + e.getMessage());
-    }
-    return this.contratos;
+        dataSentence.close();
+    return contrato;
   }
 
-  public ArrayList obtenerTodos()
-  {
-    try
-    {
-      this.sentence = "select * from ContratosEmpleados;";
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      while (this.dataSentence.next()) {
-        this.contrato = new ContratoEmpleado(this.dataSentence.getInt(1), this.dataSentence.getString(2), this.dataSentence.getString(3), this.dataSentence.getDouble(4), this.dataSentence.getInt(5), this.dataSentence.getString(6), NiconLibTools.parseToMysqlStringDate(this.dataSentence.getDate(7)), this.dataSentence.getBoolean(8), this.dataSentence.getString(9), this.dataSentence.getString(10));
-        this.contratos.add(this.counter, this.contrato);
-        this.counter += 1;
-      }
-    } catch (Exception e) {
-      System.err.println("Ocurrio un ERROR cargando la lista de contratos registrados.\n" + e.getMessage());
-    }
-    return this.contratos;
+  /**
+   * este metodo retorna el codigo de contrato que se ha firmado con un empleaod
+   * y cuyo estado actual es activo, se obtiene el Codigo_Contrato  y se retorna
+   * al usuario
+   * @param Identificacion
+   * @return int CodigoContrato
+   */
+  public int obtenerIDContratoActivo(String Identificacion) throws SQLException{
+        sentence ="SELECT Codigo_Contrato FROM ContratosEmpleados WHERE IDempleado=" + Identificacion + " and EstadoContrato=true;";
+        dataSentence = coneccion.queryData(sentence);        
+            if (dataSentence.next()){
+               codigoContrato = dataSentence.getInt(1); 
+            }                
+            else{
+                codigoContrato = -1;
+            }  
+    return codigoContrato;
   }
 
-  public boolean verificarEstado(int codigo)
-  {
-    try
-    {
-      this.sentence = ("select EstadoContrato from ContratosEmpleados where idContrato=" + codigo + ";");
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      this.dataSentence.next();
-      this.stateOP = this.dataSentence.getBoolean(1);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return this.stateOP;
+  /**
+   * este metodo permite obtener el cargo actual del contrato registrado para 
+   * un empleado y cuyo estado de contrato es contrato activo, 
+   * @param idEmpleado
+   * @return 
+   */
+  public String obtenerCargoContratoActivo(String idEmpleado) throws SQLException {
+      sentence = "SELECT cargo FROM ContratosEmpleados WHERE IDempleado='" + idEmpleado + "' AND EstadoContrato=true";
+      dataSentence = coneccion.queryData(sentence);
+        if (dataSentence.next()){
+            cargo = dataSentence.getString(1);
+        }            
+        else{
+           cargo = "No hay Cargo activo"; 
+        }
+        dataSentence.close();
+        return cargo;
   }
 
-  public boolean cancelarContratoActivo(String IDempleado)
-  {
-    try
-    {
-      if (IDempleado != null) {
-        this.codigoContrato = obtenerContratoActivo(IDempleado);
-        this.sentence = ("UPDATE ContratosEmpleados set EstadoContrato=false where idContrato=" + this.codigoContrato + ";");
-        this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
-        this.empleadoDAO = new EmpleadoDAO();
-        this.stateOP = this.empleadoDAO.cambiarEstadoEmpleado(IDempleado, false);
-        if ((this.ExecuteSentence == 0) && (this.stateOP))
-          this.stateOP = true;
-        else
-          this.stateOP = false;
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return this.stateOP;
+  /**
+   * este metodo permite obtener un listado de todos los contratos que posea
+   * un empleado dentro de la fuente de datos, esta lista almacena todos los contratos
+   * sin importar el estado del contrato.
+   * 
+   * @param IdEmpleado
+   * @return ArrayList listaContratos
+   */
+  public ArrayList listarContratosEmpleado(String IdEmpleado) throws SQLException, ParseException{    
+      listaContratos=new ArrayList();
+      sentence = "SELECT * FROM ContratosEmpleados WHERE IDempleado=" + IdEmpleado + ";";
+      dataSentence=coneccion.queryData(sentence);
+        while(dataSentence.next()){
+            contrato=new ContratoEmpleado(dataSentence.getInt("Codigo_Contrato"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Contratacion")),dataSentence.getInt("Tiempo_Contratado"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Fin_Contrato")),dataSentence.getString("Tipo_Jornada_Laboral"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Inicio_Funciones")),dataSentence.getString("Cargo"),dataSentence.getDouble("Salario"),dataSentence.getString("Funciones_Laborales"),dataSentence.getString("Observaciones"),dataSentence.getBoolean("EstadoContrato"),dataSentence.getString("IDempleado"));
+            listaContratos.add(contrato);
+        }
+        dataSentence.close();
+    return listaContratos;
   }
 
-  public String generarCodigoContrato()
-  {
-    try
-    {
-      this.sentence = "select count(idContrato) from ContratosEmpleados;";
-      this.dataSentence = this.coneccion.queryData(this.sentence);
-      this.dataSentence.next();
-      this.codigoContrato = this.dataSentence.getInt(1);
-      this.codigoContrato += 1;
-      System.out.println("Codigo de contrato generado = " + this.codigoContrato);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return String.valueOf(this.codigoContrato);
+  /**
+   * este metodo permite obtener un listado con todos los contratos registrados
+   * dentro de la fuente  de datos, este listado incluye contratos de todos los
+   * empleados y con los diferentes estado, este listado se genera para poder 
+   * permitir visualizar todos los contratos en una  vista grafica
+   * 
+   * @return ArrayList listaContratos
+   * @throws SQLException
+   * @throws ParseException 
+   */
+  public ArrayList obtenerTodos() throws SQLException, ParseException{    
+      sentence = "SELECT * FROM ContratosEmpleados;";
+      dataSentence = coneccion.queryData(sentence);
+        while (dataSentence.next()) {
+            contrato=new ContratoEmpleado(dataSentence.getInt("Codigo_Contrato"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Contratacion")),dataSentence.getInt("Tiempo_Contratado"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Fin_Contrato")),dataSentence.getString("Jornada_Laboral"),NiconLibTools.parseToMysqlStringDate(dataSentence.getDate("Fecha_Inicio_Funciones")),dataSentence.getString("Cargo"),dataSentence.getDouble("Salario"),dataSentence.getString("Funciones_Laborales"),dataSentence.getString("Observaciones"),dataSentence.getBoolean("EstadoContrato"),dataSentence.getString("IDempleadp"));
+            listaContratos.add(contrato);
+        }    
+        dataSentence.close();
+    return listaContratos;
+  }
+
+  /**
+   * Este metodo permite obtener el estado de contrato registrado en la fuente
+   * de datos, recibe como parametros el codigo del contrato que desea buscar
+   * y retorna un boolean representando el estado del contrato true en caso de
+   * estar activo y false en caso de estar cancelado.
+   * 
+   * @param codigo
+   * @return boolean estadoContrato
+   * @throws SQLException 
+   */
+  public boolean verificarEstado(int codigo) throws SQLException{    
+      sentence = "SELECT EstadoContrato FROM ContratosEmpleados WHERE idContrato=" + codigo + ";";
+      dataSentence = coneccion.queryData(sentence);
+      dataSentence.next();
+      stateOP = dataSentence.getBoolean(1);
+      dataSentence.close();    
+    return stateOP;
+  }
+
+  /**
+   * este metodo permite obtener el nuevo codigo para el siguiente contrato
+   * a firmar y registrar dentro de la fuente de datos.
+   * 
+   * @return int codigoContrato
+   * @throws SQLException 
+   */
+  public String generarCodigoContrato() throws SQLException{   
+      sentence = "select count(Codigo_Contrato) from ContratosEmpleados;";
+      dataSentence = coneccion.queryData(sentence);
+            if(dataSentence.next()){
+                codigoContrato=dataSentence.getInt(1);
+                codigoContrato++;
+            }else{
+                codigoContrato=1;
+            }
+            dataSentence.close();    
+    return String.valueOf(codigoContrato);
   }
 }

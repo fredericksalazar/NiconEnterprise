@@ -1,13 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.libCore.api.obj;
 
 import java.util.Date;
 
-public class Empleado
-{
+public class Empleado{
+    
   private String Identificacion;
   private String Nombres;
   private String Apellidos;
@@ -24,8 +30,7 @@ public class Empleado
   private Date fechaRegistro;
   private Almacen codigo;
 
-  public Empleado(String Identificacion, String Nombres, String Apellidos, String FechaNacimiento, String LugarNacimiento, String EstadoCivil, String Direccion, String Barrio, String Ciudad, String TelefonoFijo, String TelefonoMovil, String Email, boolean Estado)
-  {
+  public Empleado(String Identificacion, String Nombres, String Apellidos, String FechaNacimiento, String LugarNacimiento, String EstadoCivil, String Direccion, String Barrio, String Ciudad, String TelefonoFijo, String TelefonoMovil, String Email, boolean Estado){
     this.Identificacion = Identificacion;
     this.Nombres = Nombres;
     this.Apellidos = Apellidos;
@@ -41,8 +46,7 @@ public class Empleado
     this.Estado = Estado;
   }
 
-  public Empleado(String Identificacion, String Nombres, String Apellidos, String FechaNacimiento, String LugarNacimiento, String EstadoCivil, String Direccion, String Barrio, String Ciudad, String TelefonoFijo, String TelefonoMovil, String Email, boolean Estado, Date FechaRegistro, String codigo)
-  {
+  public Empleado(String Identificacion, String Nombres, String Apellidos, String FechaNacimiento, String LugarNacimiento, String EstadoCivil, String Direccion, String Barrio, String Ciudad, String TelefonoFijo, String TelefonoMovil, String Email, boolean Estado, Date FechaRegistro, String codigo){
     this.Identificacion = Identificacion;
     this.Nombres = Nombres;
     this.Apellidos = Apellidos;
@@ -180,8 +184,8 @@ public class Empleado
   }
 
   @Override
-  public String toString()
-  {
+  public String toString(){
     return "Empleado{Identificacion=" + this.Identificacion + ", Nombres=" + this.Nombres + ", Apellidos=" + this.Apellidos + ", FechaNacimiento=" + this.FechaNacimiento + ", LugarNacimiento=" + this.LugarNacimiento + ", EstadoCivil=" + this.EstadoCivil + ", Direccion=" + this.Direccion + ", Barrio=" + this.Barrio + ", Ciudad=" + this.Ciudad + ", TelefonoFijo=" + this.TelefonoFijo + ", TelefonoMovil=" + this.TelefonoMovil + ", Email=" + this.Email + ", Estado=" + this.Estado + ", FechaRegistro=" + this.fechaRegistro + ", codigo=" + this.codigo + '}';
   }
+  
 }

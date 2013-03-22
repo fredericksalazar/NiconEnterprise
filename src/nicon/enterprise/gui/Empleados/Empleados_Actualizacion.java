@@ -7,6 +7,9 @@ package nicon.enterprise.gui.Empleados;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,7 +22,7 @@ import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
 import nicon.enterprise.libCore.api.obj.Empleado;
 
-public class EditorEmpleado extends JDialog
+public class Empleados_Actualizacion extends JDialog
 {
   private JPanel panelEditor;
   private JLabel jlTitulo;
@@ -40,7 +43,7 @@ public class EditorEmpleado extends JDialog
   private JButton jbCancelar;
   private EmpleadoDAO actualizar;
 
-  public EditorEmpleado(Empleado empleado){
+  public Empleados_Actualizacion(Empleado empleado){
     setSize(650, 450);
     setTitle(GlobalConfigSystem.getAplicationTitle());
     setLocationRelativeTo(null);
@@ -126,7 +129,7 @@ public class EditorEmpleado extends JDialog
     {
       @Override
       public void actionPerformed(ActionEvent ae) {
-        EditorEmpleado.this.actualizar();
+        Empleados_Actualizacion.this.actualizar();
       }
     });
     this.jbCancelar = new JButton("Cancelar");
@@ -136,7 +139,7 @@ public class EditorEmpleado extends JDialog
     {
       @Override
       public void actionPerformed(ActionEvent ae) {
-        EditorEmpleado.this.dispose();
+        Empleados_Actualizacion.this.dispose();
       }
     });
     this.panelEditor.add(this.jlTitulo);
@@ -164,15 +167,19 @@ public class EditorEmpleado extends JDialog
     if (dato.equals("")) {
       JOptionPane.showMessageDialog(this.rootPane, "No ha Ingresado un dato a actualizar.", GlobalConfigSystem.getAplicationTitle(), 0);
     } else {
-      this.actualizar = new EmpleadoDAO();
-      boolean actualizarDatos = this.actualizar.actualizarDatos(this.empleado.getIdentificacion(), campo, dato);
-      if (actualizarDatos) {
-        JOptionPane.showMessageDialog(this.rootPane, "Los datos del empleado han sido actualizados exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
-        ModuloEmpleados.recargarListaEmpleados();
-        dispose();
-        this.empleado = null;
-        this.actualizar = null;
-      }
+        try {
+            this.actualizar = new EmpleadoDAO();
+            boolean actualizarDatos = this.actualizar.actualizarDatos(this.empleado.getIdentificacion(), campo, dato);
+            if (actualizarDatos) {
+              JOptionPane.showMessageDialog(this.rootPane, "Los datos del empleado han sido actualizados exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+              Empleados_Module.recargarListaEmpleados();
+              dispose();
+              this.empleado = null;
+              this.actualizar = null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Empleados_Actualizacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
   }
 }

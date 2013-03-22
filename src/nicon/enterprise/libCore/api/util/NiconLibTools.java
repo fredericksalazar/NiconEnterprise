@@ -24,6 +24,7 @@ import java.io.ObjectOutputStream;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JComponent;
@@ -44,6 +45,7 @@ public class NiconLibTools {
 
     private static Date date;
     private static SimpleDateFormat format;
+    private static Calendar systemDate;
     
     private static String dateFormated;
     private static String currentDir;
@@ -112,6 +114,24 @@ public class NiconLibTools {
             format = new SimpleDateFormat("yyyy-MM-dd");
             dateFormated = format.format(ToFormat);    
         return dateFormated;
+    }
+    
+    /**
+     * este metodo permite agregar meses a una fecha que recibe del sistema, esta
+     * suma de meses se hace a traves del API de Calendar que define el manejo de
+     * fechas, al hacer el calculo retorna un String con el valor de la nueva
+     * fecha en formato de fecha de Mysql
+     * 
+     * @param months
+     * @param inputDate
+     * @return String converterdate
+     * @throws ParseException 
+     */
+    public static String sumMonthsToDate(int months,Date inputDate) throws ParseException{
+        systemDate=Calendar.getInstance();
+        systemDate.setTime(inputDate);
+        systemDate.add(Calendar.MONTH, months);
+        return parseToMysqlStringDate(date=systemDate.getTime());
     }
 
     /**

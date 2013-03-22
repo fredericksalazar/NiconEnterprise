@@ -31,7 +31,8 @@ import nicon.enterprise.libCore.obj.Proveedor;
 public class ProveedorDAO {
     
     /**
-     *
+     *define la URL donde esta almacenada la plantilla de reporte de la lista de
+     *proveedores que será exportada en archivo pdf.
      */
     public static final String URL_REPORT_LISTA_PROVEEDORES="/nicon/enterprise/libCore/rsc/ListaProveedores.jasper";
 
@@ -219,7 +220,7 @@ public class ProveedorDAO {
      * @throws SQLException 
      */
     public Proveedor buscarProveedorPorNit(String Nit) throws SQLException {
-            sentencia = ("SELECT * FROM Proveedores where Nit='" + Nit + "';");
+            sentencia = "SELECT * FROM Proveedores WHERE Nit='" + Nit + "';";
             datosConsulta = (ResultSet) coneccion.queryData(sentencia);
                 if (datosConsulta.next()) {
                     proveedor = new Proveedor(datosConsulta.getString(1), datosConsulta.getString(2),datosConsulta.getString(3),datosConsulta.getString(4),datosConsulta.getString(5),datosConsulta.getString(6),datosConsulta.getString(7),datosConsulta.getString(8),datosConsulta.getString(9),datosConsulta.getString(10),datosConsulta.getString(11),datosConsulta.getString(12));

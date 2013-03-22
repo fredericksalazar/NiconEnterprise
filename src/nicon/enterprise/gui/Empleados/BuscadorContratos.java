@@ -9,7 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -23,13 +27,11 @@ import javax.swing.table.DefaultTableModel;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
 import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
 import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
+import nicon.enterprise.libCore.api.obj.ContratoEmpleado;
 import nicon.enterprise.libCore.api.obj.Empleado;
-import nicon.enterprise.libCore.obj.ContratoEmpleado;
 
-
-public class BuscadorContratos extends JDialog
-  implements ActionListener, MouseListener
-{
+public class BuscadorContratos extends JDialog implements ActionListener, MouseListener{
+    
   private JPanel panelAdmin;
   private JLabel jlIdentificacion;
   private JLabel jlNombres;
@@ -139,27 +141,33 @@ public class BuscadorContratos extends JDialog
     if (id.equals("")) {
       JOptionPane.showMessageDialog(null, "No ha Ingresado un número de identificacion correcto", GlobalConfigSystem.getAplicationTitle(), 0);
     } else {
-      this.contratos = this.contratoDAO.listarContratosEmpleado(id);
-      this.empleado = this.empleadoDAO.buscarEmpleadoPorID(id);
-      this.jlNombres.setText(this.empleado.getNombres() + " " + this.empleado.getApellidos());
-      this.jlCargo.setText(this.contratoDAO.obtenerCargoContratoActivo(id));
-      if (!this.contratos.isEmpty()) {
-        String[] data = new String[6];
+        try {
+            this.contratos = this.contratoDAO.listarContratosEmpleado(id);
+            this.empleado = this.empleadoDAO.buscarEmpleadoPorID(id);
+            this.jlNombres.setText(this.empleado.getNombres() + " " + this.empleado.getApellidos());
+            this.jlCargo.setText(this.contratoDAO.obtenerCargoContratoActivo(id));
+            if (!this.contratos.isEmpty()) {
+              String[] data = new String[6];
 
-        for (int i = 0; i < this.contratos.size(); i++) {
-          this.contrato = ((ContratoEmpleado)this.contratos.get(i));
-          data[0] = String.valueOf(this.contrato.getIdContrato());
-          data[1] = this.contrato.getFechaContratacion();
-          data[2] = this.contrato.getCargo();
-          data[3] = String.valueOf(this.contrato.getSalario());
-          data[4] = String.valueOf(this.contrato.getTiempoContratado());
-          data[5] = String.valueOf(this.contrato.getEstadoContrato());
-          this.modelo.addRow(data);
+              for (int i = 0; i < this.contratos.size(); i++) {
+                this.contrato = ((ContratoEmpleado)this.contratos.get(i));
+                data[0] = String.valueOf(this.contrato.getCodigoContrato());
+                data[1] = this.contrato.getFechaContratacion();
+                data[2] = this.contrato.getCargo();
+                data[3] = String.valueOf(this.contrato.getSalario());
+                data[4] = String.valueOf(this.contrato.getTiempoContratado());
+                data[5] = String.valueOf(this.contrato.getEstadoContrato());
+                this.modelo.addRow(data);
+              }
+              this.jlNumContratos.setText(String.valueOf("Total Contratos: " + this.modelo.getRowCount()));
+            } else {
+              JOptionPane.showMessageDialog(null, "No se encontraron contratos firmados con el empleado.", GlobalConfigSystem.getAplicationTitle(), 1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BuscadorContratos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(BuscadorContratos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.jlNumContratos.setText(String.valueOf("Total Contratos: " + this.modelo.getRowCount()));
-      } else {
-        JOptionPane.showMessageDialog(null, "No se encontraron contratos firmados con el empleado.", GlobalConfigSystem.getAplicationTitle(), 1);
-      }
     }
   }
 
@@ -181,6 +189,7 @@ public class BuscadorContratos extends JDialog
     repaint();
   }
 
+  @Override
   public void actionPerformed(ActionEvent e)
   {
     if (e.getSource() == this.jbBuscar) {
@@ -191,10 +200,12 @@ public class BuscadorContratos extends JDialog
       verDetallesContrato();
   }
 
+  @Override
   public void mouseClicked(MouseEvent e)
   {
   }
 
+  @Override
   public void mousePressed(MouseEvent e)
   {
     if (e.getSource() == this.jtIdentificacion) {
@@ -203,14 +214,17 @@ public class BuscadorContratos extends JDialog
     }
   }
 
+  @Override
   public void mouseReleased(MouseEvent e)
   {
   }
 
+  @Override
   public void mouseEntered(MouseEvent e)
   {
   }
 
+  @Override
   public void mouseExited(MouseEvent e)
   {
   }

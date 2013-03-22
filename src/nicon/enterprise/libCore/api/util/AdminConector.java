@@ -133,7 +133,6 @@ public class AdminConector {
                     execute = sentence.execute(sqlSentence);
                         if (!execute) {
                             stateOP = 0;
-                            sentence.execute("commit;");
                         }
             } else {
                 JOptionPane.showMessageDialog(null, "No hay coneción con la fuente de datos, verifique el estado del servidor e intente de nuevo", GlobalConfigSystem.getAplicationTitle(),JOptionPane.ERROR_MESSAGE,new ImageIcon(getClass().getResource(GlobalConfigSystem.getIconsPath()+"NiconError.png")));
@@ -157,6 +156,14 @@ public class AdminConector {
             JOptionPane.showMessageDialog(null, "No hay coneción con la fuente de datos, verifique el estado del servidor e intente de nuevo", GlobalConfigSystem.getAplicationTitle(), 0);
         }
         return result;
+    }
+    
+    public void commit() throws SQLException{
+        sentence.execute("commit;");
+    }
+    
+    public void rollBack() throws SQLException{
+        sentence.execute("rollback;");
     }
 
     /**

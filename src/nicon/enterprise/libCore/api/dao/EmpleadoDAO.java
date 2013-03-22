@@ -1,191 +1,212 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.libCore.api.dao;
 
 import com.mysql.jdbc.ResultSet;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
+
 import nicon.enterprise.libCore.api.util.AdminConector;
 import nicon.enterprise.libCore.api.obj.Empleado;
 
 public class EmpleadoDAO {
 
     private Empleado empleado;
+    
     private boolean stateOP;
     private String sentence;
     private int ExecuteSentence;
+    private int contador;
+    
     private ArrayList ListaEmpleados;
     private ResultSet DataSentence;
-    private int contador;
     private AdminConector coneccion;
 
+    /**
+     * 
+     * @param empleado 
+     */
     public EmpleadoDAO(Empleado empleado) {
         this.empleado = empleado;
         this.coneccion = AdminConector.getInstance();
     }
 
+    /**
+     * 
+     */
     public EmpleadoDAO() {
-        this.coneccion = AdminConector.getInstance();
+        coneccion = AdminConector.getInstance();
+        ListaEmpleados = new ArrayList();
     }
 
-    public boolean crearEmpleado() {
-        try {
-            this.sentence = ("INSERT INTO Empleados values('" + this.empleado.getIdentificacion() + "','" + this.empleado.getNombres() + "','" + this.empleado.getApellidos() + "','" + this.empleado.getFechaNacimiento() + "','" + this.empleado.getLugarNacimiento() + "','" + this.empleado.getEstadoCivil() + "','" + this.empleado.getDireccion() + "','" + this.empleado.getBarrio() + "','" + this.empleado.getCiudad() + "','" + this.empleado.getTelefonoFijo() + "','" + this.empleado.getTelefonoMovil() + "','" + this.empleado.getEmail() + "'," + this.empleado.getEstado() + ",current_timestamp,1);");
-            System.out.println("Sentencia de ejecucion:\n" + this.sentence);
-            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
-            if (this.ExecuteSentence == 0) {
-                System.out.println("La informacion del empleado se ha ingresado exitosamente ...");
-                this.stateOP = true;
+    /**
+     * este metodo permite crear n nuevo empleado dentro de la fuente de datos, 
+     * la informacion del empleado a crear se obtiene del objeto empleado que
+     * se recibe dentro del constructor
+     * 
+     * @return 
+     */
+    public boolean createEmployee() throws SQLException {
+            sentence = "INSERT INTO Empleados values('" + empleado.getIdentificacion() + "','" + empleado.getNombres() + "','" + empleado.getApellidos() + "','" + empleado.getFechaNacimiento() + "','" + empleado.getLugarNacimiento() + "','" + empleado.getEstadoCivil() + "','" + empleado.getDireccion() + "','" + empleado.getBarrio() + "','" + empleado.getCiudad() + "','" +empleado.getTelefonoFijo() + "','" + empleado.getTelefonoMovil() + "','" +empleado.getEmail() + "'," +empleado.getEstado() + ",current_timestamp,1);";
+            ExecuteSentence = coneccion.runSentence(sentence);
+                if (ExecuteSentence == 0) {
+                    stateOP = true;
+                } else {
+                    stateOP = false;
+                }        
+        return stateOP;
+    }
+
+    /**
+     * 
+     * @return
+     * @throws SQLException 
+     */
+    public boolean eliminarEmpleado() throws SQLException {
+            sentence = "DELETE FROM Empleados WHERE empleados.Identificacion='" +empleado.getIdentificacion() + "' AND empleados.nombres='" +empleado.getNombres() + ";";
+            ExecuteSentence = coneccion.runSentence(sentence);
+                if (ExecuteSentence == 0) {
+                    stateOP = true;
+                } else {
+                    stateOP = false;
+                }        
+        return stateOP;
+    }
+
+    /**
+     * el estado de un empleado hace referencia al estado dentro de la organizacion
+     * que puede ser activo o inactivo, el hecho de que un empleado tenga como
+     * estado inactivo refiere de que no se le permite ni el ingreso ni el pago
+     * de nomina.
+     * 
+     * @param IDempleado
+     * @param Estado
+     * @return boolean stateOP;
+     * @throws SQLException 
+     */
+    public boolean cambiarEstadoEmpleado(String IDempleado, boolean Estado) throws SQLException {
+            sentence = "UPDATE Empleados set estado=" + Estado + " where identificacion=" + IDempleado + ";";
+            ExecuteSentence =coneccion.runSentence(sentence);
+                if (ExecuteSentence == 0) {
+                    stateOP = true;
+                } else {
+                    stateOP = false;
+                }
+            return stateOP;
+    }
+
+    /**
+     * este metodo permite actualizar los datos de un empleado, registrado dentro
+     * de la fuente de datos, recibe como parametros la cedula del empleado, el
+     * campo a actulizar y el nuevo dato.
+     * 
+     * @param cedula
+     * @param campo
+     * @param dato
+     * @return
+     * @throws SQLException 
+     */
+    public boolean actualizarDatos(String cedula, String campo, String dato) throws SQLException {
+            sentence = ("UPDATE Empleados SET " + campo + " ='" + dato + "' WHERE Empleados.identificacion='" + cedula + "';");
+            ExecuteSentence = coneccion.runSentence(sentence);
+                if (ExecuteSentence == 0) {
+                    stateOP = true;
+                } else {
+                    stateOP = false;
+                }
+                return stateOP;
+    }
+
+    /**
+     * este metodo permite obtener un listado de todos los empleados registrados
+     * en la fuente de datos, 
+     * @return ArrayList listEmpleados
+     * @throws SQLException 
+     */
+    public ArrayList listarEmpleados() throws SQLException {            
+            sentence = "SELECT * FROM Empleados;";
+            DataSentence = coneccion.queryData(sentence);
+                while (DataSentence.next()) {
+                    empleado = new Empleado(DataSentence.getString(1),DataSentence.getString(2),DataSentence.getString(3),DataSentence.getString(4),DataSentence.getString(5),DataSentence.getString(6),DataSentence.getString(7),DataSentence.getString(8),DataSentence.getString(9),DataSentence.getString(10),DataSentence.getString(11),DataSentence.getString(12),DataSentence.getBoolean(13),DataSentence.getDate(14),DataSentence.getString(15));
+                    ListaEmpleados.add(empleado);
+                }
+            return ListaEmpleados;
+    }
+
+    /**
+     * 
+     * @param cedula
+     * @return
+     * @throws SQLException 
+     */
+    public Empleado buscarEmpleadoPorID(String cedula) throws SQLException {
+            sentence = ("select * from Empleados where Empleados.identificacion='" + cedula + "';");
+            DataSentence = coneccion.queryData(sentence);
+            if (DataSentence.next()) {
+                empleado = new Empleado(this.DataSentence.getString(1), this.DataSentence.getString(2), this.DataSentence.getString(3), this.DataSentence.getString(4), this.DataSentence.getString(5), this.DataSentence.getString(6), this.DataSentence.getString(7), this.DataSentence.getString(8), this.DataSentence.getString(9), this.DataSentence.getString(10), this.DataSentence.getString(11), this.DataSentence.getString(12), this.DataSentence.getBoolean(13), this.DataSentence.getDate(14), this.DataSentence.getString(15));
+                DataSentence.close();
             } else {
-                System.out.println("La sentencia no se ejecuto y la informacion no se almaceno ...");
-                this.stateOP = false;
+                empleado = null;
             }
-        } catch (Exception e) {
-            System.out.println("Ocurrio un error en EmpleadoDAO.crearEmpleado():\n" + e);
-            this.stateOP = false;
-        }
-        return this.stateOP;
+            return empleado;
     }
 
-    public boolean eliminarEmpleado() {
-        try {
-            System.out.println("Inciando eliminacion de empleado ...");
-            this.sentence = ("DELETE FROM Empleados WHERE empleados.Identificacion='" + this.empleado.getIdentificacion() + "' AND empleados.nombres='" + this.empleado.getNombres() + ";");
-            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
-            if (this.ExecuteSentence == 0) {
-                this.stateOP = true;
-                System.out.println("El empleado ha sido eliminado");
+    /**
+     * 
+     * @param Nombres
+     * @return
+     * @throws SQLException 
+     */
+    public Empleado buscarEmpleadoPorNombres(String Nombres) throws SQLException {
+            sentence = ("select * from Empleados where nombres='" + Nombres + "';");
+            DataSentence = coneccion.queryData(sentence);
+                if (DataSentence.next()) {
+                    empleado = new Empleado(DataSentence.getString(1),DataSentence.getString(2),DataSentence.getString(3),DataSentence.getString(4),DataSentence.getString(5),DataSentence.getString(6),DataSentence.getString(7),DataSentence.getString(8),DataSentence.getString(9),DataSentence.getString(10),DataSentence.getString(11),DataSentence.getString(12),DataSentence.getBoolean(13),DataSentence.getDate(14),DataSentence.getString(15));
+                    DataSentence.close();
+                } else {
+                    empleado = null;
+                }        
+        return empleado;
+    }
+
+    /**
+     * 
+     * @param identificacion
+     * @return
+     * @throws SQLException 
+     */
+    public boolean verificarExistencia(String identificacion) throws SQLException {
+            sentence = "select * from Empleados where identificacion='" + identificacion + "';";
+            DataSentence = coneccion.queryData(sentence);
+                if (DataSentence.next()) {
+                    stateOP = true;
+                } else {
+                    stateOP = false;
+                }        
+        return stateOP;
+    }
+
+    /**
+     * 
+     * @return
+     * @throws SQLException 
+     */
+    public int obtenerTotalRegistros() throws SQLException {
+            sentence = "select count(identificacion) from Empleados;";
+            DataSentence = coneccion.queryData(sentence);
+            if (DataSentence.next()) {
+                contador = DataSentence.getInt(1);
             } else {
-                this.stateOP = false;
-                System.out.println("El empleado no se elimino ...");
-            }
-        } catch (Exception e) {
-            System.out.println("Ocurrio un error y el empleado no se elimino ...");
-            e.printStackTrace();
-        }
-        return this.stateOP;
-    }
-
-    public boolean cambiarEstadoEmpleado(String IDempleado, boolean Estado) {
-        try {
-            this.sentence = ("UPDATE Empleados set estado=" + Estado + " where identificacion=" + IDempleado + ";");
-            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
-            if (this.ExecuteSentence == 0) {
-                this.stateOP = true;
-            } else {
-                this.stateOP = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.stateOP;
-    }
-
-    public boolean actualizarDatos(String cedula, String campo, String dato) {
-        try {
-            System.out.println("Iniciando actualizacion de datos de empleado ...");
-            this.sentence = ("UPDATE Empleados SET " + campo + " ='" + dato + "' WHERE Empleados.identificacion='" + cedula + "';");
-            System.out.println(this.sentence);
-            this.ExecuteSentence = this.coneccion.runSentence(this.sentence);
-            if (this.ExecuteSentence == 0) {
-                this.stateOP = true;
-                System.out.println("Actualizacion de datos Terminada ...");
-            } else {
-                this.stateOP = false;
-                System.out.println("La actualizacion de datos no pudo ser terminada ...");
-            }
-        } catch (Exception e) {
-            System.out.println("Ocurrio el siguiente error en la actualizacion de datos ");
-            e.printStackTrace();
-        }
-        return this.stateOP;
-    }
-
-    public ArrayList listarEmpleados() {
-        try {
-            System.out.println("Inciando carga de informacion de Empleados ...");
-            this.ListaEmpleados = new ArrayList();
-            this.sentence = "select * from Empleados;";
-            this.DataSentence = this.coneccion.queryData(this.sentence);
-            while (this.DataSentence.next()) {
-                this.empleado = new Empleado(this.DataSentence.getString(1), this.DataSentence.getString(2), this.DataSentence.getString(3), this.DataSentence.getString(4), this.DataSentence.getString(5), this.DataSentence.getString(6), this.DataSentence.getString(7), this.DataSentence.getString(8), this.DataSentence.getString(9), this.DataSentence.getString(10), this.DataSentence.getString(11), this.DataSentence.getString(12), this.DataSentence.getBoolean(13), this.DataSentence.getDate(14), this.DataSentence.getString(15));
-                this.ListaEmpleados.add(this.empleado);
-            }
-            System.out.println("Lista de Empleados cargada exitosamente total registros econtrados: " + this.ListaEmpleados.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.ListaEmpleados;
-    }
-
-    public Empleado buscarEmpleadoPorID(String cedula) {
-        try {
-            System.out.println("Iniciando la carga de datos del empleado de identificacion: " + cedula);
-            this.sentence = ("select * from Empleados where Empleados.identificacion='" + cedula + "';");
-            this.DataSentence = this.coneccion.queryData(this.sentence);
-            if (this.DataSentence.next()) {
-                System.out.println("Creando Objeto Empleado con la informacion obtenida ...");
-                this.empleado = new Empleado(this.DataSentence.getString(1), this.DataSentence.getString(2), this.DataSentence.getString(3), this.DataSentence.getString(4), this.DataSentence.getString(5), this.DataSentence.getString(6), this.DataSentence.getString(7), this.DataSentence.getString(8), this.DataSentence.getString(9), this.DataSentence.getString(10), this.DataSentence.getString(11), this.DataSentence.getString(12), this.DataSentence.getBoolean(13), this.DataSentence.getDate(14), this.DataSentence.getString(15));
-                this.DataSentence.close();
-            } else {
-                System.out.println("No se encontro informacion de empleado relacionada con la identificacion: " + cedula);
-                this.empleado = null;
-            }
-        } catch (Exception e) {
-            System.out.println("Ocurrio un error mientras se buscaba la informacion: \n");
-            e.printStackTrace();
-        }
-        return this.empleado;
-    }
-
-    public Empleado buscarEmpleadoPorNombres(String Nombres) {
-        try {
-            System.out.println("Iniciando carga de datos de empleado de Nombres: " + Nombres);
-            this.sentence = ("select * from Empleados where nombres='" + Nombres + "';");
-            this.DataSentence = this.coneccion.queryData(this.sentence);
-            if (this.DataSentence.next()) {
-                System.out.println("Creando Objeto Empleado con la informacion obtenida ...");
-                this.empleado = new Empleado(this.DataSentence.getString(1), this.DataSentence.getString(2), this.DataSentence.getString(3), this.DataSentence.getString(4), this.DataSentence.getString(5), this.DataSentence.getString(6), this.DataSentence.getString(7), this.DataSentence.getString(8), this.DataSentence.getString(9), this.DataSentence.getString(10), this.DataSentence.getString(11), this.DataSentence.getString(12), this.DataSentence.getBoolean(13), this.DataSentence.getDate(14), this.DataSentence.getString(15));
-                this.DataSentence.close();
-            } else {
-                System.out.println("No se encontro informacion de empleado relacionada con la identificacion: " + Nombres);
-                this.empleado = null;
-            }
-        } catch (Exception e) {
-            System.out.println("Ocurrio un error mientras se buscaba la informacion: \n");
-            e.printStackTrace();
-        }
-        return this.empleado;
-    }
-
-    public boolean verificarExistencia(String identificacion) {
-        try {
-            this.sentence = ("select * from Empleados where identificacion='" + identificacion + "';");
-            this.DataSentence = this.coneccion.queryData(this.sentence);
-            if (this.DataSentence.next()) {
-                this.stateOP = true;
-            } else {
-                this.stateOP = false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return this.stateOP;
-    }
-
-    public int obtenerTotalRegistros() {
-        try {
-            this.sentence = "select count(identificacion) from Empleados;";
-            this.DataSentence = this.coneccion.queryData(this.sentence);
-            if (this.DataSentence.next()) {
-                this.contador = this.DataSentence.getInt(1);
-            } else {
-                this.contador = 0;
-            }
-        } catch (Exception e) {
-            System.err.println("Ocurrio un error en EmpleadoDAO.obtenerTotalRegistros():\n" + e);
-        }
-        return this.contador;
+                contador = 0;
+            }return contador;
     }
 }

@@ -39,9 +39,12 @@ import net.sf.jasperreports.engine.JRException;
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.api.dao.ProveedorDAO;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
-import nicon.enterprise.libCore.api.util.NiconAdminReport;
 import nicon.enterprise.libCore.obj.Proveedor;
 
+/**
+ * este es el modulo de administracion de proveedores, 
+ * @author frederick
+ */
 public class Proveedores_Module implements ActionListener, MouseListener{
     
   private JPanel moduloProveedores;
@@ -56,7 +59,7 @@ public class Proveedores_Module implements ActionListener, MouseListener{
   private JMenuBar menuBar;
   private JMenu menuArchivo;
   private JMenu menuProveedor;
-  private JMenu reportes;
+  private JMenu menuExportaciones;
   private JMenu ver;
   
   private JMenuItem cerrarModulo;
@@ -135,9 +138,11 @@ public class Proveedores_Module implements ActionListener, MouseListener{
     tablaProveedores.setSelectionBackground(GlobalConfigSystem.getrowSelectedTable());
     tablaProveedores.addMouseListener(this);
 
-    jsScroll = new JScrollPane(this.tablaProveedores);
+    jsScroll = new JScrollPane(tablaProveedores);
     jsScroll.setBounds(0, 0, 390, 595);
 
+    // inicia el ajuste de la barra de menu de proveedores.
+    
     menuBar = new JMenuBar();
     menuBar.setBounds(390, 0, 890, 20);
 
@@ -149,59 +154,69 @@ public class Proveedores_Module implements ActionListener, MouseListener{
     menuProveedor.setFont(GlobalConfigSystem.getFontAplicationText());
     menuProveedor.setMnemonic('P');
 
-    reportes = new JMenu("Reportes");
-    reportes.setFont(GlobalConfigSystem.getFontAplicationText());
-    reportes.setMnemonic('r');
+    menuExportaciones = new JMenu("Reportes");
+    menuExportaciones.setIcon(new ImageIcon(getClass().getResource(Icons+"NiconRight.png")));
+    menuExportaciones.setFont(GlobalConfigSystem.getFontAplicationText());
+    menuExportaciones.setMnemonic('r');
 
     ver = new JMenu("Ver");
     ver.setFont(GlobalConfigSystem.getFontAplicationText());
     ver.setMnemonic('v');
+        
+    // fin menus principales
 
-    this.cerrarModulo = new JMenuItem("- Cerrar Módulo");
-    this.cerrarModulo.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuExit.png")));
-    this.cerrarModulo.addActionListener(this);
+    cerrarModulo = new JMenuItem("- Cerrar Módulo");
+    cerrarModulo.setFont(GlobalConfigSystem.getFontAplicationText());
+    cerrarModulo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuExit.png")));
+    cerrarModulo.addActionListener(this);
 
-    this.crearProveedor = new JMenuItem("- Crear Proveedor");
-    this.crearProveedor.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconAdd.png")));
-    this.crearProveedor.addActionListener(this);
+    crearProveedor = new JMenuItem("- Crear Proveedor");
+    crearProveedor.setFont(GlobalConfigSystem.getFontAplicationText());
+    crearProveedor.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconAdd.png")));
+    crearProveedor.addActionListener(this);
 
-    this.eliminarProveedor = new JMenuItem("- Eliminar Proveedor");
-    this.eliminarProveedor.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconRemove.png")));
-    this.eliminarProveedor.addActionListener(this);
+    eliminarProveedor = new JMenuItem("- Eliminar Proveedor");
+    eliminarProveedor.setFont(GlobalConfigSystem.getFontAplicationText());
+    eliminarProveedor.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconRemove.png")));
+    eliminarProveedor.addActionListener(this);
 
-    this.actualizarProveedor = new JMenuItem("- Actualizar datos");
-    this.actualizarProveedor.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconUpdateMenu.png")));
-    this.actualizarProveedor.addActionListener(this);
+    actualizarProveedor = new JMenuItem("- Actualizar datos");
+    actualizarProveedor.setFont(GlobalConfigSystem.getFontAplicationText());
+    actualizarProveedor.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconUpdateMenu.png")));
+    actualizarProveedor.addActionListener(this);
 
-    this.exportarTodos = new JMenuItem(" - Listar Todos");
-    this.exportarTodos.setToolTipText("Imprime el listado de todos los proveedores registrados en el sistema");
-    this.exportarTodos.addActionListener(this);
+    exportarTodos = new JMenuItem(" - Listar Todos");
+    exportarTodos.setFont(GlobalConfigSystem.getFontAplicationText());
+    exportarTodos.setToolTipText("Imprime el listado de todos los proveedores registrados en el sistema");
+    exportarTodos.addActionListener(this);
 
-    this.verListaAsc = new JMenuItem("Ordenar Lista Asc");
-    this.verListaAsc.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuUp.png")));
-    this.verListaAsc.setToolTipText("Ordena el listado de proveedores de forma ascendente");
-    this.verListaAsc.addActionListener(this);
+    verListaAsc = new JMenuItem("Ordenar Lista Asc");
+    verListaAsc.setFont(GlobalConfigSystem.getFontAplicationText());
+    verListaAsc.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuUp.png")));
+    verListaAsc.setToolTipText("Ordena el listado de proveedores de forma ascendente");
+    verListaAsc.addActionListener(this);
 
-    this.verListaDesc = new JMenuItem("Ordenar Lista Desc");
-    this.verListaDesc.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuDown.png")));
-    this.verListaDesc.setToolTipText("Ordena la lista de forma descendente");
-    this.verListaDesc.addActionListener(this);
+    verListaDesc = new JMenuItem("Ordenar Lista Desc");
+    verListaDesc.setFont(GlobalConfigSystem.getFontAplicationText());
+    verListaDesc.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuDown.png")));
+    verListaDesc.setToolTipText("Ordena la lista de forma descendente");
+    verListaDesc.addActionListener(this);
 
-    this.menuArchivo.add(this.cerrarModulo);
+    menuArchivo.add(menuExportaciones);
+    menuArchivo.add(cerrarModulo);    
 
-    this.menuProveedor.add(this.crearProveedor);
-    this.menuProveedor.add(this.actualizarProveedor);
-    this.menuProveedor.add(this.eliminarProveedor);
+    menuProveedor.add(crearProveedor);
+    menuProveedor.add(actualizarProveedor);
+    menuProveedor.add(eliminarProveedor);
 
-    this.reportes.add(this.exportarTodos);
+    menuExportaciones.add(exportarTodos);
 
-    this.ver.add(this.verListaAsc);
-    this.ver.add(this.verListaDesc);
+    ver.add(verListaAsc);
+    ver.add(verListaDesc);
 
-    this.menuBar.add(this.menuArchivo);
-    this.menuBar.add(this.menuProveedor);
-    this.menuBar.add(this.reportes);
-    this.menuBar.add(this.ver);
+    menuBar.add(menuArchivo);
+    menuBar.add(menuProveedor);
+    menuBar.add(ver);
 
     this.jlNit = new JLabel("- Nit:");
     this.jlNit.setForeground(GlobalConfigSystem.getForegroundAplicationTitle());

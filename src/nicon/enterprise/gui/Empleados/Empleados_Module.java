@@ -1,7 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * CopyRigth (C) 2013 NiconSystem Incorporated. 
+ * 
+ * NiconSystem Inc.
+ * Cll 9a#6a-09 Florida Valle del cauca Colombia
+ * 318 437 4382
+ * fredefass01@gmail.com
+ * desarrollador-mantenedor: Frederick Adolfo Salazar Sanchez.
  */
+
 package nicon.enterprise.gui.Empleados;
 
 import java.awt.Color;
@@ -10,7 +16,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,18 +36,25 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
 import nicon.enterprise.gui.ModuloPrincipal;
 import nicon.enterprise.libCore.api.util.GlobalConfigSystem;
-import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
 import nicon.enterprise.libCore.api.dao.EmpleadoDAO;
 import nicon.enterprise.libCore.api.obj.Empleado;
-import nicon.enterprise.libCore.obj.ContratoEmpleado;
+import nicon.enterprise.libCore.api.dao.ContratoEmpleadoDAO;
+import nicon.enterprise.libCore.api.obj.ContratoEmpleado;
 
-
-public class ModuloEmpleados  implements ActionListener, MouseListener{
+/**
+ * esta clase representa el interfazz grafico del modulo de gestion y administracion
+ * de empleados, 
+ * 
+ * @author frederick
+ */
+public class Empleados_Module  implements ActionListener, MouseListener{
     
   private JPanel panelAdmin;
   private JPanel panelInformacion;
+  
   private JLabel jlNombres;
   private JLabel jlIdentificacion;
   private JLabel jlFechaNacimiento;
@@ -49,6 +67,7 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
   private JLabel jlEmail;
   private JLabel jlEstado;
   private JLabel jlFechaContratacion;
+  
   private JTextField jtIdentificacion;
   private JTextField jtFechaNacimiento;
   private JTextField jtLugarNacimiento;
@@ -60,25 +79,30 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
   private JTextField jtEmail;
   private JTextField jtEstado;
   private JTextField jtFechaContratacion;
+  
   private static JScrollPane jsEmpleados;
   private static DefaultTableModel modeloDatos;
   private static JTable jtEmpleados;
-  private static TitledBorder bordeInf;
+  private TitledBorder bordeInf;
+  
   private JMenuBar menuBar;
   private JMenu menuEmpleado;
   private JMenu menuArchivo;
   private JMenu menuContrato;
   private JMenuItem cerrarModulo;
   private JMenuItem crearEmpleado;
+  private JMenuItem crearEmpleadoCon;
   private JMenuItem eliminarEmpleado;
   private JMenuItem editarEmpleado;
   private JMenuItem crearContrato;
   private JMenuItem listarContratos;
   private JMenuItem cancelarContrato;
+  
   private static Empleado empleado;
   private static EmpleadoDAO empleadoDAO;
   private ContratoEmpleado contrato;
   private ContratoEmpleadoDAO contratoDAO;
+  
   private static ArrayList listaEmpleados;
   private int selectedRow;
   private JLabel jlCargo;
@@ -87,29 +111,28 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
   private JButton jbVisor;
   private boolean state;
 
-  public ModuloEmpleados()
-  {
-    this.Icons = GlobalConfigSystem.getIconsPath();
-    this.contratoDAO = new ContratoEmpleadoDAO();
+  public Empleados_Module() {
+    Icons = GlobalConfigSystem.getIconsPath();
+    contratoDAO = new ContratoEmpleadoDAO();
     initComponents();
     cargarDatos();
   }
 
-  private void initComponents()
-  {
-    this.panelAdmin = new JPanel();
-    this.panelAdmin.setBackground(GlobalConfigSystem.getBackgroundAplication());
-    this.panelAdmin.setLayout(null);
+  private void initComponents(){
+      
+    panelAdmin = new JPanel();
+    panelAdmin.setBackground(GlobalConfigSystem.getBackgroundAplication());
+    panelAdmin.setLayout(null);
 
-    bordeInf = BorderFactory.createTitledBorder("Información");
+    bordeInf = BorderFactory.createTitledBorder("");
     bordeInf.setTitleColor(GlobalConfigSystem.getForegrounAplicationText());
     bordeInf.setTitleFont(GlobalConfigSystem.getFontAplicationText());
 
-    this.panelInformacion = new JPanel();
-    this.panelInformacion.setBackground(GlobalConfigSystem.getBackgroundAplication());
-    this.panelInformacion.setBorder(bordeInf);
-    this.panelInformacion.setBounds(470, 50, 515, 495);
-    this.panelInformacion.setLayout(null);
+    panelInformacion = new JPanel();
+    panelInformacion.setBackground(GlobalConfigSystem.getBackgroundAplication());
+    panelInformacion.setBorder(bordeInf);
+    panelInformacion.setBounds(470, 50, 515, 495);
+    panelInformacion.setLayout(null);
 
     modeloDatos = new DefaultTableModel();
     modeloDatos.addColumn("Identificacion");
@@ -125,22 +148,24 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     jsEmpleados = new JScrollPane(jtEmpleados);
     jsEmpleados.setBounds(0, 0, 450, 580);
 
-    this.menuBar = new JMenuBar();
-    this.menuBar.setBounds(450, 0, 830, 20);
+    menuBar = new JMenuBar();
+    menuBar.setBounds(450, 0, 830,20);
 
-    this.menuEmpleado = new JMenu("Empleado");
-    this.menuArchivo = new JMenu("Archivo");
-    this.menuContrato = new JMenu("Contrato");
-
-    this.cerrarModulo = new JMenuItem("Cerrar este Módulo");
-    this.cerrarModulo.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuExit.png")));
-    this.cerrarModulo.setToolTipText("Cierra el actual Módulo de empleados.");
-    this.cerrarModulo.addActionListener(this);
-
-    this.crearEmpleado = new JMenuItem("Crear Empleado");
-    this.crearEmpleado.setToolTipText("Abre la ventana de ingreso de datos para crear un nuevo empleado");
-    this.crearEmpleado.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuPersonAdd.png")));
-    this.crearEmpleado.addActionListener(this);
+    menuEmpleado = new JMenu("Empleado");
+    menuEmpleado.setMnemonic('E');
+    menuEmpleado.setFont(GlobalConfigSystem.getFontAplicationText());
+    
+    crearEmpleado=new JMenuItem("Crear Empeleado");
+    crearEmpleado.setFont(GlobalConfigSystem.getFontAplicationText());
+    crearEmpleado.setIcon(new ImageIcon(getClass().getResource(Icons+"NiconMenuPersonAddRSC.png")));
+    crearEmpleado.setToolTipText("permite registrar un empleado sin asignar ningun contrato");
+    crearEmpleado.addActionListener(this);
+    
+    crearEmpleadoCon = new JMenuItem("Crear Empleado Con Contrato");
+    crearEmpleadoCon.setToolTipText("Abre la ventana de ingreso de datos para crear un nuevo empleado");
+    crearEmpleadoCon.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuPersonAdd.png")));
+    crearEmpleadoCon.setFont(GlobalConfigSystem.getFontAplicationText());
+    crearEmpleadoCon.addActionListener(this);
 
     this.eliminarEmpleado = new JMenuItem("Eliminar Empleado");
     this.eliminarEmpleado.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconRemove.png")));
@@ -151,6 +176,24 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     this.editarEmpleado.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconUpdateMenu.png")));
     this.editarEmpleado.setToolTipText("Actualizar la información de un empleado seleccionado en la tabla");
     this.editarEmpleado.addActionListener(this);
+    
+    menuArchivo = new JMenu("Archivo");
+    menuArchivo.setFont(GlobalConfigSystem.getFontAplicationText());
+    menuArchivo.setMnemonic('A');
+    
+    cerrarModulo = new JMenuItem("- Cerrar Módulo");
+    cerrarModulo.setIcon(new ImageIcon(getClass().getResource(Icons + "NiconMenuExit.png")));
+    cerrarModulo.setFont(GlobalConfigSystem.getFontAplicationText());
+    cerrarModulo.setToolTipText("Cierra el actual Módulo de empleados.");
+    cerrarModulo.addActionListener(this);
+    
+    menuContrato = new JMenu("Contrato");
+    menuContrato.setFont(GlobalConfigSystem.getFontAplicationText());
+    menuContrato.setMnemonic('C');
+
+    
+
+    
 
     this.crearContrato = new JMenuItem("Crear Contrato");
     this.crearContrato.setIcon(new ImageIcon(getClass().getResource(this.Icons + "NiconMenuAddContrat.png")));
@@ -169,7 +212,8 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
 
     this.menuArchivo.add(this.cerrarModulo);
 
-    this.menuEmpleado.add(this.crearEmpleado);
+    menuEmpleado.add(crearEmpleado);
+    this.menuEmpleado.add(this.crearEmpleadoCon);
     this.menuEmpleado.add(this.eliminarEmpleado);
     this.menuEmpleado.add(this.editarEmpleado);
 
@@ -344,13 +388,13 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
   @Override
   public void actionPerformed(ActionEvent e)
   {
-    if (e.getSource() == this.crearEmpleado) {
-      GuiIngreso ingreso = new GuiIngreso();
+    if (e.getSource() == this.crearEmpleadoCon) {
+      Empleados_Ingreso ingreso = new Empleados_Ingreso();
       ingreso.setVisible(true);
     }
 
     if (e.getSource() == this.editarEmpleado) {
-      EditorEmpleado editor = new EditorEmpleado(obtenerEmpleadoSeleccionado());
+      Empleados_Actualizacion editor = new Empleados_Actualizacion(obtenerEmpleadoSeleccionado());
       editor.setVisible(true);
     }
 
@@ -363,7 +407,7 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     }
 
     if (e.getSource() == this.crearContrato) {
-      CrearContrato crear = new CrearContrato();
+      PanelCrearContrato crear = new PanelCrearContrato();
       crear.abrirDialogo();
     }
 
@@ -374,6 +418,11 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
 
     if (e.getSource() == this.cancelarContrato)
       cancelarContratoSeleccionado();
+    
+    if((e.getSource()==crearEmpleado)){
+        PanelCrearEmpleado ingresoEmpleado=new PanelCrearEmpleado();
+        ingresoEmpleado.mostrarVentana();
+    }
   }
 
   private static void cargarDatos()
@@ -406,7 +455,7 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     try
     {
       empleado = obtenerEmpleadoSeleccionado();
-      this.contrato = this.contratoDAO.buscarContrato(empleado.getIdentificacion());
+      this.contrato = this.contratoDAO.buscarContratoActivo(empleado.getIdentificacion());
       this.jlNombres.setText(empleado.getNombres() + " " + empleado.getApellidos());
       this.jlCargo.setText(this.contrato.getCargo());
       this.jtIdentificacion.setText(empleado.getIdentificacion());
@@ -448,7 +497,7 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     try
     {
       System.out.println("Mostrando informacion de ID: " + Identificacion);
-      this.contrato = this.contratoDAO.buscarContrato(Identificacion);
+      this.contrato = this.contratoDAO.buscarContratoActivo(Identificacion);
       this.visor = new VisorContrato(this.contrato, Nombres);
       this.visor.setVisible(true);
     } catch (Exception e) {
@@ -462,11 +511,15 @@ public class ModuloEmpleados  implements ActionListener, MouseListener{
     String cancel = JOptionPane.showInputDialog(null, "Esta seguro que deseea cancelar el actual contrato para el empleado:\n\n" + empleado.getNombres() + " " + empleado.getApellidos() + "\n\n" + " SI Cancelar = S      No Cancelar = N", GlobalConfigSystem.getAplicationTitle(), 2);
 
     if ((cancel.equals("S")) || (cancel.equals("s"))) {
-      this.state = this.contratoDAO.cancelarContratoActivo(empleado.getIdentificacion());
-      if (this.state == true) {
-        JOptionPane.showMessageDialog(this.panelAdmin, "El contrato actual con el empleado ha sido cancelado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
-        JOptionPane.showMessageDialog(this.panelAdmin, "El empleado con identificación= " + empleado.getIdentificacion() + "\n" + "" + empleado.getNombres() + " " + empleado.getApellidos() + " \n" + "Ha sido desactivado, su Ingreso a Producción o cualquier área adicional\n" + "esta totalmente retringida.", GlobalConfigSystem.getAplicationTitle(), 1);
-      }
+        try {
+            this.state = this.contratoDAO.cancelarContratoActivo(empleado.getIdentificacion());
+            if (this.state == true) {
+              JOptionPane.showMessageDialog(this.panelAdmin, "El contrato actual con el empleado ha sido cancelado exitosamente", GlobalConfigSystem.getAplicationTitle(), 1);
+              JOptionPane.showMessageDialog(this.panelAdmin, "El empleado con identificación= " + empleado.getIdentificacion() + "\n" + "" + empleado.getNombres() + " " + empleado.getApellidos() + " \n" + "Ha sido desactivado, su Ingreso a Producción o cualquier área adicional\n" + "esta totalmente retringida.", GlobalConfigSystem.getAplicationTitle(), 1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Empleados_Module.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
     else if ((cancel.equals("N")) || (cancel.equals("n"))) {
